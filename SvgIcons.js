@@ -43,3 +43,19 @@ export const LoginFooter = () => {
       </Svg>
     );
   };
+
+export const LeftArrow = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width="36" height="34" viewBox="0 0 36 34" fill="none">
+      <Path d="M25.1551 2.83329L28.3501 5.34788L13.5451 17L28.3501 28.652L25.1551 31.1666L7.1551 17L25.1551 2.83329Z" fill="#1D3039"/>
+    </Svg>
+  );
+};
+
+export const RightArrow = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width="36" height="34" viewBox="0 0 36 34" fill="none">
+      <Path d="M10.8449 31.1667L7.6499 28.6521L22.4549 17L7.6499 5.34796L10.8449 2.83337L28.8449 17L10.8449 31.1667Z" fill="#1D3039"/>
+    </Svg>
+  );
+};
