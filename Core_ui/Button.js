@@ -16,21 +16,26 @@ const styles = StyleSheet.create({
   },
   defaultStyleText: {
     fontFamily: 'NexaText-Trial-Bold',
-    textAlign: 'center', 
+    textAlign: 'center',
+    color:"#ffffff" 
   },
 });
 
 const Button = (props) => {
-  const { customeStyleButton, buttonText, customeStyleText,onClick } = props;
+  const { customeStyleButton, buttonText, customeStyleText,onClick,children,disabled } = props;
   return (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity style={[styles.defaultStyleButton, customeStyleButton]} onPress={onClick}>
+      <TouchableOpacity style={[styles.defaultStyleButton, customeStyleButton]} onPress={onClick} disabled={disabled}>
         <Text style={[styles.defaultStyleText, customeStyleText]}>
-          {buttonText}
+          {buttonText?buttonText:children}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
+
+Button.defaultProps ={
+  disabled:false
+}
 export default Button;

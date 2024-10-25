@@ -9,15 +9,22 @@ import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Routes from './Components/Routes/Routes';
 import GlobalStyleProvider from './GlobalStyleProvider';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
+import { ConnectivityProvider } from './ConnectivityContext';
+import NoInternetPopup from './NoInternetPopup';
 
 function App(): React.JSX.Element {
   return (
-    <GlobalStyleProvider>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Routes/>
-
+    <ConnectivityProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <GlobalStyleProvider>
+        <AlertNotificationRoot>
+          <Routes />
+          <NoInternetPopup />
+        </AlertNotificationRoot>
+        </GlobalStyleProvider>
       </GestureHandlerRootView>
-      </GlobalStyleProvider>
+    </ConnectivityProvider>
 
 
   );
