@@ -2,16 +2,20 @@ import CryptoJS from 'crypto-js';
 
 // AES Encryption
 export function encryptAES256(plainText, key) {
-    const iv = CryptoJS.enc.Utf8.parse(key.substring(0, 16)); // Use the first 16 characters of the key as the IV
-    const keySpec = CryptoJS.enc.Utf8.parse(key);
-    
-    const encrypted = CryptoJS.AES.encrypt(plainText, keySpec, {
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
-    });
+    var secretKey = key.substring(0,16);
+    var key = CryptoJS.enc.Utf8.parse(secretKey);
+    var iv = CryptoJS.enc.Utf8.parse(secretKey);
 
-    return encrypted.toString(); // Base64 encoded by default
+    var cipherText = CryptoJS.AES.encrypt(plainText, key
+        , {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        }
+    );
+    console.log("Encrypted Text : "+cipherText.toString());
+
+    return cipherText;
 }
 
 // AES Decryption

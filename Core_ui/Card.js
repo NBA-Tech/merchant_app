@@ -3,20 +3,19 @@ import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const style = StyleSheet.create({
-    cardContainer: {
+    DefaultCardContainer: {
         borderRadius: 22,
         borderWidth: 1,
         borderColor: '#D4D7E3',
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
         height: 'max-content',
-        width: wp('80%'),
-        marginHorizontal: wp('10%'),
+        width: wp('90%'),
         marginVertical: hp('5%'),
         padding: 10,
     },
 });
 function Card(props) {
-    const { hasBackground, customStyle, children } = props;
+    const { hasBackground, customStyle, children,backgroundImage } = props;
 
     console.log('Children:', children); // Log children to debug
 
@@ -27,13 +26,13 @@ function Card(props) {
     return hasBackground ? (
         <ImageBackground
             source={backgroundImage} // Ensure backgroundImage is defined
-            style={[style.cardContainer, customStyle]}
+            style={[style.DefaultCardContainer, customStyle]}
             imageStyle={{ borderRadius: 22 }}
         >
             {children}
         </ImageBackground>
     ) : (
-        <View style={[style.cardContainer, customStyle]}>
+        <View style={[style.DefaultCardContainer, customStyle]}>
             {children}
         </View>
     );

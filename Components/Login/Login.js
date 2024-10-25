@@ -61,6 +61,7 @@ function Login(props) {
             token:token,
             email:base64_email
         }
+        console.log(payload)
         
         const check_login_api=await fetch(`${BASE_URL}/app/login`,{
             method:'POST',

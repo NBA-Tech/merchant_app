@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="login"  
+      <Stack.Navigator initialRouteName="home"  
       screenOptions={{  gestureEnabled: true,
       gestureDirection: 'horizontal',
       animation: 'slide_from_right',
