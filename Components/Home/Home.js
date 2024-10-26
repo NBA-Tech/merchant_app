@@ -7,28 +7,22 @@ import Card from '../../Core_ui/Card';
 import { StatIcon, RightArrowWhite, BankIcon, DownloadIcon } from '../../SvgIcons';
 import CardLoader from '../../Core_ui/CardLoader';
 import Button from '../../Core_ui/Button';
+import DateHeader from '../../Core_ui/DateHeader';
+import { ScrollView } from 'react-native-gesture-handler';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
         flexDirection: 'column',
         margin: hp('2%')
     },
-    dateContainer: {
-        flexDirection: 'row',
-        marginVertical: hp('2%'),
-        justifyContent: 'space-between'
-    },
-    date: {
-        textAlign: 'center',
-        flex: 1,
-        alignItems: 'center'
-    },
+   
+   
     iconContainer: {
         flexDirection: 'row',
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: hp('15%')
+        marginBottom: hp('7%')
 
     },
     cardContainer: {
@@ -82,25 +76,9 @@ const Home = (props) => {
     })
 
     return (
-        <View style={globalStyle.background}>
+        <ScrollView style={[globalStyle.background,{flex:1}]}>
             <View style={style.homeContainer}>
-                <View style={style.headerContainer}>
-                    <Text style={globalStyle.headingText}>Merchant name</Text>
-                    <Text style={globalStyle.boldText}>Login name</Text>
-                </View>
-
-                <View style={style.dateContainer}>
-                    <TouchableOpacity>
-                        <LeftArrow />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={[globalStyle.headingText, style.date]}>Today, 10 Oct, 2024</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <RightArrow fill={"#1D3039"} width={"36"} height={"34"} />
-                    </TouchableOpacity>
-                </View>
-
+                <DateHeader/>
                 <View>
 
                     <Card
@@ -223,7 +201,7 @@ const Home = (props) => {
 
 
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
