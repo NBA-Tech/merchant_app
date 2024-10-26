@@ -10,7 +10,7 @@ const style = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
         height: 'max-content',
         width: wp('90%'),
-        marginVertical: hp('5%'),
+        marginVertical: hp('2%'),
         padding: 10,
     },
 });

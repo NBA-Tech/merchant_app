@@ -10,7 +10,7 @@ const CardLoader = (props) => {
     <View style={styles.card}>
       {backgroundImage ? (
         <ImageBackground
-          source={{ uri: backgroundImage }} // Use your image URL or require statement for local images
+          source={backgroundImage } // Use your image URL or require statement for local images
           style={styles.card}
           imageStyle={styles.backgroundImage} // Additional styles for the image
         >
@@ -61,12 +61,10 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
     marginBottom: 16,
     borderRadius: 8,
-    backgroundColor: '#fff',
-    elevation: 3,
     overflow: 'hidden', // Ensure children respect border radius
+    height:'max-content'
   },
   backgroundImage: {
     borderRadius: 8, // Match border radius of the card
@@ -82,14 +80,14 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   title: {
-    width: '60%',
-    height: 20,
+    width: '100%',
+    height: 15,
     borderRadius: 4,
     marginBottom: 8,
   },
   subtitle: {
-    width: '40%',
-    height: 16,
+    width: '80%',
+    height: 10,
     borderRadius: 4,
   },
 });

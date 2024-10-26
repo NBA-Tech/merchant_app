@@ -52,13 +52,6 @@ export const LeftArrow = () => {
   );
 };
 
-export const RightArrow = () => {
-  return (
-    <Svg xmlns="http://www.w3.org/2000/svg" width="36" height="34" viewBox="0 0 36 34" fill="none">
-      <Path d="M10.8449 31.1667L7.6499 28.6521L22.4549 17L7.6499 5.34796L10.8449 2.83337L28.8449 17L10.8449 31.1667Z" fill="#1D3039"/>
-    </Svg>
-  );
-};
 
 export const NoInterNetIcon = () => {
   return (
@@ -82,11 +75,25 @@ export const StatIcon = () => (
   </Svg>
 );
 
-export const RightArrowWhite = () => (
-  <Svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24" fill="none">
+export const RightArrow = ({fill,width=24,height=24}) => (
+  <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 24" fill="none">
     <Path
       d="M6.025 22L4.25 20.225L12.475 12L4.25 3.775L6.025 2L16.025 12L6.025 22Z"
-      fill="white"
+      fill={fill}
     />
+  </Svg>
+);
+
+
+export const BankIcon = ({ width = 24, height = 24, fill = "#1286ED" }) => (
+  <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
+    <Path d="M5 17V10H7V17H5ZM11 17V10H13V17H11ZM2 21V19H22V21H2ZM17 17V10H19V17H17ZM2 8V6L12 1L22 6V8H2ZM6.45 6H17.55L12 3.25L6.45 6Z" fill={fill} />
+  </Svg>
+);
+
+
+export const DownloadIcon = ({ width = 24, height = 25, fill = "#1286ED" }) => (
+  <Svg width={width} height={height} viewBox="0 0 24 25" fill="none">
+    <Path d="M12 16.7346L7 11.7346L8.4 10.2846L11 12.8846V4.73462H13V12.8846L15.6 10.2846L17 11.7346L12 16.7346ZM6 20.7346C5.45 20.7346 4.97917 20.5388 4.5875 20.1471C4.19583 19.7555 4 19.2846 4 18.7346V15.7346H6V18.7346H18V15.7346H20V18.7346C20 19.2846 19.8042 19.7555 19.4125 20.1471C19.0208 20.5388 18.55 20.7346 18 20.7346H6Z" fill={fill} />
   </Svg>
 );

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 export const globalStyle=StyleSheet.create({
     background:{
@@ -9,13 +10,15 @@ export const globalStyle=StyleSheet.create({
         color:"#0C1421",
         fontSize:18,
         fontStyle:'normal',
-        fontFamily:'NexaText-Trial-Bold'
+        fontFamily:'NexaText-Trial-Bold',
+        marginTop:heightPercentageToDP('1%')
     },
     headingText:{
         color:"#0C1421",
         fontSize:24,
         fontStyle:'normal',
-        fontFamily:'NexaText-Trial-Bold'
+        fontFamily:'NexaText-Trial-Bold',
+        marginTop:heightPercentageToDP('1%')
     },
 
 
