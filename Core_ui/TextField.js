@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   defaultText: {
     borderRadius: 5,
     height: 20,
-    fontFamily: 'NexaText-Trial-Bold',
+    fontFamily: 'IBMPlexSans-Bold',
     marginVertical:hp('2%'),
     borderRadius:8,
     borderWidth: 1,              

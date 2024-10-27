@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
    
   },
   defaultStyleText: {
-    fontFamily: 'NexaText-Trial-Bold',
+    fontFamily: 'IBMPlexSans-Bold',
     textAlign: 'center',
     color:"#ffffff"
   },

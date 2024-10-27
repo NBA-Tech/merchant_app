@@ -8,7 +8,8 @@ const style=StyleSheet.create({
     dateContainer: {
         flexDirection: 'row',
         marginVertical: hp('2%'),
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems:'center'
     },
     date: {
         textAlign: 'center',
@@ -26,14 +27,14 @@ const DateHeader = () => {
                 </View>
 
                 <View style={style.dateContainer}>
-                    <TouchableOpacity>
-                        <LeftArrow />
+                    <TouchableOpacity style={{marginVertical:hp('1%')}}>
+                        <LeftArrow fill={"#FFFFFF"}/>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <Text style={[globalStyle.headingText, style.date]}>Today, 10 Oct, 2024</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <RightArrow fill={"#1D3039"} width={"36"} height={"34"} />
+                        <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
                     </TouchableOpacity>
                 </View>
         </View>
