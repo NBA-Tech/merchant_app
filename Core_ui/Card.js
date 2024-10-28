@@ -17,7 +17,6 @@ const style = StyleSheet.create({
 function Card(props) {
     const { hasBackground, customStyle, children,backgroundImage } = props;
 
-    console.log('Children:', children); // Log children to debug
 
     if (!children) {
         return null; // or return an empty fragment

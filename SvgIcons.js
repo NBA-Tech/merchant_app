@@ -152,3 +152,8 @@ export const UserIcon = ({ width = 25, height = 25, fill = "#1C1B1F" }) => (
   </Svg>
 )
 
+export const DropDownIcon = (props) => (
+  <Svg xmlns="http://www.w3.org/2000/svg" width={24} height={25} viewBox="0 0 24 25" {...props}>
+      <Path d="M2 8.525L3.775 6.75L12 14.975L20.225 6.75L22 8.525L12 18.525L2 8.525Z" fill="#1286ED" />
+  </Svg>
+);

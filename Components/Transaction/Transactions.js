@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import DateHeader from '../../Core_ui/DateHeader';
 import Card from '../../Core_ui/Card';
-import { BankIcon, RightArrow,StatIcon,UpiIcon } from '../../SvgIcons';
+import { BankIcon, RightArrow, StatIcon, UpiIcon,DropDownIcon } from '../../SvgIcons';
 import Footer from '../Footer';
-import TransactionCard from './TransactionCard';
+import * as Animatable from 'react-native-animatable';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -40,7 +40,6 @@ const style = StyleSheet.create({
         borderTopRightRadius: 30,
     },
     cardCustomStyle: {
-        flex: 1,
         alignSelf: 'center',
     },
     footerContainer: {
@@ -50,12 +49,77 @@ const style = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },
-    
-    
+
+    nestedCard: {
+        flexDirection: 'column',
+        flex: 1,
+        marginVertical: hp('5%')
+
+    },
+    nestedElement: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1,
+        marginTop: hp('2%')
+    }
+
+
 });
 
 function Transactions(props) {
     const globalStyle = useContext(StyleContext);
+    const [toggleIndex, setToggleIndex] = useState(-1)
+    const [toggle, setToggle] = useState(false)
+
+    const CardElement = ({ cardDetails }) => (
+        cardDetails.map((value, index) => (
+            <View style={style.nestedCard} key={index}>
+                <View style={style.nestedElement}>
+                    <Text style={globalStyle.boldTextBlack}>{value?.heading}</Text>
+                    <Text style={globalStyle.boldTextBlack}>{value?.amount}</Text>
+                    <RightArrow fill={"#1286ED"} />
+
+                </View>
+
+            </View>
+
+        )
+
+        )
+
+    )
+
+    const cards = [
+        {
+            name: 'Settlement report',
+            amount: '$100',
+            transactions: '0',
+            cardDetails: <CardElement cardDetails={[
+                {
+                    heading: 'SEttle report',
+                    amount: '$100'
+                }
+            ]} />
+
+        },
+        {
+            name: 'Temp report',
+            amount: '$1000',
+            transactions: '0',
+            cardDetails: <CardElement cardDetails={[
+                {
+                    heading: 'Tempr report',
+                    amount: '$100'
+                }
+            ]} />
+
+        }
+    ]
+    const toggleExpand = (index) => {
+        setToggleIndex(index)
+        setToggle(!toggle)
+
+    }
     return (
         <View style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -68,7 +132,7 @@ function Transactions(props) {
                             customStyle={style.cardContainer}
                         >
                             <View style={style.iconContainer}>
-                                <StatIcon fill={'#1A4163'}/>
+                                <StatIcon fill={'#1A4163'} />
                                 <RightArrow />
                             </View>
                             <View style={style.bodyContainer}>
@@ -86,25 +150,52 @@ function Transactions(props) {
                     </View>
 
                     <View style={style.transbodyContainer}>
-                        <TransactionCard>
-                        <Card customStyle={style.cardCustomStyle}>
-                            <View style={style.settlementContainer}>
-                                <View>
-                                    <View style={style.settlementHeader}>
-                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Settlement amount</Text>
+                        {cards && cards.map((value, index) => (
+
+                            <Card customStyle={style.cardCustomStyle} key={index}>
+                                <TouchableOpacity onPress={() => { toggleExpand(index) }}>
+                                    <View style={style.settlementContainer}>
+                                        <View>
+                                            <View style={style.settlementHeader}>
+                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Settlement amount</Text>
+                                            </View>
+                                            <View style={style.settlement}>
+                                                <UpiIcon />
+                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ 1000.00 </Text>
+                                                {(toggleIndex == index && toggle)?
+                                                (
+                                                <DropDownIcon />
+
+                                                ):(
+                                                <RightArrow fill={"#1286ED"} />
+                                                )
+
+                                                }
+
+                                            </View>
+                                            <View style={style.settlementHeader}>
+                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>0 Transactions</Text>
+                                            </View>
+                                        </View>
                                     </View>
-                                    <View style={style.settlement}>
-                                        <UpiIcon />
-                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ 1000.00 </Text>
-                                        <RightArrow fill={"#1286ED"} />
-                                    </View>
-                                    <View style={style.settlementHeader}>
-                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>0 Transactions</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </Card>
-                        </TransactionCard>
+                                </TouchableOpacity>
+                                {toggleIndex == index && toggle && (
+
+                                    <Animatable.View animation="fadeInDown" duration={300}>
+                                        <View>
+                                            {value?.cardDetails && value?.cardDetails}
+                                        </View>
+                                    </Animatable.View>
+
+                                )
+
+                                }
+
+                            </Card>
+                        ))
+
+                        }
+
                     </View>
                 </View>
             </ScrollView>
