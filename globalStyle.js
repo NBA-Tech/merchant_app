@@ -6,6 +6,10 @@ export const globalStyle=StyleSheet.create({
         flex:1,
         backgroundColor:"#073761"
     },
+    backgroundWhite:{
+        flex:1,
+        backgroundColor:"#F8F9FA"
+    },
     boldText:{
         fontSize:18,
         fontStyle:'normal',

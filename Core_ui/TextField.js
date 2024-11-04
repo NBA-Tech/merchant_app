@@ -4,7 +4,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { TextInput } from 'react-native-paper';
 
 export const TextField = forwardRef((props, ref) => {
-  const { placeHolder, onChange, cutomStyle, placeHolderTextColor,isPassword } = props; 
+  const { placeHolder, onChange, cutomStyle, placeHolderTextColor,isPassword,keyboardType,maxLength } = props; 
 
   return (
     <View style={styles.textContainer}>
@@ -15,9 +15,11 @@ export const TextField = forwardRef((props, ref) => {
         style={[styles.defaultText, cutomStyle]} 
         placeholderTextColor={placeHolderTextColor}
          underlineColor="transparent"
-         activeUnderlineColor="transparent"
+         activeUnderlineColor="#1385EC"
          textColor='#3D5920'
          secureTextEntry={isPassword}
+         keyboardType={keyboardType}
+         maxLength={maxLength}
       />
     </View>
   );

@@ -52,7 +52,7 @@ function Login(props) {
     const [pasword,setPassword]=useState()
 
     const handleLogin=async()=>{
-        console.log("click",email,pasword,mobile)
+        setLoading(true)
         let base64_email=base64Encode(email)
         let client_token=base64Encode(""+email+""+email)
 
@@ -73,13 +73,15 @@ function Login(props) {
         })
 
         const is_login=await check_login_api.json()
-        console.log(is_login) 
+        if(is_login){
+            setLoading(false)
+        }
 
     }
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={[globalStyle.background, { flex: 1 }]}>
+            <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
                 <View style={style.loginContainer}>
                     <View style={style.topHeaderContainer}>
                         <TopHeaderBackground />
@@ -91,21 +93,21 @@ function Login(props) {
                         />
                     </View>
                     <View style={style.formContainer}>
-                        <Text style={globalStyle.boldText}>Mobile Number</Text>
+                        <Text style={globalStyle.boldTextBlack}>Mobile Number</Text>
                         <TextField
                             cutomStyle={style.textField}
                             placeHolder={'Mobile_number/ MID'}
                             onChange={setMobile}
                         />
 
-                        <Text style={globalStyle.boldText}>Email</Text>
+                        <Text style={globalStyle.boldTextBlack}>Email</Text>
                         <TextField
                             cutomStyle={style.textField}
                             placeHolder={'Email'}
                             onChange={setEmail}
                         />
 
-                        <Text style={globalStyle.boldText}>Password</Text>
+                        <Text style={globalStyle.boldTextBlack}>Password</Text>
                         <TextField
                             cutomStyle={style.textField}
                             placeHolder={'Password'}
@@ -125,6 +127,7 @@ function Login(props) {
                         <Button
                             customeStyleButton={style.button}
                             onClick={!loading?handleLogin:null}
+                            disabled={loading}
                         >   
                             {loading?<DotsLoader/>:'Login'}
                             </Button>
