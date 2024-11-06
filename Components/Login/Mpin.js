@@ -6,9 +6,9 @@ import { TextField } from '../../Core_ui/TextField';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Core_ui/Button';
-import DotsLoader  from '../../DotsLoader';
+import DotsLoader from '../../DotsLoader';
 import { BASE_URL } from '../../Config';
-import { base64Encode,base64Decode,encryptAES256 } from '../../Encryption';
+import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -27,36 +27,69 @@ const style = StyleSheet.create({
     },
     textField: {
         backgroundColor: "#F2FAFD",
-        width:'max-content',
-        height:hp('10%')
+        width: 'max-content',
+        height: hp('10%')
     },
     button: {
         backgroundColor: "#1385EC",
         paddingVertical: hp('1.5%'),
         borderRadius: 8,
     },
-    MpinContainer:{
-        flexDirection:'row',
-        justifyContent:'space-evenly',
-        marginVertical:hp('5%')
+    MpinContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        marginVertical: hp('5%')
+    },
+    buttonMainContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        flex: 1,
+        alignContent:'center'
+    },
+    buttonContainer: {
+        marginHorizontal: wp('0%'),
+        marginVertical: hp('1%'),
+        borderRadius: 10,           // Rounded corners
+        borderWidth: 1,             // Border thickness
+        borderColor: '#0F1ECD',     // Border color
+    },
+    button: {
+        paddingHorizontal: wp('2%'),
+        paddingVertical: hp('1%'),
+    },
+    text:{
+        color:"#0F1ECD",
+        paddingHorizontal:wp('8%')
+    },
+    buttonFilled: {
+        backgroundColor: "#1385EC",
+        marginHorizontal: wp('0%'),
+        marginVertical: hp('1%'),
+        borderRadius: 10,           // Rounded corners
+        borderWidth: 1,             // Border thickness
+    },
+    textFilled:{
+        color:"#FFFFFF",
+        paddingHorizontal:wp('14%')
+
     }
 
 });
 
 function Mpin(props) {
     const globalStyle = useContext(StyleContext);
-    const [loading,setLoading]=useState(false)
-    const mPin1=useRef(null)
-    const mPin2=useRef(null)
-    const mPin3=useRef(null)
-    const mPin4=useRef(null)
+    const [loading, setLoading] = useState(false)
+    const mPin1 = useRef(null)
+    const mPin2 = useRef(null)
+    const mPin3 = useRef(null)
+    const mPin4 = useRef(null)
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
-          nextInputRef.current.focus();
+            nextInputRef.current.focus();
         }
-      };
-    
+    };
+
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -74,44 +107,61 @@ function Mpin(props) {
                     <View style={style.formContainer}>
                         <Text style={globalStyle.boldTextBlack}>Confirm mPin</Text>
                         <View style={style.MpinContainer}>
-                        <TextField
-                            ref={mPin1}
-                            cutomStyle={style.textField}
-                            placeHolder={''}
-                            onChange={(text) => handleChange(text, mPin2)}
-                            keyboardType="numeric"
-                            maxLength={1}
-                        />
+                            <TextField
+                                ref={mPin1}
+                                cutomStyle={style.textField}
+                                placeHolder={''}
+                                onChange={(text) => handleChange(text, mPin2)}
+                                keyboardType="numeric"
+                                maxLength={1}
+                            />
 
-                         <TextField
-                            ref={mPin2}
-                            cutomStyle={style.textField}
-                            placeHolder={''}
-                            onChange={(text) => handleChange(text, mPin3)}
-                            keyboardType="numeric"
-                            maxLength={1}
-                        />
-                         <TextField
-                         ref={mPin3}
-                            cutomStyle={style.textField}
-                            placeHolder={''}
-                            onChange={(text) => handleChange(text, mPin4)}
-                            keyboardType="numeric"
-                            maxLength={1}
-                        />
-                         <TextField
-                         ref={mPin4}
-                            cutomStyle={style.textField}
-                            placeHolder={''}
-                            onChange={(text) => handleChange(text, null)}
-                            keyboardType="numeric"
-                            maxLength={1}
-                        />
+                            <TextField
+                                ref={mPin2}
+                                cutomStyle={style.textField}
+                                placeHolder={''}
+                                onChange={(text) => handleChange(text, mPin3)}
+                                keyboardType="numeric"
+                                maxLength={1}
+                            />
+                            <TextField
+                                ref={mPin3}
+                                cutomStyle={style.textField}
+                                placeHolder={''}
+                                onChange={(text) => handleChange(text, mPin4)}
+                                keyboardType="numeric"
+                                maxLength={1}
+                            />
+                            <TextField
+                                ref={mPin4}
+                                cutomStyle={style.textField}
+                                placeHolder={''}
+                                onChange={(text) => handleChange(text, null)}
+                                keyboardType="numeric"
+                                maxLength={1}
+                            />
 
                         </View>
-                       
 
-                      
+                        <View style={style.buttonMainContainer}>
+                            <Button
+                                customeStyleButton={style.buttonContainer}
+                                customeStyleText={style.text}
+                            >
+                            Switch Account
+                            </Button>
+
+                            <Button
+                                customeStyleButton={style.buttonFilled}
+                                customeStyleText={style.textFilled}
+                            >
+                            Login
+                            </Button>
+
+                        </View>
+
+
+
                     </View>
                     <View style={style.footerContainer}>
                         <LoginFooter />
