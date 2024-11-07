@@ -10,6 +10,8 @@ import DotsLoader from '../../DotsLoader';
 import { BASE_URL } from '../../Config';
 import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const style = StyleSheet.create({
     loginContainer: {
@@ -60,6 +62,7 @@ const style = StyleSheet.create({
 
 function Login(props) {
     const globalStyle = useContext(StyleContext);
+    const {navigation}=props
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState()
@@ -81,6 +84,15 @@ function Login(props) {
 
 
     const handleLogin = async () => {
+        if(!isChecked){
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'OOPS',
+                textBody: "Accept the terms and conditions",
+            });
+            return
+
+        }
         setLoading(true)
         let base64_email = base64Encode(email)
         let client_token = base64Encode("" + email + "" + email)
@@ -141,6 +153,7 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const validate_otp_api_response = await validate_otp_api.json()
+        let get_active_status_api_response=""
         if (validate_otp_api_response?.key) {
             setLoading(false)
             if (validate_otp_api_response?.value == "Valid") {
@@ -155,16 +168,22 @@ function Login(props) {
                     body: JSON.stringify(payload)
                 })
 
-                const get_active_status_api_response = await get_active_status_api.json()
+                get_active_status_api_response = await get_active_status_api.json()
                 console.log(get_active_status_api_response, email)
             }
         }
         if(validate_otp_api_response?.value=="Valid"){
+            await AsyncStorage.removeItem('merchant_status_data');
+
+            await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
                 title: 'Login Success',
                 textBody: "Welcome Back!! You will be redirected to home page..",
             });
+            setTimeout(() => {
+                navigation.navigate('home')
+            }, 3000);
         }
         else{
             Toast.show({

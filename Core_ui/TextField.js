@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   defaultText: {
     borderRadius: 8,
-    height: 40,
+    height: hp('2%'),
     fontFamily: 'IBMPlexSans-Bold',
     marginVertical: hp('2%'),
     borderWidth: 1,

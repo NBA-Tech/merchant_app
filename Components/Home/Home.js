@@ -10,7 +10,8 @@ import Button from '../../Core_ui/Button';
 import DateHeader from '../../Core_ui/DateHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../../Config';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -76,12 +77,73 @@ const style = StyleSheet.create({
 const Home = (props) => {
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(true);
+    const [merchantSessionData,setMerchentSessionData]=useState()
+    const [fromDate,setFromDate]=useState(new Date())
+    const [toDate,setToDate]=useState(new Date())
+
+    const getMerchantData=async()=>{
+        let merchant_session= await AsyncStorage.getItem('merchant_status_data')
+        merchant_session=JSON.parse(merchant_session)
+        setMerchentSessionData(merchant_session)
+
+        let payload={
+            merchantId:merchant_session?.id,
+            status:""
+        }
+        console.log(payload)
+        
+        const merchant_basic_info_api=await fetch(`${BASE_URL}/app/merchant/getMerchantData`,{
+            method:'POST',
+            headers:{
+                'content-type': 'application/json'
+            },
+            body:JSON.stringify(payload)
+        })
+
+        const merchant_basic_info_response=await merchant_basic_info_api.json()
+        console.log("merchant data",merchant_basic_info_response)
+        
+    }
+    const get_transaction_data=async(from_date,to_date)=>{
+        let payload={
+            paymentMethods:[
+                "ALL"
+            ],
+            transactionDate:{
+                from:fromDate,
+                to:toDate
+            },
+            transactionAmount:{
+                from:10,
+                to:100000
+            }
+        }
+        let headers={
+            'content-type': 'application/json',
+            'x-client-id':merchantSessionData?.clientDetails?.id,
+            'x-client-secret':merchantSessionData?.clientDetails?.secret
+
+        }
+        
+        const get_transaction_data_api=await fetch(`${BASE_URL}/app/txn/getTransactionDetails`,{
+            method:'POST',
+            headers:headers,
+            body:JSON.stringify(payload)
+        })
+
+        const get_transaction_data_res=await get_transaction_data_api.json()
+        console.log("transaction_data",get_transaction_data_res)
+
+    }
 
     useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 5000);
+        getMerchantData()
     }, []);
+
+    useEffect(()=>{
+        get_transaction_data(fromDate.toISOString(),toDate.toISOString())
+
+    },[fromDate,toDate])
 
     return (
         <View style={style.home}>
