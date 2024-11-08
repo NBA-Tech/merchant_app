@@ -123,10 +123,7 @@ const Home = (props) => {
                 from: from_date,
                 to: to_date
             },
-            transactionAmount: {
-                from: 0,
-                to: 1000000
-            }
+            
         }
         let headers = {
             'content-type': 'application/json',
@@ -135,6 +132,7 @@ const Home = (props) => {
 
         }
         console.log(headers)
+        console.log(payload)
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
             method: 'POST',
@@ -143,6 +141,7 @@ const Home = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
+        console.log(get_transaction_data_res)
         if(get_transaction_data_res?.msg=="Success"){
             const total_amount = get_transaction_data_res?.obj.reduce(
                 (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
@@ -200,7 +199,7 @@ const Home = (props) => {
         };
 
         adjustDatesAndFetchData();
-    }, [date]);
+    }, [date,merchantSessionData]);
 
 
     return (
