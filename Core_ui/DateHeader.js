@@ -17,7 +17,7 @@ const style=StyleSheet.create({
         alignItems: 'center'
     },
 })
-const DateHeader = ({businessName,loginName,date,dateOnClick}) => {
+const DateHeader = ({businessName,loginName,date,dateOnClick,leftOnClick,rightOnClick}) => {
     const globalStyle = useContext(StyleContext);
     return (
         <View>
@@ -27,13 +27,13 @@ const DateHeader = ({businessName,loginName,date,dateOnClick}) => {
                 </View>
 
                 <View style={style.dateContainer}>
-                    <TouchableOpacity style={{marginVertical:hp('1%')}}>
+                    <TouchableOpacity style={{marginVertical:hp('1%')}} onPress={leftOnClick}>
                         <LeftArrow fill={"#FFFFFF"}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={dateOnClick}>
                         <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={rightOnClick}>
                         <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
                     </TouchableOpacity>
                 </View>

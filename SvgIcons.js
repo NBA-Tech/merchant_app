@@ -28,21 +28,23 @@ export const TopHeaderBackground = () => {
 };
 
 export const LoginFooter = () => {
-    return (
-      <Svg width="380" height="131" viewBox="0 30 380 111" fill="none">
-        <Defs>
-          <LinearGradient id="paint0_linear_1_2950" x1="-28" y1="67" x2="364" y2="67" gradientUnits="userSpaceOnUse">
-            <Stop stopColor="#29CEFB" />
-            <Stop offset="1" stopColor="#1286ED" />
-          </LinearGradient>
-        </Defs>
-        <Path
-          d="M-25.9917 111C-45.6434 111 58.183 66.6331 132 65C188.699 63.7456 262.095 102.98 314.5 82C351.223 67.2981 358.821 32.9345 360.081 13.6846C360.032 5.30125 360 0 360 0C360 0 360.618 5.46424 360.081 13.6846C360.222 38.2726 360.5 89.3736 360.5 111L-25.9917 111Z"
-          fill="url(#paint0_linear_1_2950)"
-        />
-      </Svg>
-    );
-  };
+  const { width, height } = Dimensions.get('window'); // Get the device width and height
+
+  return (
+    <Svg width={width} height={height / 4} viewBox="0 0 380 111" fill="none" style={{ position: 'absolute', bottom: 0 }}>
+      <Defs>
+        <LinearGradient id="paint0_linear_1_2950" x1="-28" y1="67" x2="364" y2="67" gradientUnits="userSpaceOnUse">
+          <Stop stopColor="#29CEFB" />
+          <Stop offset="1" stopColor="#1286ED" />
+        </LinearGradient>
+      </Defs>
+      <Path
+        d="M-25.9917 111C-45.6434 111 58.183 66.6331 132 65C188.699 63.7456 262.095 102.98 314.5 82C351.223 67.2981 358.821 32.9345 360.081 13.6846C360.032 5.30125 360 0 360 0C360 0 360.618 5.46424 360.081 13.6846C360.222 38.2726 360.5 89.3736 360.5 111L-25.9917 111Z"
+        fill="url(#paint0_linear_1_2950)"
+      />
+    </Svg>
+  );
+};
 
 export const LeftArrow = ({ fill = "white", width = 24, height = 24 }) => (
   <Svg width={width} height={height} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +77,7 @@ export const StatIcon = ({fill='white',height=24,width=24}) => (
   </Svg>
 );
 
-export const RightArrow = ({fill,width=24,height=24}) => (
+export const RightArrow = ({fill="#ffffff",width=24,height=24}) => (
   <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 24" fill="none">
     <Path
       d="M6.025 22L4.25 20.225L12.475 12L4.25 3.775L6.025 2L16.025 12L6.025 22Z"

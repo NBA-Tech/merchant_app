@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { DataContext } from '../../DataContext';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -78,13 +79,13 @@ const style = StyleSheet.create({
 
 const Home = (props) => {
     const globalStyle = useContext(StyleContext);
+    const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
     const [merchantSessionData, setMerchentSessionData] = useState()
-    const [date, setDate] = useState(new Date())
     const [merchantData, setMerchantData] = useState()
     const [dateModal, setDateModal] = useState(false)
-    const [transAmount,setTransAmount]=useState(0)
-    const [totalTrans,setTotalTrans]=useState(0)
+    const [transAmount, setTransAmount] = useState(0)
+    const [totalTrans, setTotalTrans] = useState(0)
 
     const getMerchantData = async () => {
         let merchant_session = await AsyncStorage.getItem('merchant_status_data')
@@ -123,16 +124,19 @@ const Home = (props) => {
                 from: from_date,
                 to: to_date
             },
-            
+            transactionAmount: {
+                from: 0,
+                to: 100000
+            }
+
         }
+        console.log(payload)
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(headers)
-        console.log(payload)
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
             method: 'POST',
@@ -141,8 +145,8 @@ const Home = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log(get_transaction_data_res)
-        if(get_transaction_data_res?.msg=="Success"){
+        console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo)
+        if (get_transaction_data_res?.msg == "Success") {
             const total_amount = get_transaction_data_res?.obj.reduce(
                 (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
                 0
@@ -156,7 +160,7 @@ const Home = (props) => {
             setTransAmount(total_amount)
             setTotalTrans(total_transaction_count)
         }
-        else{
+        else {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS !',
@@ -168,10 +172,16 @@ const Home = (props) => {
     }
 
     const handleLeftClick = () => {
+        const date = new Date(transDate);
+        date.setDate(date.getDate() - 1);
+        setTransDate(date)
 
     }
 
     const handleRightClick = () => {
+        const date = new Date(transDate);
+        date.setDate(date.getDate() + 1);
+        setTransDate(date)
 
     }
 
@@ -184,22 +194,21 @@ const Home = (props) => {
     }, []);
 
     useEffect(() => {
-        console.log("date is",date)
         const adjustDatesAndFetchData = async () => {
             setDateModal(false)
             setLoading(true);
 
             // Create startOfDay and endOfDay in UTC
-            const startOfDay = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
-            const endOfDay = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
+            const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
+            const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
 
             await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
 
-            
+
         };
 
         adjustDatesAndFetchData();
-    }, [date,merchantSessionData]);
+    }, [transDate, merchantSessionData]);
 
 
     return (
@@ -208,15 +217,15 @@ const Home = (props) => {
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader businessName={merchantData?.obj?.bName} loginName={merchantData?.obj?.name} date={formatDate(date)} dateOnClick={toggleDateModal} />
+                            <DateHeader businessName={merchantData?.obj?.bName} loginName={merchantData?.obj?.name} date={formatDate(transDate)} dateOnClick={toggleDateModal} leftOnClick={handleLeftClick} rightOnClick={handleRightClick} />
                             {dateModal && (
                                 <DateTimePicker
-                                    value={date}
+                                    value={transDate}
                                     mode="date"
                                     display="spinner"
                                     onChange={(event, selectedDate) => {
                                         if (selectedDate) {
-                                            setDate(selectedDate);
+                                            setTransDate(selectedDate);
                                         }
                                     }}
                                 />

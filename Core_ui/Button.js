@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 0.5, 
     borderColor: '#DDD',
-    height: hp('5%'),
+    height: hp('6%'),
     justifyContent: 'center', 
     alignItems: 'center',
     

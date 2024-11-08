@@ -12,16 +12,19 @@ import GlobalStyleProvider from './GlobalStyleProvider';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { ConnectivityProvider } from './ConnectivityContext';
 import NoInternetPopup from './NoInternetPopup';
+import { DataProvider } from './DataContext';
 
 function App(): React.JSX.Element {
   return (
     <ConnectivityProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <GlobalStyleProvider>
-        <AlertNotificationRoot>
-          <Routes />
-          <NoInternetPopup />
-        </AlertNotificationRoot>
+          <DataProvider>
+            <AlertNotificationRoot>
+              <Routes />
+              <NoInternetPopup />
+            </AlertNotificationRoot>
+          </DataProvider>
         </GlobalStyleProvider>
       </GestureHandlerRootView>
     </ConnectivityProvider>

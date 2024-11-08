@@ -163,9 +163,6 @@ function Mpin(props) {
 
 
                     </View>
-                    <View style={style.footerContainer}>
-                        <LoginFooter />
-                    </View>
                 </View>
             </View>
         </ScrollView>
