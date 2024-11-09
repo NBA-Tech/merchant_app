@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { StyleContext } from '../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { HouseIcon, ArrowIcon, QrIcon, BankIcon, UserIcon } from '../SvgIcons';
@@ -36,33 +36,35 @@ const style = StyleSheet.create({
 
 
 const Footer = (props) => {
-    const { active } = props
+    const { active,navigation } = props
     const globalStyle = useContext(StyleContext);
     return (
         <View style={style.footerContainer}>
-            <View style={style.footerElements}>
+             <TouchableOpacity style={style.footerElements} onPress={()=>{navigation.navigate('home')}}>
                 <View style={active == "home" ? globalStyle.blueCircleBorder : ''}>
-                    <HouseIcon />
+                    <HouseIcon fill={active=="home"?'#1286ED':'#1C1B1F'}/>
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Home</Text>
 
 
-            </View>
+            </TouchableOpacity>
 
-            <View style={style.footerElements}>
+            <TouchableOpacity style={style.footerElements} onPress={()=>{navigation.navigate('reports')}}>
+
                 <View style={active == "transfer" ? globalStyle.blueCircleBorder : ''}>
-                    <ArrowIcon />
+                    <ArrowIcon fill={active=="transfer"?'#1286ED':'#1C1B1F'}/>
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Transfers</Text>
+  
 
 
-            </View>
+            </TouchableOpacity>
 
             <View style={style.footerElements}>
                 <View style={active == "payment" ? globalStyle.blueCircleBorder : ''}>
-                    <QrIcon />
+                    <QrIcon fill={active=="payment"?'#1286ED':'#1C1B1F'}/>
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Payments</Text>
@@ -72,7 +74,7 @@ const Footer = (props) => {
 
             <View style={style.footerElements}>
                 <View style={active == "payOff" ? globalStyle.blueCircleBorder : ''}>
-                    <BankIcon fill='#1C1B1F' />
+                    <BankIcon fill={active=="payOff"?'#1286ED':'#1C1B1F'} />
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Pay Off</Text>
@@ -82,7 +84,7 @@ const Footer = (props) => {
 
             <View style={style.footerElements}>
                 <View style={active == "profile" ? globalStyle.blueCircleBorder : ''}>
-                    <UserIcon/>
+                    <UserIcon fill={active=="profile"?'#1286ED':'#1C1B1F'}/>
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Profile</Text>

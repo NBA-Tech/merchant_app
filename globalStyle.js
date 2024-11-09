@@ -33,6 +33,14 @@ export const globalStyle=StyleSheet.create({
         color:"#FFFFFF"
     },
 
+    blackSubText:{
+        fontSize:16,
+        fontStyle:'normal',
+        fontFamily:'IBMPlexSans-Light',
+        color:"#323232",
+
+    },
+
 
     normalText:{
         color:"#1D3039",

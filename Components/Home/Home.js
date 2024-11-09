@@ -286,7 +286,7 @@ const Home = (props) => {
                     </View>
                 </View>
             </ScrollView>
-            <Footer active={'home'}/>
+            <Footer active={'home'} navigation={navigation}/>
         </View>
     );
 };

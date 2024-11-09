@@ -21,9 +21,10 @@ const BottomTabNavigator = () => {
         tabBarStyle: { display: 'none' }, // Hide the tab bar
       }}
     >
+      <Tab.Screen name="reports" component={Reports} />
+
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="trans" component={Transactions} />
-      <Tab.Screen name="reports" component={Reports} />
     </Tab.Navigator>
   );
 };
@@ -33,7 +34,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="login"
+        initialRouteName="main"
         screenOptions={{
           headerShown: false,
         }}
