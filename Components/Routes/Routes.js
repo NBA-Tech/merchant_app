@@ -1,26 +1,46 @@
-// App.js
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from '../Login/Login';
 import Home from '../Home/Home';
-import Transactions from '../Transaction/Transactions'; 
+import Transactions from '../Transaction/Transactions';
 import Mpin from '../Login/Mpin';
-const Stack = createStackNavigator();
+import Reports from '../Reports/Reports';
+import Footer from '../Footer';
 
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+// Bottom Tab Navigator with hidden tab bar
+const BottomTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown:false,
+        tabBarStyle: { display: 'none' }, // Hide the tab bar
+      }}
+    >
+      <Tab.Screen name="home" component={Home} />
+      <Tab.Screen name="trans" component={Transactions} />
+      <Tab.Screen name="reports" component={Reports} />
+    </Tab.Navigator>
+  );
+};
+
+// Stack Navigator containing Login, Mpin, and Bottom Tabs
 const Routes = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="home"  
-      screenOptions={{  gestureEnabled: true,
-      gestureDirection: 'horizontal',
-      animation: 'slide_from_right',
-      headerShown:false}}>
-        
+      <Stack.Navigator
+        initialRouteName="login"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Stack.Screen name="login" component={Login} />
-        <Stack.Screen name="home" component={Home} />
-        <Stack.Screen name="trans" component={Transactions} />
         <Stack.Screen name="mpin" component={Mpin} />
+        <Stack.Screen name="main" component={BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

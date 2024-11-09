@@ -182,7 +182,7 @@ function Login(props) {
                 textBody: "Welcome Back!! You will be redirected to home page..",
             });
             setTimeout(() => {
-                navigation.navigate('home')
+                navigation.navigate('main',{screen:'home'})
             }, 3000);
         }
         else{
