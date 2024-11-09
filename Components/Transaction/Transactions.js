@@ -1,12 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import DateHeader from '../../Core_ui/DateHeader';
 import Card from '../../Core_ui/Card';
-import { BankIcon, RightArrow, StatIcon, UpiIcon,DropDownIcon } from '../../SvgIcons';
+import { BankIcon, RightArrow, StatIcon, UpiIcon, DropDownIcon, MenuIcon, CardIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import * as Animatable from 'react-native-animatable';
+import { DataContext } from '../../DataContext';
+import { FormatDate, getMerchantSession } from '../../HelperFunctions';
+import { BASE_URL } from '../../Config';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import CardLoader from '../../Core_ui/CardLoader';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -53,15 +60,21 @@ const style = StyleSheet.create({
     nestedCard: {
         flexDirection: 'column',
         flex: 1,
-        marginVertical: hp('5%')
+        marginVertical: hp('3%')
 
     },
     nestedElement: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         flex: 1,
-        marginTop: hp('2%')
-    }
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: hp('3%'),
+    },
 
 
 });
@@ -70,6 +83,34 @@ function Transactions(props) {
     const globalStyle = useContext(StyleContext);
     const [toggleIndex, setToggleIndex] = useState(-1)
     const [toggle, setToggle] = useState(false)
+    const { transDate, setTransDate } = useContext(DataContext)
+    const [merchantSessionData, setMerchentSessionData] = useState()
+    const [dateModal, setDateModal] = useState(false)
+    const [totalTransAmount, setTotalTransAmount] = useState(0)
+    const [totalTrans, setTotalTrans] = useState(0)
+    const [totalUPIAmount, setTotalUPIAmount] = useState(0)
+    const [totalPGAmount, setTotalPGAmount] = useState(0)
+    const [totalUPI, setTotalUPI] = useState(0)
+    const [totalPG, setTotalPG] = useState(0)
+    const [loading, setLoading] = useState(false)
+
+    const [cards, setCards] = useState({})
+
+    const transCardsDetails = [
+        {
+            name: "UPI Collect",
+            totalAmount: totalUPIAmount,
+            totalTrans: `${totalUPI} Transactions`,
+            icon: <UpiIcon />
+        },
+        {
+            name: 'PG Collect',
+            totalAmount: totalPGAmount,
+            totalTrans: `${totalPG} Transactions`,
+            icon: <CardIcon />
+        }
+    ]
+
 
     const CardElement = ({ cardDetails }) => (
         cardDetails.map((value, index) => (
@@ -89,112 +130,272 @@ function Transactions(props) {
 
     )
 
-    const cards = [
-        {
-            name: 'Settlement report',
-            amount: '$100',
-            transactions: '0',
-            cardDetails: <CardElement cardDetails={[
-                {
-                    heading: 'SEttle report',
-                    amount: '$100'
-                }
-            ]} />
 
-        },
-        {
-            name: 'Temp report',
-            amount: '$1000',
-            transactions: '0',
-            cardDetails: <CardElement cardDetails={[
-                {
-                    heading: 'Tempr report',
-                    amount: '$100'
-                }
-            ]} />
-
-        }
-    ]
     const toggleExpand = (index) => {
-        setToggleIndex(index)
         setToggle(!toggle)
 
     }
+    const getTransaction = async (transType, from_date, to_date) => {
+        let payload = {
+            paymentMethods: [
+                transType
+            ],
+            transactionDate: {
+                from: from_date,
+                to: to_date
+            },
+            transactionAmount: {
+                from: 0,
+                to: 100000
+            }
+
+        }
+        console.log(payload)
+
+        let headers = {
+            'content-type': 'application/json',
+            'x-client-id': merchantSessionData?.clientDetails?.id,
+            'x-client-secret': merchantSessionData?.clientDetails?.secret
+
+        }
+        console.log(headers)
+
+        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+        })
+
+        const get_transaction_data_res = await get_transaction_data_api.json()
+        if (get_transaction_data_res?.msg == "Success") {
+            if (transType == "ALL") {
+                console.log("comming")
+                const total_amount = get_transaction_data_res?.obj.reduce(
+                    (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
+                    0
+                ).toFixed(2);
+
+                const total_transaction_count = get_transaction_data_res?.obj.reduce(
+                    (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
+                    0
+                );
+                const pendingTransactions = get_transaction_data_res?.obj.flatMap(obj =>
+                    obj.transactionDetailPojo.filter(transaction => transaction.status === "PENDING")
+                );
+
+
+                const successTransactions = get_transaction_data_res?.obj.flatMap(obj =>
+                    obj.transactionDetailPojo.filter(transaction => transaction.status === "SUCCESS")
+                );
+
+
+                const failTransactions = get_transaction_data_res?.obj.flatMap(obj =>
+                    obj.transactionDetailPojo.filter(transaction => transaction.status === "FAILED")
+                );
+
+                setCards(
+                    {
+                        name: 'Success Transaction',
+                        cardDetails: <CardElement cardDetails={[
+                            {
+                                heading: 'Success',
+                                amount: `${successTransactions.length} Transactions`
+                            }, {
+                                heading: 'Pending ',
+                                amount: `${pendingTransactions.length} Transactions`
+                            },
+                            {
+                                heading: 'Failed',
+                                amount: `${failTransactions.length} Transactions`
+                            }
+                        ]} />
+                    },
+                )
+
+
+
+                setTotalTransAmount(total_amount)
+                setTotalTrans(total_transaction_count)
+
+            }
+            else if (transType == "UPI") {
+                setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
+                setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
+
+            }
+            else if (transType == "PG") {
+                setTotalPGAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
+                setTotalPG(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
+            }
+        }
+
+        setLoading(false) 
+
+
+
+    }
+
+    useEffect(() => {
+        const getSession = async () => {
+            setMerchentSessionData(await getMerchantSession())
+
+        }
+        getSession()
+
+
+    }, [])
+
+
+    useEffect(() => {
+        (async () => {
+            setLoading(true)
+
+            await Promise.all(
+                ["PG", "UPI", "ALL"].map(async (value) => {
+                    const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
+                    const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
+                    await getTransaction(value, startOfDay.toISOString(), endOfDay.toISOString());
+                })
+            );
+        })();
+    }, [transDate, merchantSessionData]);
+
+    useEffect(() => {
+        console.log(cards)
+    }, [cards])
+
     return (
         <View style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
-                        <DateHeader />
+                        <DateHeader date={FormatDate(transDate)} dateOnClick={() => { setDateModal(!dateModal) }} />
+                        {dateModal && (
+                            <DateTimePicker
+                                value={transDate}
+                                mode="date"
+                                display="spinner"
+                                onChange={(event, selectedDate) => {
+                                    if (selectedDate) {
+                                        setDateModal(false)
+                                        setTransDate(selectedDate);
+                                    }
+                                }}
+                            />
+                        )
+
+                        }
                         <Card
                             hasBackground={true}
                             backgroundImage={require('../../assets/images/credit_bg.png')}
                             customStyle={style.cardContainer}
                         >
                             <View style={style.iconContainer}>
-                                <StatIcon fill={'#1A4163'} />
+                                <StatIcon />
                                 <RightArrow />
                             </View>
-                            <View style={style.bodyContainer}>
-                                <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
-                                    Successful Transactions worth
-                                </Text>
-                                <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
-                                    ₹ 1000.00
-                                </Text>
-                                <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
-                                    10 Transactions
-                                </Text>
-                            </View>
+                            {loading ? (
+                                <CardLoader />
+                            ) : (
+                                <View style={style.bodyContainer}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                        Successful Transactions worth
+                                    </Text>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                        ₹ {totalTransAmount}
+                                    </Text>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                        {totalTrans} Transactions
+                                    </Text>
+                                </View>
+
+                            )
+
+                            }
+
                         </Card>
                     </View>
 
+
+
                     <View style={style.transbodyContainer}>
-                        {cards && cards.map((value, index) => (
-
+                        {transCardsDetails && transCardsDetails.map((value, index) => (
                             <Card customStyle={style.cardCustomStyle} key={index}>
-                                <TouchableOpacity onPress={() => { toggleExpand(index) }}>
+                                <TouchableOpacity>
                                     <View style={style.settlementContainer}>
-                                        <View>
-                                            <View style={style.settlementHeader}>
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Settlement amount</Text>
-                                            </View>
-                                            <View style={style.settlement}>
-                                                <UpiIcon />
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ 1000.00 </Text>
-                                                {(toggleIndex == index && toggle)?
-                                                (
-                                                <DropDownIcon />
+                                        {loading ? (
+                                            <CardLoader />
+                                        ) : (
+                                            <View>
+                                                <View style={style.settlementHeader}>
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.name}</Text>
+                                                </View>
+                                                <View style={style.settlement}>
+                                                    {value?.icon}
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {value?.totalAmount} </Text>
 
-                                                ):(
-                                                <RightArrow fill={"#1286ED"} />
-                                                )
+                                                    <RightArrow fill={"#1286ED"} />
 
-                                                }
+                                                </View>
+                                                <View style={style.settlementHeader}>
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.totalTrans}</Text>
+                                                </View>
+                                            </View>
 
-                                            </View>
-                                            <View style={style.settlementHeader}>
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>0 Transactions</Text>
-                                            </View>
-                                        </View>
+                                        )
+
+                                        }
+
                                     </View>
                                 </TouchableOpacity>
-                                {toggleIndex == index && toggle && (
-
-                                    <Animatable.View animation="fadeInDown" duration={300}>
-                                        <View>
-                                            {value?.cardDetails && value?.cardDetails}
-                                        </View>
-                                    </Animatable.View>
-
-                                )
-
-                                }
 
                             </Card>
+
                         ))
 
                         }
+
+
+
+
+                        <Card customStyle={style.cardCustomStyle}>
+                            <TouchableOpacity onPress={toggleExpand}>
+                                <View style={style.settlementContainer}>
+                                    <View>
+                                        {loading ? (
+                                            <CardLoader />
+                                        ) : (
+                                            <View style={style.settlement}>
+                                                <MenuIcon />
+                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Transactions Status</Text>
+
+                                                {toggle ? (
+                                                    <DropDownIcon />
+                                                ) : (
+                                                    <RightArrow fill="#1286ED" />
+                                                )}
+                                            </View>
+
+                                        )
+
+                                        }
+
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                            {toggle && (
+
+                                <Animatable.View animation="fadeInDown" duration={300}>
+                                    <View>
+                                        {cards?.cardDetails && cards?.cardDetails}
+                                    </View>
+                                </Animatable.View>
+
+                            )
+
+                            }
+
+                        </Card>
 
                     </View>
                 </View>

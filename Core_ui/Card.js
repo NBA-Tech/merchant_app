@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const style = StyleSheet.create({
@@ -15,7 +15,7 @@ const style = StyleSheet.create({
     },
 });
 function Card(props) {
-    const { hasBackground, customStyle, children,backgroundImage } = props;
+    const { hasBackground, customStyle, children, backgroundImage, onClick } = props;
 
 
     if (!children) {
@@ -23,17 +23,21 @@ function Card(props) {
     }
 
     return hasBackground ? (
-        <ImageBackground
-            source={backgroundImage} // Ensure backgroundImage is defined
-            style={[style.DefaultCardContainer, customStyle]}
-            imageStyle={{ borderRadius: 22 }}
-        >
-            {children}
-        </ImageBackground>
+        <TouchableOpacity onPress={onClick}>
+            <ImageBackground
+                source={backgroundImage} // Ensure backgroundImage is defined
+                style={[style.DefaultCardContainer, customStyle]}
+                imageStyle={{ borderRadius: 22 }}
+            >
+                {children}
+            </ImageBackground>
+        </TouchableOpacity>
     ) : (
-        <View style={[style.DefaultCardContainer, customStyle]}>
-            {children}
-        </View>
+        <TouchableOpacity onPress={onClick}>
+            <View style={[style.DefaultCardContainer, customStyle]}>
+                {children}
+            </View>
+        </TouchableOpacity>
     );
 }
 

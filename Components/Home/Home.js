@@ -10,11 +10,11 @@ import Button from '../../Core_ui/Button';
 import DateHeader from '../../Core_ui/DateHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
+import { FormatDate,getMerchantSession } from '../../HelperFunctions';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -78,43 +78,17 @@ const style = StyleSheet.create({
 });
 
 const Home = (props) => {
+    const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
     const [merchantSessionData, setMerchentSessionData] = useState()
-    const [merchantData, setMerchantData] = useState()
     const [dateModal, setDateModal] = useState(false)
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
 
-    const getMerchantData = async () => {
-        let merchant_session = await AsyncStorage.getItem('merchant_status_data')
-        merchant_session = JSON.parse(merchant_session)
-        setMerchentSessionData(merchant_session)
 
-        let payload = {
-            merchantId: merchant_session?.id,
-            status: "ACTIVE"
-        }
-
-        const merchant_basic_info_api = await fetch(`${BASE_URL}/app/merchant/getMerchantData`, {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-
-        const merchant_basic_info_response = await merchant_basic_info_api.json()
-        setMerchantData(merchant_basic_info_response)
-
-    }
-    const formatDate = (date) => {
-        const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const year = date.getFullYear();
-        const day = date.getDate();
-        return `${day}-${month[date.getMonth()]}-${year}`
-    }
+    
     const get_transaction_data = async (from_date, to_date) => {
         let payload = {
             paymentMethods: [
@@ -145,7 +119,7 @@ const Home = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo)
+
         if (get_transaction_data_res?.msg == "Success") {
             const total_amount = get_transaction_data_res?.obj.reduce(
                 (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
@@ -171,27 +145,21 @@ const Home = (props) => {
         setLoading(false);
     }
 
-    const handleLeftClick = () => {
-        const date = new Date(transDate);
-        date.setDate(date.getDate() - 1);
-        setTransDate(date)
 
-    }
-
-    const handleRightClick = () => {
-        const date = new Date(transDate);
-        date.setDate(date.getDate() + 1);
-        setTransDate(date)
-
-    }
 
     const toggleDateModal = () => {
         setDateModal(!dateModal)
     }
+    useEffect(()=>{
+        const getSession=async()=>{
+            setMerchentSessionData(await getMerchantSession())
 
-    useEffect(() => {
-        getMerchantData()
-    }, []);
+        }
+        getSession()
+        
+
+    },[])
+
 
     useEffect(() => {
         const adjustDatesAndFetchData = async () => {
@@ -217,7 +185,7 @@ const Home = (props) => {
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader businessName={merchantData?.obj?.bName} loginName={merchantData?.obj?.name} date={formatDate(transDate)} dateOnClick={toggleDateModal} leftOnClick={handleLeftClick} rightOnClick={handleRightClick} />
+                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal}  />
                             {dateModal && (
                                 <DateTimePicker
                                     value={transDate}
@@ -236,6 +204,7 @@ const Home = (props) => {
                                 hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}
                                 customStyle={style.cardContainer}
+                                onClick={()=>{navigation.navigate('trans')}}
                             >
                                 <View style={style.iconContainer}>
                                     <StatIcon />
