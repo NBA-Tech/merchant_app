@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { CalendarIcon, CardIcon, RightArrow, UpiIcon } from '../../SvgIcons';
@@ -78,7 +78,7 @@ const style = StyleSheet.create({
     },
     infoContainer: {
         flexDirection: 'column',
-        alignItems:'flex-start'
+        alignItems: 'flex-start'
     },
     logoContainer: {
         flexDirection: 'column',
@@ -127,6 +127,7 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexShrink: 0,
+        marginHorizontal: wp('5%')
     },
     dateField: {
         backgroundColor: '#E5F3FF',
@@ -134,9 +135,9 @@ const style = StyleSheet.create({
         paddingTop: 12,
         paddingRight: 10,
         paddingBottom: 12,
-        paddingLeft: 13,
+        paddingLeft: 20,
         alignItems: 'center',
-        gap: 48, // This may not work depending on the React Native version; an alternative is to use margin or justifyContent with flex properties
+        gap: 10, // This may not work depending on the React Native version; an alternative is to use margin or justifyContent with flex properties
         flexShrink: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -155,6 +156,21 @@ const style = StyleSheet.create({
         padding: 10,
         paddingHorizontal: 30,
         borderRadius: 30
+    },
+    chipOutline: {
+        backgroundColor: '#ffffff',
+        justifyContent: 'center',
+        borderRadius: 20,
+        color: '#1286ED',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexShrink: 0,
+        borderColor: '#1286ED',
+        borderWidth: 1,
+        marginHorizontal: wp('5%')
+
     }
 
 })
@@ -181,6 +197,9 @@ const Reports = (props) => {
 
     const [toDate, setToDate] = useState(new Date())
     const [allTransData, setAllTransData] = useState([])
+    const [isFilterUpdate, setIsFilterUpdate] = useState(false)
+    const [fromDateModal, setFromDateModal] = useState(false)
+    const [toDateModal, setToDateModal] = useState(false)
 
     const status = [
         { label: 'SUCCESS', value: 'success' },
@@ -196,7 +215,7 @@ const Reports = (props) => {
         setDateModal(!dateModal)
     }
     const getTransactionDetails = async (trans_type, from_date, to_date) => {
-        if(!merchantSessionData?.clientDetails?.id){
+        if (!merchantSessionData?.clientDetails?.id) {
             return
         }
 
@@ -218,8 +237,6 @@ const Reports = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(headers)
-        console.log(payload)
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
             method: 'POST',
@@ -256,8 +273,8 @@ const Reports = (props) => {
     }, [])
 
     useEffect(() => {
-        console.log("total trans",allTransData)
-    }, [allTransData])
+        console.log("total trans", filterModal)
+    }, [filterModal])
 
     useEffect(() => {
         setLoading(true);
@@ -266,7 +283,9 @@ const Reports = (props) => {
             isPg ? "PG" : ""
         ].filter(Boolean);
         getTransactionDetails(trans_type, fromDate, toDate).finally(() => setLoading(false));
-    }, [isUpi, isPg, fromDate, toDate,merchantSessionData]);
+    }, [merchantSessionData, isFilterUpdate]);
+
+
 
 
     return (
@@ -295,32 +314,31 @@ const Reports = (props) => {
                             {filterModal && (
                                 <Modal
                                     isVisible={filterModal}
+                                    animationType="fade"
+                                    transparent={true}
                                     customBackdrop={
-                                        <View style={style.modalAbsolute}>
-                                            <BlurView
-                                                style={style.modalAbsolute}
-                                                blurType="dark"
-                                                blurAmount={500}
-                                                reducedTransparencyFallbackColor="white"
-                                            />
-                                        </View>
+                                        <TouchableWithoutFeedback onPress={() => { setFilterModal(false) }}>
+                                            <View style={[style.modalAbsolute, { pointerEvents: 'box-none' }]}>
+                                                <BlurView
+                                                    style={style.modalAbsolute}
+                                                    blurType="dark"
+                                                    blurAmount={500}
+                                                    reducedTransparencyFallbackColor="white"
+                                                />
+                                            </View>
+                                        </TouchableWithoutFeedback>
                                     }
                                 >
                                     <View style={style.filterContainer}>
                                         <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Payment method</Text>
 
-                                        <View style={style.filterRow}>
-                                            <TouchableOpacity style={style.filterRow}>
-                                                <Text style={[globalStyle.boldText, style.chipFilled]}>UPI    X</Text>
+                                        <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
+                                            <TouchableOpacity style={style.filterRow} onPress={() => { setIsUpi(!isUpi) }}>
+                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline]}>UPI    {isUpi ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
-                                            <TouchableOpacity style={style.filterRow}>
-                                                <Text style={[globalStyle.boldText, style.chipFilled]}>UPI    X</Text>
-                                            </TouchableOpacity>
-
-
-                                            <TouchableOpacity style={style.filterRow}>
-                                                <Text style={[globalStyle.boldText, style.chipFilled]}>UPI    X</Text>
+                                            <TouchableOpacity style={style.filterRow} onPress={() => { setIsPg(!isPg) }}>
+                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline]}>PG     {isPg ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
 
@@ -371,21 +389,53 @@ const Reports = (props) => {
                                             <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Date</Text>
                                             <View style={style.filterRow}>
 
-                                                <TouchableOpacity style={style.filterRow}>
+                                                <TouchableOpacity style={style.filterRow} onPress={()=>{setFromDateModal(!fromDateModal)}}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000' }]}>FRom</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000',fontSize:15 }]}>{fromDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
 
-                                                <TouchableOpacity style={style.filterRow}>
+                                                <TouchableOpacity style={style.filterRow} onPress={()=>{setToDateModal(!toDateModal)}}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000' }]}>FRom</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000',fontSize:15 }]}>{toDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
+                                        {fromDateModal && (
+                                            <DateTimePicker
+                                                value={fromDate}
+                                                mode="date"
+                                                display="spinner"
+                                                onChange={(event, selectedDate) => {
+                                                    if(selectedDate){
+                                                        setFromDate(selectedDate)
+                                                    }
+
+                                                }}
+                                            />
+                                        )
+
+                                        }
+
+                                        {toDateModal && (
+                                            <DateTimePicker
+                                                value={toDate}
+                                                mode="date"
+                                                display="spinner"
+                                                onChange={(event, selectedDate) => {
+                                                    if(selectedDate){
+                                                        setToDate(selectedDate)
+                                                    }
+
+                                                }}
+                                            />
+                                        )
+
+                                        }
+
                                         <View>
 
                                             <View style={style.filterRow}>
@@ -488,14 +538,14 @@ const Reports = (props) => {
                                                 ) : (
                                                     <View style={style.cardData}>
                                                         <View style={style.logoContainer}>
-                                                            {value?.paymentMethod=="UPI"?<UpiIcon/>:<CardIcon/>}
+                                                            {value?.paymentMethod == "UPI" ? <UpiIcon /> : <CardIcon />}
                                                         </View>
                                                         <View style={style.infoContainer}>
                                                             <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
-                                                            Amount :  ₹{value?.amount}
+                                                                Amount :  ₹{value?.amount}
                                                             </Text>
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                
+
                                                                 ID : {value?.orderId}
                                                             </Text>
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
@@ -518,7 +568,7 @@ const Reports = (props) => {
 
                                 ))
 
-                                } 
+                                }
 
 
 
@@ -535,7 +585,7 @@ const Reports = (props) => {
                                 <FAB
                                     style={style.fab}
                                     icon={() => <FilterIcon />}
-                                    onPress={() => console.log('Pressed')}
+                                    onPress={() => setFilterModal(true)}
                                 />
                             </View>
                         </PaperProvider>
