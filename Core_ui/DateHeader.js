@@ -26,7 +26,7 @@ const style = StyleSheet.create({
         justifyContent: 'flex-start'
     }
 })
-const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading, isBackHeader = false }) => {
+const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading,customStyle, isBackHeader = false }) => {
     const { transDate, setTransDate } = useContext(DataContext)
 
     const globalStyle = useContext(StyleContext);
@@ -98,7 +98,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading, i
                     </View>
                 </View>
             ) : (
-                <View style={style.navContainer}>
+                <View style={[style.navContainer,customStyle]}>
                     <BackIcon size='30'/>
                     <Text style={[globalStyle.headingText, { color:'#ffffff',marginBottom:10,marginHorizontal:10 }]}>{navHeading}</Text>
 
