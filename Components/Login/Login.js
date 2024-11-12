@@ -80,7 +80,7 @@ function Login(props) {
     const mPin4 = useRef(null)
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(0);
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
@@ -138,6 +138,7 @@ function Login(props) {
         const is_login = await check_login_api.json()
         console.log(is_login)
         if (is_login?.obj == "Authentication Successful") {
+            setSeconds(60)
             setLoading(false)
             setIsOtp(true)
         }
@@ -234,6 +235,11 @@ function Login(props) {
             },
             body: JSON.stringify(payload)
         })
+        const send_otp_api_res=await send_otp_api.json()
+        
+        if(send_otp_api_res?.statusCode=="OK"){
+            setSeconds(60)
+        }
 
 
 
@@ -362,7 +368,7 @@ function Login(props) {
                                 </View>
                                 <View style={style.resendOtp}>
                                     {seconds > 0 ? (
-                                        <Text style={globalStyle.blackSubText}>OTP Expires on : {seconds}</Text>
+                                        <Text style={globalStyle.blackSubText}>OTP Expires on : {seconds} s</Text>
                                     ) : (
                                         <TouchableOpacity onPress={handleResendOtp}>
                                             <Text style={globalStyle.blueMediumText}>Resend Otp</Text>
