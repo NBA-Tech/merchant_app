@@ -23,12 +23,14 @@ const BottomTabNavigator = () => {
         tabBarStyle: { display: 'none' }, // Hide the tab bar
       }}
     >
-      <Tab.Screen name="transactionreceipt" component={TransactionReceipt} />
-      <Tab.Screen name="profile" component={Profile} />
+
+
 
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="trans" component={Transactions} />
       <Tab.Screen name="reports" component={Reports} />
+      <Tab.Screen name="profile" component={Profile} />
+      <Tab.Screen name="transactionreceipt" component={TransactionReceipt} />
     </Tab.Navigator>
   );
 };
