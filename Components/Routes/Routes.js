@@ -9,6 +9,7 @@ import Mpin from '../Login/Mpin';
 import Reports from '../Reports/Reports';
 import Footer from '../Footer';
 import Profile from '../Profile/Profile';
+import TransactionReceipt from '../Transaction/TransactionReceipt';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,6 +23,7 @@ const BottomTabNavigator = () => {
         tabBarStyle: { display: 'none' }, // Hide the tab bar
       }}
     >
+      <Tab.Screen name="transactionreceipt" component={TransactionReceipt} />
       <Tab.Screen name="profile" component={Profile} />
 
       <Tab.Screen name="home" component={Home} />
@@ -36,7 +38,7 @@ const Routes = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="main"
+        initialRouteName="login"
         screenOptions={{
           headerShown: false,
         }}
