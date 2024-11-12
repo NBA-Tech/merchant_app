@@ -73,8 +73,12 @@ const style = StyleSheet.create({
         flex: 1
     },
     cardCustomStyle: {
-        flex: 1,
+        alignSelf: 'center'
+    },
+    cardCustomStyleCard:{
         alignSelf: 'center',
+        marginTop:hp('10%'),
+        paddingTop:30
     },
     infoContainer: {
         flexDirection: 'column',
@@ -181,7 +185,6 @@ const Reports = (props) => {
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
     const [merchantSessionData, setMerchentSessionData] = useState()
-    const [dateModal, setDateModal] = useState(false)
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
     const [isStatusFocus, setIsStatusFocus] = useState(false)
@@ -202,18 +205,15 @@ const Reports = (props) => {
     const [toDateModal, setToDateModal] = useState(false)
 
     const status = [
-        { label: 'SUCCESS', value: 'success' },
-        { label: 'PENDING', value: 'pending' },
-        { label: 'FAILED', value: 'failed' },
+        { label: 'SUCCESS', value: 'SUCCESS' },
+        { label: 'PENDING', value: 'PENDING' },
+        { label: 'FAILED', value: 'FAILED' },
     ];
     const paymentMethods = [
         { label: 'UPI', value: 'upi' },
         { label: 'PG', value: 'pg' }
     ]
 
-    const toggleDateModal = () => {
-        setDateModal(!dateModal)
-    }
     const getTransactionDetails = async (trans_type, from_date, to_date) => {
         if (!merchantSessionData?.clientDetails?.id) {
             return
@@ -231,6 +231,7 @@ const Reports = (props) => {
             }
 
         }
+        console.log(payload)
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
@@ -249,9 +250,25 @@ const Reports = (props) => {
             let total_trans = []
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
-                    total_trans.push(transaction);
+                    if(currStatus=="" || currStatus==transaction?.status){
+                        total_trans.push(transaction);
+
+                    }
                 });
             });
+
+            const total_amount = get_transaction_data_res?.obj.reduce(
+                (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
+                0
+            ).toFixed(2);
+
+            const total_transaction_count = get_transaction_data_res?.obj.reduce(
+                (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
+                0
+            );
+
+            setTransAmount(total_amount)
+            setTotalTrans(total_transaction_count)
 
             setAllTransData(total_trans)
 
@@ -260,6 +277,9 @@ const Reports = (props) => {
 
 
 
+
+    }
+    const handleFilterOnClick=()=>{
 
     }
     useEffect(() => {
@@ -272,11 +292,9 @@ const Reports = (props) => {
 
     }, [])
 
-    useEffect(() => {
-        console.log("total trans", filterModal)
-    }, [filterModal])
 
     useEffect(() => {
+        setFilterModal(false)
         setLoading(true);
         const trans_type = [
             isUpi ? "UPI" : "",
@@ -294,23 +312,10 @@ const Reports = (props) => {
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
+                        
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} />
-                            {dateModal && (
-                                <DateTimePicker
-                                    value={transDate}
-                                    mode="date"
-                                    display="spinner"
-                                    onChange={(event, selectedDate) => {
-                                        if (selectedDate) {
-                                            setTransDate(selectedDate);
-                                        }
-                                    }}
-                                />
-                            )
-
-                            }
-
+                            <DateHeader isBackHeader={true} navHeading={'Transaction Report'}/>
+                        
                             {filterModal && (
                                 <Modal
                                     isVisible={filterModal}
@@ -413,6 +418,7 @@ const Reports = (props) => {
                                                     if(selectedDate){
                                                         setFromDate(selectedDate)
                                                     }
+                                                    setFromDateModal(false)
 
                                                 }}
                                             />
@@ -429,6 +435,7 @@ const Reports = (props) => {
                                                     if(selectedDate){
                                                         setToDate(selectedDate)
                                                     }
+                                                    setToDateModal(false)
 
                                                 }}
                                             />
@@ -452,6 +459,7 @@ const Reports = (props) => {
                                                 <Button
                                                     customeStyleButton={style.buttonBlue}
                                                     disabled={loading}
+                                                    onClick={()=>{setIsFilterUpdate(!isFilterUpdate)}}
                                                 >
                                                     <Text style={{ color: '#FFFFFF' }}>
                                                         Filter
@@ -468,17 +476,10 @@ const Reports = (props) => {
                             )
 
                             }
-
-                        </View>
-                    </View>
-
-                    <View style={style.homeBodyContainer}>
-                        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-                            <View style={style.transactionContainer}>
-                                <Card
+                              <Card
                                     hasBackground={true}
                                     backgroundImage={require('../../assets/images/credit_bg.png')}
-                                    customStyle={style.cardCustomStyle}
+                                    customStyle={style.cardCustomStyleCard}
                                 >
                                     <View style={style.iconContainer}>
                                         <StatIcon />
@@ -489,11 +490,20 @@ const Reports = (props) => {
                                     ) : (
                                         <View style={style.bodyContainer}>
                                             <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions worth </Text>
-                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  </Text>
-                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}> Transactions</Text>
+                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
+                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
                                         </View>
                                     )}
                                 </Card>
+                            
+
+                        </View>
+                    </View>
+
+                    <View style={style.homeBodyContainer}>
+                        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+                            <View style={style.transactionContainer}>
+                              
                                 {loading && (
                                     Array.from({ length: 5 }).map((_, index) => (
                                         <Card key={index} customStyle={style.cardCustomStyle}>

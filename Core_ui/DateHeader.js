@@ -1,27 +1,32 @@
-import React,{useContext, useEffect,useState} from 'react';
-import { View,Text,TouchableOpacity,StyleSheet } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { StyleContext } from '../GlobalStyleProvider';
-import { LeftArrow,RightArrow } from '../SvgIcons';
+import { LeftArrow, RightArrow, BackIcon } from '../SvgIcons';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../Config';
 import { DataContext } from '../DataContext';
 
 
-const style=StyleSheet.create({
+const style = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row',
         marginVertical: hp('2%'),
         justifyContent: 'space-between',
-        alignItems:'center'
+        alignItems: 'center'
     },
     date: {
         textAlign: 'center',
         flex: 1,
         alignItems: 'center'
     },
+    navContainer:{
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'flex-start'
+    }
 })
-const DateHeader = ({date,dateOnClick,leftOnClick,rightOnClick}) => {
+const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading, isBackHeader = false }) => {
     const { transDate, setTransDate } = useContext(DataContext)
 
     const globalStyle = useContext(StyleContext);
@@ -29,8 +34,8 @@ const DateHeader = ({date,dateOnClick,leftOnClick,rightOnClick}) => {
 
 
     const getMerchantData = async () => {
-            let merchant_session = await AsyncStorage.getItem('merchant_status_data')
-            merchant_session = JSON.parse(merchant_session)
+        let merchant_session = await AsyncStorage.getItem('merchant_status_data')
+        merchant_session = JSON.parse(merchant_session)
 
         let payload = {
             merchantId: merchant_session?.id,
@@ -64,28 +69,44 @@ const DateHeader = ({date,dateOnClick,leftOnClick,rightOnClick}) => {
 
     }
 
-    useEffect(()=>{
-        getMerchantData()
+    useEffect(() => {
+        if (!isBackHeader) {
+            getMerchantData()
 
-    },[])
+        }
+
+    }, [])
     return (
         <View>
-             <View style={style.headerContainer}>
-                    <Text style={[globalStyle.headingText,{fontSize:15}]}>{merchantData?.obj?.bName}</Text>
-                    <Text style={globalStyle.boldText}>{merchantData?.obj?.name}</Text>
-                </View>
+            {!isBackHeader ? (
+                <View>
+                    <View style={style.headerContainer}>
+                        <Text style={[globalStyle.headingText, { fontSize: 15 }]}>{merchantData?.obj?.bName}</Text>
+                        <Text style={globalStyle.boldText}>{merchantData?.obj?.name}</Text>
+                    </View>
 
-                <View style={style.dateContainer}>
-                    <TouchableOpacity style={{marginVertical:hp('1%')}} onPress={handleLeftClick}>
-                        <LeftArrow fill={"#FFFFFF"}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={dateOnClick}>
-                        <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleRightClick}>
-                        <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
-                    </TouchableOpacity>
+                    <View style={style.dateContainer}>
+                        <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
+                            <LeftArrow fill={"#FFFFFF"} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={dateOnClick}>
+                            <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleRightClick}>
+                            <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
+            ) : (
+                <View style={style.navContainer}>
+                    <BackIcon size='30'/>
+                    <Text style={[globalStyle.headingText, { color:'#ffffff',marginBottom:10,marginHorizontal:10 }]}>{navHeading}</Text>
+
+                </View>
+            )
+
+            }
+
         </View>
     );
 };

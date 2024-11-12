@@ -8,6 +8,7 @@ import Transactions from '../Transaction/Transactions';
 import Mpin from '../Login/Mpin';
 import Reports from '../Reports/Reports';
 import Footer from '../Footer';
+import Profile from '../Profile/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,10 +22,11 @@ const BottomTabNavigator = () => {
         tabBarStyle: { display: 'none' }, // Hide the tab bar
       }}
     >
-      <Tab.Screen name="reports" component={Reports} />
+      <Tab.Screen name="profile" component={Profile} />
 
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="trans" component={Transactions} />
+      <Tab.Screen name="reports" component={Reports} />
     </Tab.Navigator>
   );
 };
