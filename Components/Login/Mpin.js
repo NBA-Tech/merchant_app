@@ -172,6 +172,7 @@ function Mpin(props) {
     })
 
     const set_mpin_res=await set_mpin_api.json()
+    console.log(set_mpin_res)
     
     if(set_mpin_res?.msg=="Success"){
         Toast.show({

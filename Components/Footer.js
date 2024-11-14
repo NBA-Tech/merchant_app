@@ -57,7 +57,7 @@ const Footer = (props) => {
                     <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Transfers</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Transactions</Text>
 
 
 

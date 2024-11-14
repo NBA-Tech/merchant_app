@@ -11,6 +11,9 @@ import { BASE_URL } from '../../Config';
 import { base64Encode, encryptAES256 } from '../../Encryption';
 import { IconButton } from 'react-native-paper';
 import { getMerchantSession } from '../../HelperFunctions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FormatDate } from '../../HelperFunctions';
+import CardLoader from '../../Core_ui/CardLoader';
 
 const style = StyleSheet.create({
     reportPage: {
@@ -71,27 +74,28 @@ const style = StyleSheet.create({
         alignContent: 'flex-start'
     },
     buttonContainer: {
-        alignItems: 'center', 
+        alignItems: 'center',
         justifyContent: 'center',
     },
     buttonStyle: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#1286ED', // Set your button background color
         paddingHorizontal: 12,
         borderRadius: 20,
-        width: 'auto', 
-        height: 'auto', 
+        width: 'auto',
+        height: 'auto',
     },
 })
 const TransactionReceipt = (props) => {
     const { navigation } = props
-    const {txnId,paymentMethod,clientId,timeStamp}=props?.route?.params
-    console.log(txnId,paymentMethod,clientId,timeStamp)
+    const { txnId, paymentMethod, clientId, timeStamp } = props?.route?.params
+    console.log(txnId, paymentMethod, clientId, timeStamp)
     const globalStyle = useContext(StyleContext);
-    const [loading, setLoading] = useState(false)
-    const [transDetails,setTransDetails]=useState()
-    const [merchantSessionData, setMerchentSessionData] = useState()
+    const [loading, setLoading] = useState(true)
+    const [transDetails, setTransDetails] = useState()
+    const [merchantSessionData, setMerchentSessionData] = useState(false)
+    const [merchantData, setMerchantData] = useState()
 
 
     useEffect(() => {
@@ -102,43 +106,77 @@ const TransactionReceipt = (props) => {
 
     }, [])
 
+    useEffect(() => {
+        (async () => {
+            let merchant_session = await AsyncStorage.getItem('merchant_status_data')
+            merchant_session = JSON.parse(merchant_session)
 
-    useEffect(()=>{
-        (async()=>{
-            let x_token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+            let payload = {
+                merchantId: merchant_session?.id,
+                status: "ACTIVE"
+            }
+            console.log(payload)
 
-                {
-                    txnId:txnId,
-                    clientId:clientId,
-                    paymentMethod:paymentMethod
+            const get_merchant_api = await fetch(`${BASE_URL}/app/merchant/getMerchantData`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
                 },
-                
-            )),
-            merchantSessionData?.clientDetails?.secret
-        ))
-            let payload={
-                txnId:txnId,
-                clientId:clientId,
-                paymentMethod:paymentMethod
+                body: JSON.stringify(payload)
+            })
+            const get_merchant_res = await get_merchant_api.json()
+            if (get_merchant_res?.msg == "SUCCESS") {
+                setMerchantData(get_merchant_res?.obj)
 
             }
-            console.log("payload",payload)
-            console.log('x_token',x_token)
-            const get_trans_details=await fetch(`${BASE_URL}/app/txn/getTransactionDetails`,{
-                method:'POST',
-                headers:{
-                    'x-token':x_token,
-                    'content-type':'application/json'
-                },
-                body:JSON.stringify(payload)
-            })
-
-            const get_trans_details_res=await get_trans_details.json()
-            console.log("get_trans_details_res",get_trans_details_res)
 
         })()
 
-    },[merchantSessionData])
+    }, [merchantSessionData])
+
+
+    useEffect(() => {
+        (async () => {
+            if (!merchantSessionData) {
+                return
+            }
+            let x_token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
+
+                {
+                    orderId: txnId,
+                    clientId: clientId,
+                    paymentMethod: paymentMethod
+                },
+
+            )),
+                merchantSessionData?.clientDetails?.secret
+            ))
+            let payload = {
+                orderId: txnId,
+                clientId: clientId,
+                paymentMethod: paymentMethod
+
+            }
+            const get_trans_details = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
+                method: 'POST',
+                headers: {
+                    'x-token': x_token,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            console.log(merchantSessionData)
+
+            const get_trans_details_res = await get_trans_details.json()
+            if (get_trans_details_res?.msg == "SUCCESS") {
+                setTransDetails(get_trans_details_res?.obj?.[0])
+
+            }
+            setLoading(false)
+
+        })()
+
+    }, [merchantSessionData])
     return (
         <View style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>
@@ -147,30 +185,41 @@ const TransactionReceipt = (props) => {
                     <View style={style.homeContainer}>
 
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader isBackHeader={true} navHeading={'Transaction Details'} isDate={false} navigation={navigation}/>
+                            <DateHeader isBackHeader={true} navHeading={'Transaction Details'} isDate={false} navigation={navigation} />
 
                             <View>
-                                <Card customStyle={style.topCard}>
-                                    <View style={style.leftContainer}>
-                                        <Text style={[globalStyle.mediumText]}>
-                                            Merchant Name
-                                        </Text>
 
-                                        <Text style={[globalStyle.blackSubText]}>
-                                            Merchant Name
-                                        </Text>
+                                {loading ? (
+                                    <CardLoader />
+                                ) : (
+                                    <Card customStyle={style.topCard}>
+                                        <View style={style.leftContainer}>
+                                            <Text style={[globalStyle.mediumText]}>
+                                                {merchantData?.bName}
+                                            </Text>
 
-                                        <Text style={[globalStyle.blackSubText]}>
-                                            21 Feb, 9:30 AM
-                                        </Text>
+                                            <Text style={[globalStyle.blackSubText]}>
+                                                {merchantData?.name}
+                                            </Text>
 
-                                    </View>
-                                    <View style={style.rightContainer}>
-                                        <GreenTick />
+                                            <Text style={[globalStyle.blackSubText]}>
+                                                {merchantData?.email}
+                                            </Text>
 
-                                    </View>
+                                        </View>
+                                        <View style={style.rightContainer}>
+                                            <GreenTick />
 
-                                </Card>
+                                        </View>
+                                    </Card>
+
+
+
+                                )
+
+                                }
+
+
 
                             </View>
 
@@ -188,9 +237,9 @@ const TransactionReceipt = (props) => {
                             ) : (
                                 <View style={style.cardContainer}>
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>Successful Transactions worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>₹  0</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>0 Transactions</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>₹  {transDetails?.amount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>{FormatDate(timeStamp)}</Text>
                                     </View>
 
                                     <View style={style.iconContainer}>
@@ -203,32 +252,63 @@ const TransactionReceipt = (props) => {
 
                         <Card customStyle={style.infoCard}>
                             <View style={style.row}>
-                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Card Number </Text>
+                                {loading ? (
+                                    [1, 2, 3,4,5].map((value, index) => (
+                                        <CardLoader noOfImage={0} noOfText={2} key={index}/>
+                                    ))
+                                ) : (
+                                    <View>
+                                        {transDetails?.id && (
+                                            <>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Transaction Id </Text>
+                                                <Text style={[globalStyle.blueMediumText]}>{transDetails?.id} </Text>
+                                            </>
+                                        )}
 
-                                <Text style={[globalStyle.blueMediumText]}>XXXXXXXXXX544654 </Text>
+                                        {transDetails?.transactedFrom && (
+                                            <>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Transaction From </Text>
+                                                <Text style={[globalStyle.blueMediumText]}>{transDetails?.transactedFrom} </Text>
+                                            </>
+                                        )}
 
-                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>UTR </Text>
+                                        {transDetails?.utr_NO && (
+                                            <>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>UTR </Text>
+                                                <Text style={[globalStyle.blueMediumText]}>{transDetails?.utr_NO} </Text>
+                                            </>
+                                        )}
 
-                                <Text style={[globalStyle.blueMediumText]}>XXXXXXXXXX544654 </Text>
+                                        {transDetails?.rrn && (
+                                            <>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>RRN </Text>
+                                                <Text style={[globalStyle.blueMediumText]}>{transDetails?.rrn} </Text>
+                                            </>
+                                        )}
 
-                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>RRN </Text>
+                                        {transDetails?.status && (
+                                            <>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Status</Text>
+                                                <Text style={[globalStyle.blueMediumText]}>{transDetails?.status} </Text>
+                                            </>
+                                        )}
+                                    </View>
 
-                                <Text style={[globalStyle.blueMediumText]}>XXXXXXXXXX544654 </Text>
+                                )
 
-                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Transaction ID </Text>
+                                }
 
-                                <Text style={[globalStyle.blueMediumText]}>XXXXXXXXXX544654 </Text>
                             </View>
 
 
                         </Card>
                         <View style={style.buttonContainer}>
                             <View
-                             style={style.buttonStyle}
+                                style={style.buttonStyle}
                             >
-                                <ShareIcon fill={'#ffffff'}/>
-                                <Text style={[[globalStyle.boldText, { color: "#ffffff",paddingBottom:10 }]]}>Share Transaction Report</Text>
-                                
+                                <ShareIcon fill={'#ffffff'} />
+                                <Text style={[[globalStyle.boldText, { color: "#ffffff", paddingBottom: 10 }]]}>Share Transaction Report</Text>
+
                             </View>
 
 

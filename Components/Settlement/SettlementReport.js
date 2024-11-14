@@ -157,7 +157,7 @@ function SettlementReport(props) {
                                 </View>
                                 <View>
                                     <Text style={globalStyle.mediumText}>
-                                        $500
+                                    ₹500
                                     </Text>
                                 </View>
                             </View>
@@ -170,7 +170,7 @@ function SettlementReport(props) {
                                 </View>
                                 <View>
                                     <Text style={globalStyle.mediumText}>
-                                        $500
+                                    ₹500
                                     </Text>
                                 </View>
                             </View>
@@ -182,7 +182,7 @@ function SettlementReport(props) {
                                 </View>
                                 <View>
                                     <Text style={globalStyle.mediumText}>
-                                        $0
+                                    ₹0
                                     </Text>
                                 </View>
                             </View>

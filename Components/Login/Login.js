@@ -51,8 +51,8 @@ const style = StyleSheet.create({
     },
     otpField: {
         backgroundColor: "#F2FAFD",
-        width: wp('15%'),
-        height: hp('10%'),
+        width: wp('12%'),
+        height: hp('8%'),
 
     },
     resendOtp: {
@@ -231,8 +231,14 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const send_otp_api_res=await send_otp_api.json()
+        console.log(send_otp_api_res)
         
-        if(send_otp_api_res?.statusCode=="OK"){
+        if(send_otp_api_res?.statusCode==200){
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'SUCCESS',
+                textBody: 'OTP SENT',
+            });
             setSeconds(60)
         }
 
@@ -382,7 +388,7 @@ function Login(props) {
                                     onClick={(!loading && seconds > 0) ? handleOtp : null}
                                     disabled={(loading || seconds <= 0)}
                                 >
-                                    {loading ? <DotsLoader /> : 'Login'}
+                                    {loading ? <DotsLoader /> : 'Verify'}
                                 </Button>
                             </View>
 

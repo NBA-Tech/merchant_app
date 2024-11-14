@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export const FormatDate = (date) => {
+export const FormatDate = (prop_date) => {
+    const date=new Date(prop_date)
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const year = date.getFullYear();
     const day = date.getDate();

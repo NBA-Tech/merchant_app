@@ -41,7 +41,7 @@ const Routes = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        // await AsyncStorage.removeItem('merchant_status_data');
+        await AsyncStorage.removeItem('merchant_status_data');
         const token = await AsyncStorage.getItem('merchant_status_data');
         if (token !== null) {
           setIsAuthenticated(true);
