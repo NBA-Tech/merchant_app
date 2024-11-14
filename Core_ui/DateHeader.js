@@ -20,13 +20,13 @@ const style = StyleSheet.create({
         flex: 1,
         alignItems: 'center'
     },
-    navContainer:{
-        flexDirection: 'row', 
-        alignItems: 'center', 
+    navContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'flex-start'
     }
 })
-const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading,customStyle, isBackHeader = false }) => {
+const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, customStyle, isBackHeader = false, navigation, isDate = true }) => {
     const { transDate, setTransDate } = useContext(DataContext)
 
     const globalStyle = useContext(StyleContext);
@@ -84,30 +84,45 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick,navHeading,cu
                         <Text style={[globalStyle.headingText, { fontSize: 15 }]}>{merchantData?.obj?.bName}</Text>
                         <Text style={globalStyle.boldText}>{merchantData?.obj?.name}</Text>
                     </View>
+                </View>
+            ) :
+                (
+                    <View style={[style.navContainer, customStyle]}>
+                        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                            <BackIcon size='30' />
+                        </TouchableOpacity>
+                        <Text style={[globalStyle.headingText, { color: '#ffffff', marginBottom: 10, marginHorizontal: 10 }]}>{navHeading}</Text>
 
-                    <View style={style.dateContainer}>
-                        <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
-                            <LeftArrow fill={"#FFFFFF"} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={dateOnClick}>
-                            <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleRightClick}>
-                            <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
-                        </TouchableOpacity>
                     </View>
-                </View>
-            ) : (
-                <View style={[style.navContainer,customStyle]}>
-                    <BackIcon size='30'/>
-                    <Text style={[globalStyle.headingText, { color:'#ffffff',marginBottom:10,marginHorizontal:10 }]}>{navHeading}</Text>
 
+                )
+
+            }
+
+            {isDate && (
+                <View style={style.dateContainer}>
+                    <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
+                        <LeftArrow fill={"#FFFFFF"} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={dateOnClick}>
+                        <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleRightClick}>
+                        <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
+                    </TouchableOpacity>
                 </View>
+
             )
 
             }
 
+
         </View>
+
+
+
+
+
     );
 };
 

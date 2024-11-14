@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card'
-import { RightArrow } from '../../SvgIcons';
+import {DeviceDetailsIcon, HelpIcon, LogoutIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
+import Footer from '../Footer';
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -23,13 +24,14 @@ const style = StyleSheet.create({
         position: 'absolute',
         right: '-10%',
         left: '-10%',
-      
-        
+
+
     },
     profilePic: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop:hp('10%')
     },
     profileName: {
         color: '#000000',
@@ -46,7 +48,7 @@ const style = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical:wp('2%'),
+        paddingVertical: wp('2%'),
     },
     separateBar: {
         color: '#000000',
@@ -54,8 +56,8 @@ const style = StyleSheet.create({
     },
     cardDetails: {
         color: '#323232',
-        fontSize:14,
-        fontWeight:'500',
+        fontSize: 14,
+        fontWeight: '500',
         paddingHorizontal: wp('2%'),
 
     },
@@ -66,19 +68,19 @@ const style = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical:wp('2%'),
-        
-     
+        paddingVertical: wp('2%'),
+
+
 
     },
-    cardContent:{
+    cardContent: {
         flexDirection: 'row',
-        borderRadius:16,
-        alignItems:'center',
-        justifyContent:'space-between'
-      
+        borderRadius: 16,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+
     }
-    
+
 
 })
 
@@ -86,16 +88,17 @@ const Profile = (props) => {
     const { navigation } = props
     const globalStyle = useContext(StyleContext);
     return (
-        <View style={style.profilePage}>
-            <View style={{ flexGrow: 1 }}>
+        <SafeAreaView style={style.profilePage}>
 
-                <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
+            <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+
                     <View style={style.homeContainer}>
 
                         <View style={style.headerBg}>
-                            <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ margin: wp('5%') }} />
+                            <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false}/>
                             <View style={style.profilePic}>
-                                <Image source={require('../../assets/images/profile.png')}  />
+                                <Image source={require('../../assets/images/profile.png')} />
                                 <Text style={style.profileName}>Ray John</Text>
                                 <View style={style.detailsContainer}>
                                     <Text style={style.userDetails}>
@@ -112,70 +115,73 @@ const Profile = (props) => {
                             </View>
                             <View style={style.cardSubDetails}>
                                 <View>
-                                    <Card  customStyle={style.cardContent}>
+                                    <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <Image source={require('../../assets/images/arcticons_my-device.png')} />
+                                            <DeviceDetailsIcon/>
                                             <Text style={style.cardDetails}>Device Details</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}/>
+                                            <RightArrow fill={'#002D57'} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <Image source={require('../../assets/images/users.png')} />
+                                            <StaffIcon/>
                                             <Text style={style.cardDetails}>Add Staff</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}/>
+                                            <RightArrow fill={'#002D57'} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <Image source={require('../../assets/images/settings.png')} />
+                                            <SettingsIcon/>
                                             <Text style={style.cardDetails}>Settings</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}/>
+                                            <RightArrow fill={'#002D57'} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <Image source={require('../../assets/images/helpandsup.png')} />
+                                            <HelpIcon/>
                                             <Text style={style.cardDetails}>Help & Support</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}/>
+                                            <RightArrow fill={'#002D57'} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <Image source={require('../../assets/images/logout.png')} />
+                                            <LogoutIcon/>
                                             <Text style={style.cardDetails}>Logout</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}/>
+                                            <RightArrow fill={'#002D57'} />
                                         </View>
                                     </Card>
                                 </View>
+                              
+
                             </View>
                         </View>
 
                     </View>
-
-                </View>
+                </ScrollView>
 
             </View>
+            <Footer active='profile' navigation={navigation}/>
 
-        </View>
+
+        </SafeAreaView>
     );
 };
 

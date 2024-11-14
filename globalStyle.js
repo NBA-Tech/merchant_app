@@ -17,6 +17,13 @@ export const globalStyle=StyleSheet.create({
         marginTop:heightPercentageToDP('1%'),
         color:"#FFFFFF"
     },
+    boldBlackText:{
+        fontSize:18,
+        fontStyle:'normal',
+        fontFamily:'IBMPlexSans-Bold',
+        color:"#000000"
+
+    },
     blueMediumText:{
         color:"#1286ED",
         fontSize:18,

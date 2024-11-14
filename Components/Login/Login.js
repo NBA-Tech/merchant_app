@@ -205,7 +205,8 @@ function Login(props) {
                 textBody: "Welcome Back!! You will be redirected to home page..",
             });
             setTimeout(() => {
-                navigation.navigate('main', { screen: 'home' })
+                console.log("navigating")
+                navigation.navigate('mpin',{type:'setMpin'})
             }, 3000);
         }
         else {

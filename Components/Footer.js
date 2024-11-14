@@ -45,7 +45,7 @@ const Footer = (props) => {
                     <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Home</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Home</Text>
 
 
             </TouchableOpacity>
@@ -56,7 +56,7 @@ const Footer = (props) => {
                     <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Transfers</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Transfers</Text>
 
 
 
@@ -67,20 +67,20 @@ const Footer = (props) => {
                     <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Payments</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Payments</Text>
 
 
             </View>
 
-            <View style={style.footerElements}>
-                <View style={active == "payOff" ? globalStyle.blueCircleBorder : ''}>
-                    <BankIcon fill={active == "payOff" ? '#1286ED' : '#1C1B1F'} />
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('settlement_report') }}>
+                <View style={active == "settlement_report" ? globalStyle.blueCircleBorder : ''}>
+                    <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Pay Off</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Settlements</Text>
 
 
-            </View>
+                </TouchableOpacity>
 
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('profile') }}>
 
@@ -88,7 +88,7 @@ const Footer = (props) => {
                     <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} />
                 </View>
 
-                <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Profile</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Profile</Text>
 
             </TouchableOpacity>
 

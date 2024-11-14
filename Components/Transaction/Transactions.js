@@ -80,6 +80,7 @@ const style = StyleSheet.create({
 });
 
 function Transactions(props) {
+    const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [toggleIndex, setToggleIndex] = useState(-1)
     const [toggle, setToggle] = useState(false)
@@ -269,7 +270,7 @@ function Transactions(props) {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
-                        <DateHeader date={FormatDate(transDate)} dateOnClick={() => { setDateModal(!dateModal) }} />
+                        <DateHeader date={FormatDate(transDate)} dateOnClick={() => { setDateModal(!dateModal) }} isBackHeader={true} navHeading={'Transaction Info'} navigation={navigation}/>
                         {dateModal && (
                             <DateTimePicker
                                 value={transDate}

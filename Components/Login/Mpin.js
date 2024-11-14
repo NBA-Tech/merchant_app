@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
@@ -9,6 +9,7 @@ import Button from '../../Core_ui/Button';
 import DotsLoader from '../../DotsLoader';
 import { BASE_URL } from '../../Config';
 import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
+import { getMerchantSession } from '../../HelperFunctions';
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -44,7 +45,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         flex: 1,
-        alignContent:'center'
+        alignContent: 'center'
     },
     buttonContainer: {
         marginHorizontal: wp('0%'),
@@ -57,9 +58,9 @@ const style = StyleSheet.create({
         paddingHorizontal: wp('2%'),
         paddingVertical: hp('1%'),
     },
-    text:{
-        color:"#0F1ECD",
-        paddingHorizontal:wp('8%')
+    text: {
+        color: "#0F1ECD",
+        paddingHorizontal: wp('8%')
     },
     buttonFilled: {
         backgroundColor: "#1385EC",
@@ -68,17 +69,20 @@ const style = StyleSheet.create({
         borderRadius: 10,           // Rounded corners
         borderWidth: 1,             // Border thickness
     },
-    textFilled:{
-        color:"#FFFFFF",
-        paddingHorizontal:wp('14%')
+    textFilled: {
+        color: "#FFFFFF",
+        paddingHorizontal: wp('14%')
 
     }
 
 });
 
 function Mpin(props) {
+    const typeMpin = props?.route?.params?.type
+    console.log(typeMpin)
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
+    const [merchantSessionData, setMerchentSessionData] = useState()
     const mPin1 = useRef(null)
     const mPin2 = useRef(null)
     const mPin3 = useRef(null)
@@ -89,6 +93,44 @@ function Mpin(props) {
             nextInputRef.current.focus();
         }
     };
+
+    const setMpin=async()=>{
+        let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
+        let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+
+            {
+                mpin:mpin,
+                clientId:merchantSessionData?.clientDetails?.id
+            },
+            
+        )),
+        merchantSessionData?.clientDetails?.secret
+    ))
+
+    const set_mpin_api=await fetch(`${BASE_URL}/app/setMerchantMpin`,{
+        method:'POST',
+        headers:{
+            'content-type':'application/json'
+        },
+        body:JSON.stringify({
+            token:token
+        })
+    })
+
+    const set_mpin_res=await set_mpin_api.json()
+    console.log(set_mpin_res)
+
+    }
+
+
+    useEffect(() => {
+        (async () => {
+            setMerchentSessionData(await getMerchantSession())
+            console.log(await getMerchantSession())
+
+        })()
+
+    }, [])
 
 
     return (
@@ -105,7 +147,7 @@ function Mpin(props) {
                         />
                     </View>
                     <View style={style.formContainer}>
-                        <Text style={globalStyle.boldTextBlack}>Confirm mPin</Text>
+                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set mPin' : 'Confirm mPin'}</Text>
                         <View style={style.MpinContainer}>
                             <TextField
                                 ref={mPin1}
@@ -144,18 +186,24 @@ function Mpin(props) {
                         </View>
 
                         <View style={style.buttonMainContainer}>
-                            <Button
-                                customeStyleButton={style.buttonContainer}
-                                customeStyleText={style.text}
-                            >
-                            Switch Account
-                            </Button>
+                            {typeMpin != 'setMpin' && (
+                                <Button
+                                    customeStyleButton={style.buttonContainer}
+                                    customeStyleText={style.text}
+                                >
+                                    Switch Account
+                                </Button>
+                            )
+
+                            }
+
 
                             <Button
                                 customeStyleButton={style.buttonFilled}
                                 customeStyleText={style.textFilled}
+                                onClick={typeMpin=='setMpin'?setMpin:null}
                             >
-                            Login
+                                {typeMpin == 'setMpin' ? 'Set' : 'Login'}
                             </Button>
 
                         </View>

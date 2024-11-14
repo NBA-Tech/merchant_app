@@ -8,7 +8,7 @@ import DateHeader from '../../Core_ui/DateHeader';
 import Footer from '../Footer';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
-import { RightArrow } from '../../SvgIcons';
+import { BankIcon, CardIcon, RightArrow, UpiIcon } from '../../SvgIcons';
 import Button from '../../Core_ui/Button';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { DataContext } from '../../DataContext';
@@ -31,7 +31,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: wp('2%'),
-
+        justifyContent:'center',
 
 
     },
@@ -51,6 +51,10 @@ const style = StyleSheet.create({
     cardContent: {
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: "#ffffff",
+        flex: 1,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
 
     },
     buttonContainer: {
@@ -75,9 +79,13 @@ const style = StyleSheet.create({
         paddingHorizontal: wp('2%'),
 
     },
- 
-   
- 
+    cardCustomStyle: {
+        flex: 1,
+        alignSelf: 'center',
+    },
+
+
+
 })
 function SettlementReport(props) {
     const { navigation } = props
@@ -85,6 +93,7 @@ function SettlementReport(props) {
     const { transDate, setTransDate } = useContext(DataContext);
     const [merchantSessionData, setMerchentSessionData] = useState();
     const [dateModal, setDateModal] = useState(false);
+    const [loading, setLoading] = useState(false)
 
 
 
@@ -110,7 +119,7 @@ function SettlementReport(props) {
             const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
             const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
 
-            await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
+            // await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
 
 
         };
@@ -124,11 +133,11 @@ function SettlementReport(props) {
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} />
-                            <Card hasBackground={true} 
-    backgroundImage={require('../../assets/images/CardBg.png')}  >
+                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal}  isBackHeader={true} navHeading={'Settlements'}  navigation={navigation}/>
+                            <Card hasBackground={true}
+                                backgroundImage={require('../../assets/images/credit_bg.png')}  >
                                 <View style={style.cardRow}>
-                                    <Text style={style.settlementAmount}>
+                                    <Text style={globalStyle.headingText}>
                                         Total: ₹1000
                                     </Text>
                                     <RightArrow fill={'#002D57'} />
@@ -137,47 +146,52 @@ function SettlementReport(props) {
                             </Card>
                         </View>
                     </View>
+                    <View style={style.cardContent}>
+                        <Card>
+                            <View style={style.cardRow}>
+                                <View style={style.leftDetails}>
+                                    <CardIcon />
+
+
+                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>Card</Text>
+                                </View>
+                                <View>
+                                    <Text style={globalStyle.mediumText}>
+                                        $500
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={style.cardRow}>
+                                <View style={style.leftDetails}>
+                                    <UpiIcon/>
+
+                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>UPI</Text>
+                                </View>
+                                <View>
+                                    <Text style={globalStyle.mediumText}>
+                                        $500
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={style.cardRow}>
+                                <View style={style.leftDetails}>
+                                    <BankIcon/>
+
+                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>Net Banking</Text>
+                                </View>
+                                <View>
+                                    <Text style={globalStyle.mediumText}>
+                                        $0
+                                    </Text>
+                                </View>
+                            </View>
+                        </Card>
+
+                    </View>
 
                 </View>
-                <View style={style.cardContent}>
-                    <Card   >
-                        <View style={style.cardRow}>
-                            <View style={style.leftDetails}>
 
-                                <Text style={style.cardDetails}>Card</Text>
-                            </View>
-                            <View>
-                                <Text style={style.text}>
-                                    $500
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={style.cardRow}>
-                            <View style={style.leftDetails}>
-
-                                <Text style={style.cardDetails}>UPI</Text>
-                            </View>
-                            <View>
-                                <Text style={style.text}>
-                                    $500
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={style.cardRow}>
-                            <View style={style.leftDetails}>
-
-                                <Text style={style.cardDetails}>Net Banking</Text>
-                            </View>
-                            <View>
-                                <Text style={style.text}>
-                                    $0
-                                </Text>
-                            </View>
-                        </View>
-                    </Card>
-
-                </View>
                 <View>
                     <Button customeStyleContainer={style.buttonContainer}
                         customeStyleButton={style.button}>
@@ -186,7 +200,7 @@ function SettlementReport(props) {
                 </View>
             </ScrollView>
 
-            <Footer active={'home'} navigation={navigation} />
+            <Footer active={'settlement_report'} navigation={navigation} />
         </View>
     );
 };

@@ -77,7 +77,7 @@ const style = StyleSheet.create({
     },
     cardCustomStyleCard:{
         alignSelf: 'center',
-        marginTop:hp('10%'),
+        marginTop:hp('2%'),
         paddingTop:30
     },
     infoContainer: {
@@ -279,7 +279,18 @@ const Reports = (props) => {
 
 
     }
-    const handleFilterOnClick=()=>{
+    const handleFilterReset=()=>{
+        setIsUpi(false)
+        setIsPg(false)
+        setToDate(new Date())
+        setFromDate(()=>{
+            const date = new Date();
+        date.setMonth(date.getMonth() - 1);
+        return date;
+
+        })
+        setCurrStatus("")
+        setIsFilterUpdate(!isFilterUpdate)
 
     }
     useEffect(() => {
@@ -314,7 +325,7 @@ const Reports = (props) => {
                     <View style={style.homeContainer}>
                         
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader isBackHeader={true} navHeading={'Transaction Report'}/>
+                            <DateHeader isBackHeader={true} navHeading={'Transaction Report'} isDate={false} navigation={navigation}/>
                         
                             {filterModal && (
                                 <Modal
@@ -450,6 +461,7 @@ const Reports = (props) => {
                                                 <Button
                                                     customeStyleButton={style.button}
                                                     disabled={loading}
+                                                    onClick={handleFilterReset}
                                                 >
                                                     <Text style={{ color: '#1286ED' }}>
                                                         Reset Filter

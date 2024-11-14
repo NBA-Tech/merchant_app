@@ -13,11 +13,13 @@ import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { ConnectivityProvider } from './ConnectivityContext';
 import NoInternetPopup from './NoInternetPopup';
 import { DataProvider } from './DataContext';
+import { AuthProvider } from './AuthProvider';
 
 function App(): React.JSX.Element {
   return (
     <ConnectivityProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
+        <AuthProvider>
         <GlobalStyleProvider>
           <DataProvider>
             <AlertNotificationRoot>
@@ -26,6 +28,7 @@ function App(): React.JSX.Element {
             </AlertNotificationRoot>
           </DataProvider>
         </GlobalStyleProvider>
+        </AuthProvider>
       </GestureHandlerRootView>
     </ConnectivityProvider>
 
