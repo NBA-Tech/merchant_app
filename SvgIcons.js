@@ -247,6 +247,14 @@ export const BackIcon = ({color='#D9D9D9',size='24'}) => (
   </Svg>
 );
 
+
+export const CreditCard = ({color='#D9D9D9',size='24'}) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M20.9999 4H2.99994C1.89537 4 0.999939 4.89543 0.999939 6V18C0.999939 19.1046 1.89537 20 2.99994 20H20.9999C22.1045 20 22.9999 19.1046 22.9999 18V6C22.9999 4.89543 22.1045 4 20.9999 4Z" fill="white" stroke="#1286ED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M0.999939 9.07715H22.9999" stroke="#1286ED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="3.78949" y="13.4116" width="6.94737" height="2.11765" rx="1.05882" fill="#1286ED"/>
+  </svg>
+
 export const GreenTick = () => {
   return (
     <Svg width="48" height="49" viewBox="0 0 48 49" fill="none">
@@ -280,4 +288,5 @@ export const ShareIcon = ({fill='#D9D9D9',size='24'}) => (
       />
     </G>
   </Svg>
+
 );
