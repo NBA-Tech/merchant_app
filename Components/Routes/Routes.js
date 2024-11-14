@@ -9,6 +9,7 @@ import Mpin from '../Login/Mpin';
 import Reports from '../Reports/Reports';
 import Footer from '../Footer';
 import Profile from '../Profile/Profile';
+import SettlementReport from '../Settlement/SettlementReport';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,11 +23,13 @@ const BottomTabNavigator = () => {
         tabBarStyle: { display: 'none' }, // Hide the tab bar
       }}
     >
+          <Tab.Screen name="settlement_report" component={SettlementReport}/>
       <Tab.Screen name="profile" component={Profile} />
 
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="trans" component={Transactions} />
       <Tab.Screen name="reports" component={Reports} />
+  
     </Tab.Navigator>
   );
 };
