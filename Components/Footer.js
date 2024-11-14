@@ -36,13 +36,13 @@ const style = StyleSheet.create({
 
 
 const Footer = (props) => {
-    const { active,navigation } = props
+    const { active, navigation } = props
     const globalStyle = useContext(StyleContext);
     return (
         <View style={style.footerContainer}>
-             <TouchableOpacity style={style.footerElements} onPress={()=>{navigation.navigate('home')}}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('home') }}>
                 <View style={active == "home" ? globalStyle.blueCircleBorder : ''}>
-                    <HouseIcon fill={active=="home"?'#1286ED':'#1C1B1F'}/>
+                    <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Home</Text>
@@ -50,21 +50,21 @@ const Footer = (props) => {
 
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.footerElements} onPress={()=>{navigation.navigate('reports')}}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('reports') }}>
 
                 <View style={active == "transfer" ? globalStyle.blueCircleBorder : ''}>
-                    <ArrowIcon fill={active=="transfer"?'#1286ED':'#1C1B1F'}/>
+                    <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Transfers</Text>
-  
+
 
 
             </TouchableOpacity>
 
             <View style={style.footerElements}>
                 <View style={active == "payment" ? globalStyle.blueCircleBorder : ''}>
-                    <QrIcon fill={active=="payment"?'#1286ED':'#1C1B1F'}/>
+                    <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Payments</Text>
@@ -74,7 +74,7 @@ const Footer = (props) => {
 
             <View style={style.footerElements}>
                 <View style={active == "payOff" ? globalStyle.blueCircleBorder : ''}>
-                    <BankIcon fill={active=="payOff"?'#1286ED':'#1C1B1F'} />
+                    <BankIcon fill={active == "payOff" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Pay Off</Text>
@@ -82,15 +82,15 @@ const Footer = (props) => {
 
             </View>
 
-            <View style={style.footerElements}>
-                <View style={active == "profile" ? globalStyle.blueCircleBorder : ''}>
-                    <UserIcon fill={active=="profile"?'#1286ED':'#1C1B1F'}/>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('profile') }}>
 
+                <View style={active == "profile" ? globalStyle.blueCircleBorder : ''}>
+                    <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} />
                 </View>
+
                 <Text style={[globalStyle.normalText, { textAlign: 'flex-start' }]}>Profile</Text>
 
-
-            </View>
+            </TouchableOpacity>
 
 
         </View>

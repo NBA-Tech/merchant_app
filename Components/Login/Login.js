@@ -1,5 +1,5 @@
-import React, { useContext, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules } from 'react-native';
+import React, { useContext, useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -47,22 +47,27 @@ const style = StyleSheet.create({
     MpinContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: hp('5%'),
+        marginVertical: hp('2%'),
     },
     otpField: {
         backgroundColor: "#F2FAFD",
         width: wp('15%'),
         height: hp('10%'),
-        marginBottom: hp('2%'),
 
     },
+    resendOtp: {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: hp('3%')
+    }
 
 
 });
 
 function Login(props) {
     const globalStyle = useContext(StyleContext);
-    const {navigation}=props
+    const { navigation } = props
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState()
@@ -75,6 +80,7 @@ function Login(props) {
     const mPin4 = useRef(null)
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
+    const [seconds, setSeconds] = useState(0);
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
@@ -82,9 +88,25 @@ function Login(props) {
         }
     };
 
+    useEffect(() => {
+        if (seconds === 0) return;
+
+        const interval = setInterval(() => {
+            setSeconds((prevSeconds) => prevSeconds - 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [seconds]);
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const remainingSeconds = time % 60;
+        return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    };
+
 
     const handleLogin = async () => {
-        if(!isChecked){
+        if (!isChecked) {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'OOPS',
@@ -115,11 +137,12 @@ function Login(props) {
 
         const is_login = await check_login_api.json()
         console.log(is_login)
-        if (is_login?.obj=="Authentication Successful") {
+        if (is_login?.obj == "Authentication Successful") {
+            setSeconds(60)
             setLoading(false)
             setIsOtp(true)
         }
-        else{
+        else {
             setLoading(false)
             Toast.show({
                 type: ALERT_TYPE.DANGER,
@@ -153,7 +176,7 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const validate_otp_api_response = await validate_otp_api.json()
-        let get_active_status_api_response=""
+        let get_active_status_api_response = ""
         if (validate_otp_api_response?.key) {
             setLoading(false)
             if (validate_otp_api_response?.value == "Valid") {
@@ -172,7 +195,7 @@ function Login(props) {
                 console.log(get_active_status_api_response, email)
             }
         }
-        if(validate_otp_api_response?.value=="Valid"){
+        if (validate_otp_api_response?.value == "Valid") {
             await AsyncStorage.removeItem('merchant_status_data');
 
             await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
@@ -182,10 +205,10 @@ function Login(props) {
                 textBody: "Welcome Back!! You will be redirected to home page..",
             });
             setTimeout(() => {
-                navigation.navigate('main',{screen:'home'})
+                navigation.navigate('main', { screen: 'home' })
             }, 3000);
         }
-        else{
+        else {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Login Failed',
@@ -193,6 +216,32 @@ function Login(props) {
             });
         }
         setLoading(false)
+
+    }
+
+    const handleResendOtp=async()=>{
+        let payload = {
+            name: "",
+            email: email,
+            mobile_no: mobile,
+            otp: "",
+            module: ""
+        }
+
+        const send_otp_api = await fetch(`${BASE_URL}/app/generateotp`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        const send_otp_api_res=await send_otp_api.json()
+        
+        if(send_otp_api_res?.statusCode=="OK"){
+            setSeconds(60)
+        }
+
+
 
     }
 
@@ -314,11 +363,29 @@ function Login(props) {
 
 
 
+
+
                                 </View>
+                                <View style={style.resendOtp}>
+                                    {seconds > 0 ? (
+                                        <Text style={globalStyle.blackSubText}>OTP Expires on : {seconds} s</Text>
+                                    ) : (
+                                        <TouchableOpacity onPress={handleResendOtp}>
+                                            <Text style={globalStyle.blueMediumText}>Resend Otp</Text>
+                                        </TouchableOpacity>
+
+                                    )
+
+
+                                    }
+
+                                </View>
+
+
                                 <Button
                                     customeStyleButton={style.button}
-                                    onClick={!loading ? handleOtp : null}
-                                    disabled={loading}
+                                    onClick={(!loading && seconds > 0) ? handleOtp : null}
+                                    disabled={(loading || seconds <= 0)}
                                 >
                                     {loading ? <DotsLoader /> : 'Login'}
                                 </Button>
@@ -327,7 +394,7 @@ function Login(props) {
                         }
 
                     </View>
-                    
+
                 </View>
             </View>
         </ScrollView>

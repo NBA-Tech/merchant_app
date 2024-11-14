@@ -17,6 +17,12 @@ export const globalStyle=StyleSheet.create({
         marginTop:heightPercentageToDP('1%'),
         color:"#FFFFFF"
     },
+    blueMediumText:{
+        color:"#1286ED",
+        fontSize:18,
+        fontFamily:'IBMPlexSans-SemiBold',
+
+    },
     boldTextBlack:{
         color:"#323232",
         fontSize:18,
@@ -39,6 +45,11 @@ export const globalStyle=StyleSheet.create({
         fontFamily:'IBMPlexSans-Light',
         color:"#323232",
 
+    },
+    mediumText:{
+        color:"#323232",
+        fontSize:16,
+        fontFamily:'IBMPlexSans-Medium'
     },
 
 
