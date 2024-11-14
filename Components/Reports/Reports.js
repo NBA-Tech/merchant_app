@@ -75,10 +75,10 @@ const style = StyleSheet.create({
     cardCustomStyle: {
         alignSelf: 'center'
     },
-    cardCustomStyleCard:{
+    cardCustomStyleCard: {
         alignSelf: 'center',
-        marginTop:hp('2%'),
-        paddingTop:30
+        marginTop: hp('2%'),
+        paddingTop: 30
     },
     infoContainer: {
         flexDirection: 'column',
@@ -182,17 +182,23 @@ const style = StyleSheet.create({
 const Reports = (props) => {
     const { navigation } = props
     const globalStyle = useContext(StyleContext);
+    const date_props=props?.route?.params?.date_props
+    const trans_type_props=props?.route?.params?.trans_type_props
+
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
     const [merchantSessionData, setMerchentSessionData] = useState()
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
     const [isStatusFocus, setIsStatusFocus] = useState(false)
-    const [currStatus, setCurrStatus] = useState(false)
+    const [currStatus, setCurrStatus] = useState(trans_type_props??false)
     const [filterModal, setFilterModal] = useState(false)
     const [isUpi, setIsUpi] = useState(false)
     const [isPg, setIsPg] = useState(false)
     const [fromDate, setFromDate] = useState(() => {
+        if(date_props){
+            return date_props
+        }
         const date = new Date();
         date.setMonth(date.getMonth() - 1);
         return date;
@@ -239,7 +245,7 @@ const Reports = (props) => {
 
         }
 
-        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
+        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload)
@@ -250,7 +256,7 @@ const Reports = (props) => {
             let total_trans = []
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
-                    if(currStatus=="" || currStatus==transaction?.status){
+                    if (currStatus == "" || currStatus == transaction?.status) {
                         total_trans.push(transaction);
 
                     }
@@ -279,18 +285,23 @@ const Reports = (props) => {
 
 
     }
-    const handleFilterReset=()=>{
+    const handleFilterReset = () => {
         setIsUpi(false)
         setIsPg(false)
         setToDate(new Date())
-        setFromDate(()=>{
+        setFromDate(() => {
             const date = new Date();
-        date.setMonth(date.getMonth() - 1);
-        return date;
+            date.setMonth(date.getMonth() - 1);
+            return date;
 
         })
         setCurrStatus("")
         setIsFilterUpdate(!isFilterUpdate)
+
+    }
+
+    const handleTransDetails = (value) => {
+        navigation.navigate('transactionreceipt', { 'txnId': value?.orderId, 'paymentMethod': value?.paymentMethod, 'clientId': merchantSessionData?.clientDetails?.id, 'timeStamp': value?.timeStamp })
 
     }
     useEffect(() => {
@@ -323,10 +334,10 @@ const Reports = (props) => {
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
-                        
+
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader isBackHeader={true} navHeading={'Transaction Report'} isDate={false} navigation={navigation}/>
-                        
+                            <DateHeader isBackHeader={true} navHeading={'Transaction Report'} isDate={false} navigation={navigation} />
+
                             {filterModal && (
                                 <Modal
                                     isVisible={filterModal}
@@ -405,16 +416,16 @@ const Reports = (props) => {
                                             <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Date</Text>
                                             <View style={style.filterRow}>
 
-                                                <TouchableOpacity style={style.filterRow} onPress={()=>{setFromDateModal(!fromDateModal)}}>
+                                                <TouchableOpacity style={style.filterRow} onPress={() => { setFromDateModal(!fromDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000',fontSize:15 }]}>{fromDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: 15 }]}>{fromDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
 
-                                                <TouchableOpacity style={style.filterRow} onPress={()=>{setToDateModal(!toDateModal)}}>
+                                                <TouchableOpacity style={style.filterRow} onPress={() => { setToDateModal(!toDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000',fontSize:15 }]}>{toDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: 15 }]}>{toDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
@@ -426,7 +437,7 @@ const Reports = (props) => {
                                                 mode="date"
                                                 display="spinner"
                                                 onChange={(event, selectedDate) => {
-                                                    if(selectedDate){
+                                                    if (selectedDate) {
                                                         setFromDate(selectedDate)
                                                     }
                                                     setFromDateModal(false)
@@ -443,7 +454,7 @@ const Reports = (props) => {
                                                 mode="date"
                                                 display="spinner"
                                                 onChange={(event, selectedDate) => {
-                                                    if(selectedDate){
+                                                    if (selectedDate) {
                                                         setToDate(selectedDate)
                                                     }
                                                     setToDateModal(false)
@@ -471,7 +482,7 @@ const Reports = (props) => {
                                                 <Button
                                                     customeStyleButton={style.buttonBlue}
                                                     disabled={loading}
-                                                    onClick={()=>{setIsFilterUpdate(!isFilterUpdate)}}
+                                                    onClick={() => { setIsFilterUpdate(!isFilterUpdate) }}
                                                 >
                                                     <Text style={{ color: '#FFFFFF' }}>
                                                         Filter
@@ -488,26 +499,26 @@ const Reports = (props) => {
                             )
 
                             }
-                              <Card
-                                    hasBackground={true}
-                                    backgroundImage={require('../../assets/images/credit_bg.png')}
-                                    customStyle={style.cardCustomStyleCard}
-                                >
-                                    <View style={style.iconContainer}>
-                                        <StatIcon />
-                                        <RightArrow />
+                            <Card
+                                hasBackground={true}
+                                backgroundImage={require('../../assets/images/credit_bg.png')}
+                                customStyle={style.cardCustomStyleCard}
+                            >
+                                <View style={style.iconContainer}>
+                                    <StatIcon />
+                                    <RightArrow />
+                                </View>
+                                {loading ? (
+                                    <CardLoader />
+                                ) : (
+                                    <View style={style.bodyContainer}>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
                                     </View>
-                                    {loading ? (
-                                        <CardLoader />
-                                    ) : (
-                                        <View style={style.bodyContainer}>
-                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions worth </Text>
-                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
-                                            <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
-                                        </View>
-                                    )}
-                                </Card>
-                            
+                                )}
+                            </Card>
+
 
                         </View>
                     </View>
@@ -515,36 +526,12 @@ const Reports = (props) => {
                     <View style={style.homeBodyContainer}>
                         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                             <View style={style.transactionContainer}>
-                              
                                 {loading && (
                                     Array.from({ length: 5 }).map((_, index) => (
                                         <Card key={index} customStyle={style.cardCustomStyle}>
                                             <TouchableOpacity>
                                                 <View style={style.settlementContainer}>
-                                                    {loading ? (
-                                                        <CardLoader />
-                                                    ) : (
-                                                        <View style={style.cardData}>
-                                                            <View style={style.logoContainer}>
-                                                                <BankIcon />
-                                                            </View>
-                                                            <View style={style.infoContainer}>
-                                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
-                                                                    0 Transactions
-                                                                </Text>
-                                                                <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                    0 Transactions
-                                                                </Text>
-                                                                <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                    0 Transactions
-                                                                </Text>
-                                                            </View>
-
-                                                            <View style={style.rightContainer}>
-                                                                <RightArrow fill={"#1286ED"} />
-                                                            </View>
-                                                        </View>
-                                                    )}
+                                                    <CardLoader />
                                                 </View>
                                             </TouchableOpacity>
                                         </Card>
@@ -553,55 +540,37 @@ const Reports = (props) => {
 
                                 {allTransData && allTransData.map((value, index) => (
                                     <Card key={index} customStyle={style.cardCustomStyle}>
-                                        <TouchableOpacity>
+                                        <TouchableOpacity onPress={() => handleTransDetails(value)}>
                                             <View style={style.settlementContainer}>
-                                                {loading ? (
-                                                    <CardLoader />
-                                                ) : (
-                                                    <View style={style.cardData}>
-                                                        <View style={style.logoContainer}>
-                                                            {value?.paymentMethod == "UPI" ? <UpiIcon /> : <CardIcon />}
-                                                        </View>
-                                                        <View style={style.infoContainer}>
-                                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
-                                                                Amount :  ₹{value?.amount}
-                                                            </Text>
-                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-
-                                                                ID : {value?.orderId}
-                                                            </Text>
-                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                Status : {value?.status}
-                                                            </Text>
-
-                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
-                                                            </Text>
-                                                        </View>
-
-                                                        <View style={style.rightContainer}>
-                                                            <RightArrow fill={"#1286ED"} />
-                                                        </View>
+                                                <View style={style.cardData}>
+                                                    <View style={style.logoContainer}>
+                                                        {value?.paymentMethod === "UPI" ? <UpiIcon /> : <CardIcon />}
                                                     </View>
-                                                )}
+                                                    <View style={style.infoContainer}>
+                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
+                                                            Amount : ₹{value?.amount}
+                                                        </Text>
+                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                            ID : {value?.orderId}
+                                                        </Text>
+                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                            Status : {value?.status}
+                                                        </Text>
+                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                            Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={style.rightContainer}>
+                                                        <RightArrow fill={"#1286ED"} />
+                                                    </View>
+                                                </View>
                                             </View>
                                         </TouchableOpacity>
                                     </Card>
-
-                                ))
-
-                                }
-
-
-
-
-
-
-
+                                ))}
                             </View>
-
-
                         </ScrollView>
+
                         <PaperProvider>
                             <View style={[style.container, { position: 'absolute', bottom: 20, right: 10 }]}>
                                 <FAB

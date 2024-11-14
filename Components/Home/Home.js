@@ -111,8 +111,9 @@ const Home = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
+        console.log(headers)
 
-        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
+        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload)

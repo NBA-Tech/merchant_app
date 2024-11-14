@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import DateHeader from '../../Core_ui/DateHeader';
@@ -7,8 +7,10 @@ import Card from '../../Core_ui/Card';
 import { GreenTick, ShareIcon, UpiIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import Button from '../../Core_ui/Button';
-
-
+import { BASE_URL } from '../../Config';
+import { base64Encode, encryptAES256 } from '../../Encryption';
+import { IconButton } from 'react-native-paper';
+import { getMerchantSession } from '../../HelperFunctions';
 
 const style = StyleSheet.create({
     reportPage: {
@@ -47,8 +49,6 @@ const style = StyleSheet.create({
     homeBodyContainer: {
         backgroundColor: "#ffffff",
         flex: 1,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
     },
     cardCustomStyleCard: {
         alignSelf: 'center',
@@ -71,19 +71,74 @@ const style = StyleSheet.create({
         alignContent: 'flex-start'
     },
     buttonContainer: {
-        flex: 1
+        alignItems: 'center', 
+        justifyContent: 'center',
     },
-    buttonStyle:{
-        backgroundColor:'#1286ED',
-        borderRadius:20,
-        
-
-    }
+    buttonStyle: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+        backgroundColor: '#1286ED', // Set your button background color
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        width: 'auto', 
+        height: 'auto', 
+    },
 })
 const TransactionReceipt = (props) => {
     const { navigation } = props
+    const {txnId,paymentMethod,clientId,timeStamp}=props?.route?.params
+    console.log(txnId,paymentMethod,clientId,timeStamp)
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
+    const [transDetails,setTransDetails]=useState()
+    const [merchantSessionData, setMerchentSessionData] = useState()
+
+
+    useEffect(() => {
+        (async () => {
+            setMerchentSessionData(await getMerchantSession())
+
+        })()
+
+    }, [])
+
+
+    useEffect(()=>{
+        (async()=>{
+            let x_token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+
+                {
+                    txnId:txnId,
+                    clientId:clientId,
+                    paymentMethod:paymentMethod
+                },
+                
+            )),
+            merchantSessionData?.clientDetails?.secret
+        ))
+            let payload={
+                txnId:txnId,
+                clientId:clientId,
+                paymentMethod:paymentMethod
+
+            }
+            console.log("payload",payload)
+            console.log('x_token',x_token)
+            const get_trans_details=await fetch(`${BASE_URL}/app/txn/getTransactionDetails`,{
+                method:'POST',
+                headers:{
+                    'x-token':x_token,
+                    'content-type':'application/json'
+                },
+                body:JSON.stringify(payload)
+            })
+
+            const get_trans_details_res=await get_trans_details.json()
+            console.log("get_trans_details_res",get_trans_details_res)
+
+        })()
+
+    },[merchantSessionData])
     return (
         <View style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>
@@ -92,7 +147,7 @@ const TransactionReceipt = (props) => {
                     <View style={style.homeContainer}>
 
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader isBackHeader={true} navHeading={'Transaction Details'} />
+                            <DateHeader isBackHeader={true} navHeading={'Transaction Details'} isDate={false} navigation={navigation}/>
 
                             <View>
                                 <Card customStyle={style.topCard}>
@@ -168,13 +223,13 @@ const TransactionReceipt = (props) => {
 
                         </Card>
                         <View style={style.buttonContainer}>
-                            <Button
-                             customeStyleContainer={style.buttonStyle}
+                            <View
+                             style={style.buttonStyle}
                             >
                                 <ShareIcon fill={'#ffffff'}/>
-                                <Text style={[[globalStyle.boldText, { color: "#ffffff",paddingBottom:20 }]]}>Share QR Code</Text>
+                                <Text style={[[globalStyle.boldText, { color: "#ffffff",paddingBottom:10 }]]}>Share Transaction Report</Text>
                                 
-                            </Button>
+                            </View>
 
 
                         </View>

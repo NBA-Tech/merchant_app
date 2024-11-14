@@ -8,8 +8,10 @@ import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Core_ui/Button';
 import DotsLoader from '../../DotsLoader';
 import { BASE_URL } from '../../Config';
-import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
+import { base64Encode, base64Decode, encryptAES256, decryptAES256 } from '../../Encryption';
 import { getMerchantSession } from '../../HelperFunctions';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -79,7 +81,7 @@ const style = StyleSheet.create({
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
-    console.log(typeMpin)
+    const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
     const [merchantSessionData, setMerchentSessionData] = useState()
@@ -94,7 +96,7 @@ function Mpin(props) {
         }
     };
 
-    const setMpin=async()=>{
+    const validateMpin=async ()=>{
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
@@ -106,19 +108,90 @@ function Mpin(props) {
         )),
         merchantSessionData?.clientDetails?.secret
     ))
+        const validate_mpin_api=await fetch(`${BASE_URL}/app/validateMerchantMpin`,{
+            method:'POST',
+            headers:{
+                'content-type':'application/json'
+            },
+            body:JSON.stringify({
+                token:token
+            })
+        })
+        let validate_mpin_res=validate_mpin_api.headers.get('x-token')
+        validate_mpin_res=decryptAES256(validate_mpin_res,merchantSessionData?.clientDetails?.secret)
+
+        if(validate_mpin_res=="true"){
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Login Success',
+                textBody: 'Welcome back!',
+            });
+    
+            setTimeout(() => {
+                navigation.navigate('main',{screen:'home'})
+            }, 3000);
+
+        }
+        else{
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Failed',
+                textBody: 'Check Mpin',
+            });
+
+        }
+
+
+        
+    }
+
+    const setMpin=async()=>{
+        let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
+        console.log(merchantSessionData)
+        let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+
+            {
+                mpin:mpin,
+                clientId:merchantSessionData?.clientDetails?.id
+            },
+            
+        )),
+        merchantSessionData?.clientDetails?.secret
+    ))
+    let payload={
+        token:token
+    }
+    console.log(payload)
 
     const set_mpin_api=await fetch(`${BASE_URL}/app/setMerchantMpin`,{
         method:'POST',
         headers:{
             'content-type':'application/json'
         },
-        body:JSON.stringify({
-            token:token
-        })
+        body:JSON.stringify(payload)
     })
 
     const set_mpin_res=await set_mpin_api.json()
-    console.log(set_mpin_res)
+    
+    if(set_mpin_res?.msg=="Success"){
+        Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Login Success',
+            textBody: set_mpin_res?.obj,
+        });
+
+        setTimeout(() => {
+            navigation.navigate('main',{screen:'home'})
+        }, 3000);
+
+    }
+    else{
+        Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: 'Failed',
+            textBody: set_mpin_res?.obj,
+        });
+    }
 
     }
 
@@ -201,7 +274,7 @@ function Mpin(props) {
                             <Button
                                 customeStyleButton={style.buttonFilled}
                                 customeStyleText={style.textFilled}
-                                onClick={typeMpin=='setMpin'?setMpin:null}
+                                onClick={typeMpin=='setMpin'?setMpin:validateMpin}
                             >
                                 {typeMpin == 'setMpin' ? 'Set' : 'Login'}
                             </Button>

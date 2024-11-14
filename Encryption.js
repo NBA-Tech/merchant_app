@@ -19,17 +19,33 @@ export function encryptAES256(plainText, key) {
 }
 
 // AES Decryption
-export function decryptAES256(encryptedText, key) {
-    const iv = CryptoJS.enc.Utf8.parse(key.substring(0, 16)); // Use the first 16 characters of the key as the IV
-    const keySpec = CryptoJS.enc.Utf8.parse(key);
+// export function decryptAES256(encryptedText, key) {
+//     const iv = CryptoJS.enc.Utf8.parse(key.substring(0, 16)); // Use the first 16 characters of the key as the IV
+//     const keySpec = CryptoJS.enc.Utf8.parse(iv);
 
-    const decrypted = CryptoJS.AES.decrypt(encryptedText, keySpec, {
-        iv: iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
-    });
+//     const decrypted = CryptoJS.AES.decrypt(encryptedText, keySpec, {
+//         iv: iv,
+//         mode: CryptoJS.mode.CBC,
+//         padding: CryptoJS.pad.Pkcs7,
+//     });
 
-    return CryptoJS.enc.Utf8.stringify(decrypted);
+//     return CryptoJS.enc.Utf8.stringify(decrypted);
+// }
+
+export function decryptAES256(cipherText, secret){
+    var secretKey = secret.substring(0,16);
+    var key = CryptoJS.enc.Utf8.parse(secretKey);
+    var iv = CryptoJS.enc.Utf8.parse(secretKey);
+
+    var decryptText = CryptoJS.AES.decrypt(cipherText, key 
+        , {
+            iv:iv,
+            mode:CryptoJS.mode.CBC,
+            padding:CryptoJS.pad.Pkcs7
+        }
+    );
+
+    return decryptText.toString(CryptoJS.enc.Utf8);
 }
 
 // Base64 Encoding

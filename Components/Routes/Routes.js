@@ -27,7 +27,6 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="trans" component={Transactions} />
       <Tab.Screen name="reports" component={Reports} />
-      <Tab.Screen name="transactionreceipt" component={TransactionReceipt} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
       <Tab.Screen name="profile" component={Profile} />
 
@@ -42,6 +41,7 @@ const Routes = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
+        // await AsyncStorage.removeItem('merchant_status_data');
         const token = await AsyncStorage.getItem('merchant_status_data');
         if (token !== null) {
           setIsAuthenticated(true);
@@ -64,11 +64,16 @@ const Routes = () => {
       >
         {!isAuthenticated && (
           <>
-            <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="login" component={Login} />
+
+            
           </>
         )}
         <Stack.Screen name="mpin" component={Mpin} />
         <Stack.Screen name="main" component={BottomTabNavigator} />
+      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
+
+
 
 
       </Stack.Navigator>

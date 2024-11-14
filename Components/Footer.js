@@ -25,10 +25,11 @@ const style = StyleSheet.create({
         justifyContent: 'space-between'
     },
     footerElements: {
-        margin: hp('1%'),
+        margin: hp('0.5%'),
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        paddingHorizontal:4
 
     },
 

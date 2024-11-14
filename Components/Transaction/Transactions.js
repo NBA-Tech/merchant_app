@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import DateHeader from '../../Core_ui/DateHeader';
 import Card from '../../Core_ui/Card';
 import { BankIcon, RightArrow, StatIcon, UpiIcon, DropDownIcon, MenuIcon, CardIcon } from '../../SvgIcons';
@@ -13,6 +12,8 @@ import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CardLoader from '../../Core_ui/CardLoader';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+
 
 const style = StyleSheet.create({
     homeContainer: {
@@ -75,12 +76,35 @@ const style = StyleSheet.create({
         alignItems: 'center',
         marginBottom: hp('3%'),
     },
+    cardData: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        flex: 1
+    },
+    infoContainer: {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    },
+    rightContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        flex: 1,
+        alignItems: 'center'
+
+    },
+    logoContainer: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        marginRight: wp('8%')
+
+    },
 
 
 });
 
 function Transactions(props) {
-    const {navigation}=props
+    const { navigation } = props
     const globalStyle = useContext(StyleContext);
     const [toggleIndex, setToggleIndex] = useState(-1)
     const [toggle, setToggle] = useState(false)
@@ -161,7 +185,7 @@ function Transactions(props) {
         }
         console.log(headers)
 
-        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
+        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload)
@@ -230,10 +254,20 @@ function Transactions(props) {
             }
         }
 
-        setLoading(false) 
+        setLoading(false)
 
 
 
+    }
+    const handleFilterTrans=(value)=>{
+        if(value=='UPI Collect'){
+            value='UPI'
+        }
+        else if(value=='PG Collect'){
+            value='PG'
+
+        }
+        navigation.navigate('reports',{date_props:transDate.getTime(),trans_type_props:value})
     }
 
     useEffect(() => {
@@ -270,7 +304,7 @@ function Transactions(props) {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
-                        <DateHeader date={FormatDate(transDate)} dateOnClick={() => { setDateModal(!dateModal) }} isBackHeader={true} navHeading={'Transaction Info'} navigation={navigation}/>
+                        <DateHeader date={FormatDate(transDate)} dateOnClick={() => { setDateModal(!dateModal) }} isBackHeader={true} navHeading={'Transaction Info'} navigation={navigation} />
                         {dateModal && (
                             <DateTimePicker
                                 value={transDate}
@@ -322,24 +356,25 @@ function Transactions(props) {
                     <View style={style.transbodyContainer}>
                         {transCardsDetails && transCardsDetails.map((value, index) => (
                             <Card customStyle={style.cardCustomStyle} key={index}>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={()=>{handleFilterTrans(value?.name)}}>
                                     <View style={style.settlementContainer}>
                                         {loading ? (
                                             <CardLoader />
                                         ) : (
-                                            <View>
-                                                <View style={style.settlementHeader}>
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.name}</Text>
-                                                </View>
-                                                <View style={style.settlement}>
+
+                                            <View style={style.cardData}>
+                                                <View style={style.logoContainer}>
                                                     {value?.icon}
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {value?.totalAmount} </Text>
-
-                                                    <RightArrow fill={"#1286ED"} />
-
                                                 </View>
-                                                <View style={style.settlementHeader}>
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.totalTrans}</Text>
+                                                <View style={style.infoContainer}>
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.name}</Text>
+
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {value?.totalAmount} </Text>
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.totalTrans} </Text>
+                                                    
+                                              </View>
+                                                <View style={style.rightContainer}>
+                                                    <RightArrow fill={"#1286ED"} />
                                                 </View>
                                             </View>
 
@@ -401,7 +436,7 @@ function Transactions(props) {
                     </View>
                 </View>
             </ScrollView>
-            <Footer active={'home'} />
+            <Footer active={'home'} navigation={navigation}/>
         </View>
     );
 }

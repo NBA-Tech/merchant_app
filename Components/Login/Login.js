@@ -199,15 +199,9 @@ function Login(props) {
             await AsyncStorage.removeItem('merchant_status_data');
 
             await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
-            Toast.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: 'Login Success',
-                textBody: "Welcome Back!! You will be redirected to home page..",
-            });
-            setTimeout(() => {
-                console.log("navigating")
+
                 navigation.navigate('mpin',{type:'setMpin'})
-            }, 3000);
+
         }
         else {
             Toast.show({
