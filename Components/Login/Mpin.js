@@ -147,7 +147,6 @@ function Mpin(props) {
 
     const setMpin=async()=>{
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
-        console.log(merchantSessionData)
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
@@ -161,7 +160,6 @@ function Mpin(props) {
     let payload={
         token:token
     }
-    console.log(payload)
 
     const set_mpin_api=await fetch(`${BASE_URL}/app/setMerchantMpin`,{
         method:'POST',
@@ -172,7 +170,6 @@ function Mpin(props) {
     })
 
     const set_mpin_res=await set_mpin_api.json()
-    console.log(set_mpin_res)
     
     if(set_mpin_res?.msg=="Success"){
         Toast.show({
@@ -200,7 +197,6 @@ function Mpin(props) {
     useEffect(() => {
         (async () => {
             setMerchentSessionData(await getMerchantSession())
-            console.log(await getMerchantSession())
 
         })()
 

@@ -175,7 +175,6 @@ function Transactions(props) {
             }
 
         }
-        console.log(payload)
 
         let headers = {
             'content-type': 'application/json',
@@ -183,7 +182,6 @@ function Transactions(props) {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(headers)
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
             method: 'POST',
@@ -194,7 +192,6 @@ function Transactions(props) {
         const get_transaction_data_res = await get_transaction_data_api.json()
         if (get_transaction_data_res?.msg == "Success") {
             if (transType == "ALL") {
-                console.log("comming")
                 const total_amount = get_transaction_data_res?.obj.reduce(
                     (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
                     0
@@ -295,9 +292,6 @@ function Transactions(props) {
         })();
     }, [transDate, merchantSessionData]);
 
-    useEffect(() => {
-        console.log(cards)
-    }, [cards])
 
     return (
         <View style={style.home}>

@@ -237,7 +237,6 @@ const Reports = (props) => {
             }
 
         }
-        console.log(payload)
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,

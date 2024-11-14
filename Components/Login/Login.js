@@ -124,7 +124,6 @@ function Login(props) {
             token: token,
             email: base64_email
         }
-        console.log(payload)
 
         const check_login_api = await fetch(`${BASE_URL}/app/login`, {
             method: 'POST',
@@ -136,7 +135,6 @@ function Login(props) {
         })
 
         const is_login = await check_login_api.json()
-        console.log(is_login)
         if (is_login?.obj == "Authentication Successful") {
             setSeconds(60)
             setLoading(false)
@@ -166,7 +164,6 @@ function Login(props) {
             otp: getOtp(),
             module: ""
         }
-        console.log(payload)
 
         const validate_otp_api = await fetch(`${BASE_URL}/app/validateotp`, {
             method: 'POST',
@@ -192,7 +189,6 @@ function Login(props) {
                 })
 
                 get_active_status_api_response = await get_active_status_api.json()
-                console.log(get_active_status_api_response, email)
             }
         }
         if (validate_otp_api_response?.value == "Valid") {
@@ -231,7 +227,6 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const send_otp_api_res=await send_otp_api.json()
-        console.log(send_otp_api_res)
         
         if(send_otp_api_res?.statusCode==200){
             Toast.show({

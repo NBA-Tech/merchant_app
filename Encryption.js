@@ -2,7 +2,6 @@ import CryptoJS from 'crypto-js';
 
 // AES Encryption
 export function encryptAES256(plainText, key) {
-    console.log(key)
     var secretKey = key.substring(0,16);
     var key = CryptoJS.enc.Utf8.parse(secretKey);
     var iv = CryptoJS.enc.Utf8.parse(secretKey);

@@ -6,9 +6,7 @@ const DotsLoader = () => {
     const [dots, setDots] = useState('');
 
     useEffect(() => {
-        console.log("dots")
         const interval = setInterval(() => {
-            console.log("dots")
             setDots(prev => (prev.length < 3 ? prev + '.' : '')); // Add dots until there are 3, then reset
         }, 500); // Update every 500ms
 

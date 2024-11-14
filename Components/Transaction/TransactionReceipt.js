@@ -90,7 +90,6 @@ const style = StyleSheet.create({
 const TransactionReceipt = (props) => {
     const { navigation } = props
     const { txnId, paymentMethod, clientId, timeStamp } = props?.route?.params
-    console.log(txnId, paymentMethod, clientId, timeStamp)
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(true)
     const [transDetails, setTransDetails] = useState()
@@ -115,7 +114,6 @@ const TransactionReceipt = (props) => {
                 merchantId: merchant_session?.id,
                 status: "ACTIVE"
             }
-            console.log(payload)
 
             const get_merchant_api = await fetch(`${BASE_URL}/app/merchant/getMerchantData`, {
                 method: 'POST',
@@ -165,7 +163,6 @@ const TransactionReceipt = (props) => {
                 },
                 body: JSON.stringify(payload)
             })
-            console.log(merchantSessionData)
 
             const get_trans_details_res = await get_trans_details.json()
             if (get_trans_details_res?.msg == "SUCCESS") {
