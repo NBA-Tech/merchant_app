@@ -12,3 +12,7 @@ export const getMerchantSession=async()=>{
     return merchant_session
 
 }
+
+export function convertRupeesToPaise(rupees) {
+    return String(parseFloat(rupees) * 100);
+  }

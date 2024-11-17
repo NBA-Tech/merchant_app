@@ -12,6 +12,7 @@ import Profile from '../Profile/Profile';
 import SettlementReport from '../Settlement/SettlementReport';
 import TransactionReceipt from '../Transaction/TransactionReceipt';
 import { AuthContext } from '../../AuthProvider';
+import Payment from '../Payment/Payment';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,6 @@ const Routes = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        // await AsyncStorage.removeItem('merchant_status_data');
         const token = await AsyncStorage.getItem('merchant_status_data');
         if (token !== null) {
           setIsAuthenticated(true);
@@ -69,6 +69,7 @@ const Routes = () => {
             
           </>
         )}
+        <Stack.Screen name="payment" component={Payment} />
         <Stack.Screen name="mpin" component={Mpin} />
         <Stack.Screen name="main" component={BottomTabNavigator} />
       <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
