@@ -15,6 +15,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
 import { FormatDate,getMerchantSession } from '../../HelperFunctions';
+import { useFocusEffect } from '@react-navigation/native';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -119,6 +120,7 @@ const Home = (props) => {
 
         const get_transaction_data_res = await get_transaction_data_api.json()
 
+
         if (get_transaction_data_res?.msg == "Success") {
             const total_amount = get_transaction_data_res?.obj.reduce(
                 (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
@@ -138,7 +140,13 @@ const Home = (props) => {
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS !',
                 textBody: 'No Transaction Found',
+                duration:1
             });
+            setTimeout(() => {
+                Toast.hide();
+              }, 1000);
+              setTransAmount(0)
+              setTotalTrans(0)
 
         }
         setLoading(false);
@@ -158,24 +166,28 @@ const Home = (props) => {
         
 
     },[])
+    const adjustDatesAndFetchData = async () => {
+        setDateModal(false);
+        setLoading(true);
+
+        const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
+        const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
+
+        await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
+    };
 
 
     useEffect(() => {
-        const adjustDatesAndFetchData = async () => {
-            setDateModal(false)
-            setLoading(true);
-
-            // Create startOfDay and endOfDay in UTC
-            const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
-            const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
-
-            await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
-
-
-        };
-
         adjustDatesAndFetchData();
     }, [transDate, merchantSessionData]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // console.log("API call")
+            adjustDatesAndFetchData();
+        }, [])
+    );
+
 
 
     return (
@@ -195,6 +207,7 @@ const Home = (props) => {
                                             setTransDate(selectedDate);
                                         }
                                     }}
+                                    maximumDate={new Date()}
                                 />
                             )
 

@@ -118,6 +118,7 @@ function Transactions(props) {
     const [totalUPI, setTotalUPI] = useState(0)
     const [totalPG, setTotalPG] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [noTrans,setNoTrans]=useState(false)
 
     const [cards, setCards] = useState({})
 
@@ -250,6 +251,15 @@ function Transactions(props) {
                 setTotalPG(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
             }
         }
+        else{
+            setTotalPGAmount(0)
+            setTotalPG(0)
+            setTotalUPIAmount(0)
+            setTotalUPI(0)
+            setCards({})
+            setTotalTransAmount(0)
+            setTotalTrans(0)
+        }
 
         setLoading(false)
 
@@ -264,7 +274,8 @@ function Transactions(props) {
             value='PG'
 
         }
-        navigation.navigate('reports',{date_props:transDate.getTime(),trans_type_props:value})
+        console.log(transDate)
+        navigation.navigate('reports',{date_props:transDate,trans_type_props:value})
     }
 
     useEffect(() => {
@@ -310,6 +321,7 @@ function Transactions(props) {
                                         setTransDate(selectedDate);
                                     }
                                 }}
+                                maximumDate={new Date()}
                             />
                         )
 

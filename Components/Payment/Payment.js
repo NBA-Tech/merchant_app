@@ -68,25 +68,31 @@ const Payment = (props) => {
 
     const handlePayment=async()=>{
         let payload={
-            orderInfo:orderInfoRef.current.getValue(),
-            currency:currencyRef.current.getValue(),
-            amount:convertRupeesToPaise(amountRef.current.getValue()),
-            firstName:firstNameRef.current.getValue(),
-            lastName:lastNameRef.current.getValue(),
-            chMobile:chMobileRef.current.getValue(),
-            chEmail:chEmailRef.current.getValue(),
-            chAddrStreet:chAddrStreetRef.current.getValue(),
-            chAddrCity:chAddrCityRef.current.getValue(),
-            chAddrState:chAddrStateRef.current.getValue(),
-            chAddrZip:chAddrZipRef.current.getValue()
+            orderDetails:{
+                orderInfo:orderInfoRef.current.getValue(),
+                currency:currencyRef.current.getValue(),
+                amount:convertRupeesToPaise(amountRef.current.getValue()),
+
+            },
+            customerDetails:{
+                firstName:firstNameRef.current.getValue(),
+                lastName:lastNameRef.current.getValue(),
+                chMobile:chMobileRef.current.getValue(),
+                chEmail:chEmailRef.current.getValue(),
+                chAddrStreet:chAddrStreetRef.current.getValue(),
+                chAddrCity:chAddrCityRef.current.getValue(),
+                chAddrState:chAddrStateRef.current.getValue(),
+                chAddrZip:chAddrZipRef.current.getValue()
+            }
         }
-        console.log(payload)
+
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
+        console.log(payload,headers)
 
         const get_payent_url=await fetch(`${BASE_URL}/merchant/orderCreate`,{
             method:'POST',

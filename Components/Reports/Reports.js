@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+
 import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -182,8 +184,9 @@ const style = StyleSheet.create({
 const Reports = (props) => {
     const { navigation } = props
     const globalStyle = useContext(StyleContext);
-    const date_props=props?.route?.params?.date_props
-    const trans_type_props=props?.route?.params?.trans_type_props
+    const date_props = props?.route?.params?.date_props
+    const trans_type_props = props?.route?.params?.trans_type_props
+    // console.log(date_props,trans_type_props)
 
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
@@ -191,12 +194,12 @@ const Reports = (props) => {
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
     const [isStatusFocus, setIsStatusFocus] = useState(false)
-    const [currStatus, setCurrStatus] = useState(trans_type_props??false)
+    const [currStatus, setCurrStatus] = useState(trans_type_props ?? false)
     const [filterModal, setFilterModal] = useState(false)
     const [isUpi, setIsUpi] = useState(false)
     const [isPg, setIsPg] = useState(false)
     const [fromDate, setFromDate] = useState(() => {
-        if(date_props){
+        if (date_props) {
             return date_props
         }
         const date = new Date();
@@ -209,6 +212,7 @@ const Reports = (props) => {
     const [isFilterUpdate, setIsFilterUpdate] = useState(false)
     const [fromDateModal, setFromDateModal] = useState(false)
     const [toDateModal, setToDateModal] = useState(false)
+    const [trans, setNoTrans] = useState(false)
 
     const status = [
         { label: 'SUCCESS', value: 'SUCCESS' },
@@ -244,6 +248,7 @@ const Reports = (props) => {
 
         }
 
+
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
             method: 'POST',
             headers: headers,
@@ -251,6 +256,9 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
+        console.log("payload", payload)
+
+        console.log("response", get_transaction_data_res)
         if (get_transaction_data_res?.msg == "Success") {
             let total_trans = []
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
@@ -276,8 +284,17 @@ const Reports = (props) => {
             setTotalTrans(total_transaction_count)
 
             setAllTransData(total_trans)
+            setNoTrans(false)
 
 
+        }
+        else {
+            setTransAmount(0)
+            setTotalTrans(0)
+            setAllTransData([])
+
+
+            setNoTrans(true)
         }
 
 
@@ -313,16 +330,36 @@ const Reports = (props) => {
 
     }, [])
 
-
     useEffect(() => {
-        setFilterModal(false)
+        setFilterModal(false);
         setLoading(true);
+
         const trans_type = [
             isUpi ? "UPI" : "",
             isPg ? "PG" : ""
         ].filter(Boolean);
-        getTransactionDetails(trans_type, fromDate, toDate).finally(() => setLoading(false));
-    }, [merchantSessionData, isFilterUpdate]);
+
+        getTransactionDetails(trans_type, fromDate, toDate)
+            .finally(() => setLoading(false));
+
+    }, [merchantSessionData, isFilterUpdate])
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // console.log("API-TRANS")
+            setFilterModal(false);
+            setLoading(true);
+
+            const trans_type = [
+                isUpi ? "UPI" : "",
+                isPg ? "PG" : ""
+            ].filter(Boolean);
+
+            getTransactionDetails(trans_type, fromDate, toDate)
+                .finally(() => setLoading(false));
+        }, [merchantSessionData, isFilterUpdate])
+    );
 
 
 
@@ -442,6 +479,7 @@ const Reports = (props) => {
                                                     setFromDateModal(false)
 
                                                 }}
+                                                maximumDate={new Date()}
                                             />
                                         )
 
@@ -459,6 +497,7 @@ const Reports = (props) => {
                                                     setToDateModal(false)
 
                                                 }}
+                                                maximumDate={new Date()}
                                             />
                                         )
 
@@ -523,6 +562,13 @@ const Reports = (props) => {
                     </View>
 
                     <View style={style.homeBodyContainer}>
+                        {trans && (
+                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>No Transaction Found</Text>
+
+                        )
+
+                        }
+
                         <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                             <View style={style.transactionContainer}>
                                 {loading && (

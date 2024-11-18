@@ -11,6 +11,7 @@ import { BASE_URL } from '../../Config';
 import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { isValidEmail } from '../../HelperFunctions';
 
 
 const style = StyleSheet.create({
@@ -70,8 +71,8 @@ function Login(props) {
     const { navigation } = props
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false)
-    const [email, setEmail] = useState()
-    const [mobile, setMobile] = useState()
+    const [email, setEmail] = useState(undefined)
+    const [mobile, setMobile] = useState(undefined)
     const [pasword, setPassword] = useState()
     const [isOtp, setIsOtp] = useState(false)
     const mPin1 = useRef(null)
@@ -115,6 +116,43 @@ function Login(props) {
             return
 
         }
+        console.log(mobile,email)
+        if(mobile==undefined || mobile=='' || email==undefined || email==''){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'OOPS',
+                textBody: "Mobile number/Email is required",
+            });
+            return
+
+        }
+        if(mobile.length<10){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'OOPS',
+                textBody: "Provide a valid mobile number",
+            });
+            return
+
+        }
+        if(pasword==undefined || pasword==''){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'OOPS',
+                textBody: "Password is required",
+            });
+            return
+
+        }
+        if(!isValidEmail(email)){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'OOPS',
+                textBody: "Email is not valid",
+            });
+            return
+
+        }
         setLoading(true)
         let base64_email = base64Encode(email)
         let client_token = base64Encode("" + email + "" + email)
@@ -136,7 +174,7 @@ function Login(props) {
 
         const is_login = await check_login_api.json()
         if (is_login?.obj == "Authentication Successful") {
-            setSeconds(60)
+            setSeconds(120)
             setLoading(false)
             setIsOtp(true)
         }
@@ -156,12 +194,21 @@ function Login(props) {
             .join('');
     };
     const handleOtp = async () => {
+        const otp_values=getOtp()
+        if(otp_values==''){
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Oops',
+                textBody: 'OTP field is empty',
+            });
+
+        }
         setLoading(true)
         let payload = {
             name: "",
             email: email,
             mobile_no: mobile,
-            otp: getOtp(),
+            otp: otp_values,
             module: ""
         }
 
@@ -234,7 +281,7 @@ function Login(props) {
                 title: 'SUCCESS',
                 textBody: 'OTP SENT',
             });
-            setSeconds(60)
+            setSeconds(120)
         }
 
 
@@ -260,8 +307,10 @@ function Login(props) {
                                 <Text style={globalStyle.boldTextBlack}>Mobile Number</Text>
                                 <TextField
                                     cutomStyle={style.textField}
-                                    placeHolder={'Mobile_number/ MID'}
+                                    placeHolder={'Mobile Number'}
                                     onChange={setMobile}
+                                    keyboardType="numeric"
+                                    maxLength={10}
                                 />
 
                                 <Text style={globalStyle.boldTextBlack}>Email</Text>
@@ -269,6 +318,7 @@ function Login(props) {
                                     cutomStyle={style.textField}
                                     placeHolder={'Email'}
                                     onChange={setEmail}
+                                    keyboardType="email-address"
                                 />
 
                                 <Text style={globalStyle.boldTextBlack}>Password</Text>
@@ -293,14 +343,8 @@ function Login(props) {
                                     onClick={!loading ? handleLogin : null}
                                     disabled={loading}
                                 >
-                                    {loading ? <DotsLoader /> : 'Send Otp'}
+                                    {loading ? <DotsLoader /> : 'Send OTP'}
                                 </Button>
-                                <Text style={[globalStyle.normalText, { marginTop: hp('4%'), marginHorizontal: wp('10%'), textAlign: 'center' }]}>
-                                    Not an Arthpay registered Merchant?{' '}
-                                    <Text style={{ color: '#1286ED' }}>
-                                        Register here
-                                    </Text>
-                                </Text>
                             </View>
 
                         ) :
@@ -364,7 +408,7 @@ function Login(props) {
                                 </View>
                                 <View style={style.resendOtp}>
                                     {seconds > 0 ? (
-                                        <Text style={globalStyle.blackSubText}>OTP Expires on : {seconds} s</Text>
+                                        <Text style={globalStyle.blackSubText}>OTP expires in  {seconds} s</Text>
                                     ) : (
                                         <TouchableOpacity onPress={handleResendOtp}>
                                             <Text style={globalStyle.blueMediumText}>Resend Otp</Text>

@@ -127,9 +127,8 @@ function Mpin(props) {
                 textBody: 'Welcome back!',
             });
     
-            setTimeout(() => {
                 navigation.navigate('main',{screen:'home'})
-            }, 3000);
+
 
         }
         else{
@@ -147,6 +146,15 @@ function Mpin(props) {
 
     const setMpin=async()=>{
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
+        if(mpin=='' || mpin.length!=4){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Oops',
+                textBody: 'Fill 4 digit MPIN',
+            });
+            return
+
+        }
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
@@ -178,9 +186,8 @@ function Mpin(props) {
             textBody: set_mpin_res?.obj,
         });
 
-        setTimeout(() => {
-            navigation.navigate('main',{screen:'home'})
-        }, 3000);
+        navigation.navigate('main',{screen:'home'})
+
 
     }
     else{
@@ -217,7 +224,7 @@ function Mpin(props) {
                         />
                     </View>
                     <View style={style.formContainer}>
-                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set mPin' : 'Confirm mPin'}</Text>
+                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set mPin' : 'Enter MPIN'}</Text>
                         <View style={style.MpinContainer}>
                             <TextField
                                 ref={mPin1}
@@ -256,16 +263,6 @@ function Mpin(props) {
                         </View>
 
                         <View style={style.buttonMainContainer}>
-                            {typeMpin != 'setMpin' && (
-                                <Button
-                                    customeStyleButton={style.buttonContainer}
-                                    customeStyleText={style.text}
-                                >
-                                    Switch Account
-                                </Button>
-                            )
-
-                            }
 
 
                             <Button

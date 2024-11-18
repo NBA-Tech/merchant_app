@@ -63,11 +63,15 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
     }
 
     const handleRightClick = () => {
-        const date = new Date(transDate);
-        date.setDate(date.getDate() + 1);
-        setTransDate(date)
-
-    }
+        const currentDate = new Date();
+        
+        // Check if the transDate is the same as the current date (ignoring the time)
+        if (transDate.toDateString() !== currentDate.toDateString()) {
+            const date = new Date(transDate);
+            date.setDate(date.getDate() + 1); // Move to the next day
+            setTransDate(date);
+        }
+    };
 
     useEffect(() => {
         if (!isBackHeader) {
