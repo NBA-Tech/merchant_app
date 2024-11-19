@@ -63,7 +63,7 @@ const Footer = (props) => {
 
             </TouchableOpacity>
 
-            <View style={style.footerElements}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('payment') }}>
                 <View style={active == "payment" ? globalStyle.blueCircleBorder : ''}>
                     <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} />
 
@@ -71,7 +71,7 @@ const Footer = (props) => {
                 <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Payments</Text>
 
 
-            </View>
+            </TouchableOpacity>
 
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('settlement_report') }}>
                 <View style={active == "settlement_report" ? globalStyle.blueCircleBorder : ''}>

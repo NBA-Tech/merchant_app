@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card'
-import {DeviceDetailsIcon, HelpIcon, LogoutIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
+import { DeviceDetailsIcon, HelpIcon, LogoutIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 const style = StyleSheet.create({
     profilePage: {
@@ -15,6 +15,7 @@ const style = StyleSheet.create({
     },
     homeContainer: {
         flexDirection: 'column',
+        flex: 1
     },
     headerBg: {
         backgroundColor: '#073761',
@@ -31,7 +32,7 @@ const style = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:hp('10%')
+        marginTop: hp('10%')
     },
     profileName: {
         color: '#000000',
@@ -63,6 +64,9 @@ const style = StyleSheet.create({
     },
     cardSubDetails: {
         alignItems: 'center',
+        marginTop: hp('2%'),
+        marginHorizontal: wp('5%'),
+        height: hp('60%'), // Ensure the section is scrollable with a fixed height
     },
     leftDetails: {
         display: 'flex',
@@ -90,95 +94,97 @@ const Profile = (props) => {
     return (
         <SafeAreaView style={style.profilePage}>
 
-            <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={[globalStyle.backgroundWhite]}>
 
-                    <View style={style.homeContainer}>
+                <View style={style.homeContainer}>
 
-                        <View style={style.headerBg}>
-                            <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false}/>
-                            <View style={style.profilePic}>
-                                <Image source={require('../../assets/images/profile.png')} />
-                                <Text style={style.profileName}>Ray John</Text>
-                                <View style={style.detailsContainer}>
-                                    <Text style={style.userDetails}>
-                                        +91 8647614545
-                                    </Text>
-                                    <Text style={style.separateBar}>
-                                        |
-                                    </Text>
-                                    <Text style={style.userDetails}>
-                                        example@gmail.com
-                                    </Text>
-                                </View>
-
+                    <View style={style.headerBg}>
+                        <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
+                        <View style={style.profilePic}>
+                            <Image source={require('../../assets/images/profile.png')} />
+                            <Text style={globalStyle.mediumText}>Ray John</Text>
+                            <View style={style.detailsContainer}>
+                                <Text style={globalStyle.mediumText}>
+                                    +91 8647614545
+                                </Text>
+                                <Text style={style.separateBar}>
+                                    |
+                                </Text>
+                                <Text style={globalStyle.mediumText}>
+                                    example@gmail.com
+                                </Text>
                             </View>
-                            <View style={style.cardSubDetails}>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <DeviceDetailsIcon/>
-                                            <Text style={style.cardDetails}>Device Details</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <StaffIcon/>
-                                            <Text style={style.cardDetails}>Add Staff</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <SettingsIcon/>
-                                            <Text style={style.cardDetails}>Settings</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <HelpIcon/>
-                                            <Text style={style.cardDetails}>Help & Support</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <LogoutIcon/>
-                                            <Text style={style.cardDetails}>Logout</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} />
-                                        </View>
-                                    </Card>
-                                </View>
-                              
 
-                            </View>
                         </View>
+                        <View style={style.cardSubDetails}>
+                            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                                <View>
+                                    <Card customStyle={style.cardContent}>
+                                        <View style={style.leftDetails}>
+                                            <DeviceDetailsIcon />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Device Details</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
+                                <View>
+                                    <Card customStyle={style.cardContent}>
+                                        <View style={style.leftDetails}>
+                                            <StaffIcon />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Add Staff</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
+                                <View>
+                                    <Card customStyle={style.cardContent}>
+                                        <View style={style.leftDetails}>
+                                            <SettingsIcon />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Settings</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
+                                <View>
+                                    <Card customStyle={style.cardContent}>
+                                        <View style={style.leftDetails}>
+                                            <HelpIcon />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
+                                <View>
+                                    <Card customStyle={style.cardContent}>
+                                        <View style={style.leftDetails}>
+                                            <LogoutIcon />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
 
+                                
+                            </ScrollView>
+
+
+                        </View>
                     </View>
-                </ScrollView>
+
+                </View>
 
             </View>
-            <Footer active='profile' navigation={navigation}/>
+            <Footer active='profile' navigation={navigation} />
 
 
         </SafeAreaView>

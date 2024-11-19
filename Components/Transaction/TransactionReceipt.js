@@ -4,7 +4,7 @@ import { StyleContext } from '../../GlobalStyleProvider';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card';
-import { GreenTick, ShareIcon, UpiIcon } from '../../SvgIcons';
+import { FailedCrossIcon, GreenTick, ShareIcon, UpiIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import Button from '../../Core_ui/Button';
 import { BASE_URL } from '../../Config';
@@ -209,7 +209,14 @@ const TransactionReceipt = (props) => {
 
                                         </View>
                                         <View style={style.rightContainer}>
+                                            {transDetails?.status=="SUCCESS"?(
                                             <GreenTick />
+
+                                            ):(
+                                                <FailedCrossIcon/>
+                                            )
+
+                                            }
 
                                         </View>
                                     </Card>
