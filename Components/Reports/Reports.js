@@ -186,7 +186,7 @@ const Reports = (props) => {
     const globalStyle = useContext(StyleContext);
     const date_props = props?.route?.params?.date_props
     const trans_type_props = props?.route?.params?.trans_type_props
-    // console.log(date_props,trans_type_props)
+    const status_props = props?.route?.params?.status
 
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
@@ -194,16 +194,13 @@ const Reports = (props) => {
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
     const [isStatusFocus, setIsStatusFocus] = useState(false)
-    const [currStatus, setCurrStatus] = useState(trans_type_props ?? false)
+    const [currStatus, setCurrStatus] = useState("")
     const [filterModal, setFilterModal] = useState(false)
     const [isUpi, setIsUpi] = useState(false)
     const [isPg, setIsPg] = useState(false)
     const [fromDate, setFromDate] = useState(() => {
-        if (date_props) {
-            return date_props
-        }
         const date = new Date();
-        date.setMonth(date.getMonth() - 1);
+        // date.setMonth(date.getMonth() - 1);
         return date;
     });
 
@@ -216,7 +213,6 @@ const Reports = (props) => {
 
     const status = [
         { label: 'SUCCESS', value: 'SUCCESS' },
-        { label: 'PENDING', value: 'PENDING' },
         { label: 'FAILED', value: 'FAILED' },
     ];
     const paymentMethods = [
@@ -256,18 +252,22 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log("payload", payload)
 
-        console.log("response", get_transaction_data_res)
         if (get_transaction_data_res?.msg == "Success") {
-            let total_trans = []
+            let total_trans_temp = []
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
                     if (currStatus == "" || currStatus == transaction?.status) {
-                        total_trans.push(transaction);
+                        total_trans_temp.push(transaction);
 
                     }
                 });
+            });
+
+            let total_trans = total_trans_temp.sort((a, b) => {
+                const dateA = new Date(a.timeStamp).getTime();
+                const dateB = new Date(b.timeStamp).getTime();
+                return dateB - dateA; // Descending order
             });
 
             const total_amount = get_transaction_data_res?.obj.reduce(
@@ -307,7 +307,7 @@ const Reports = (props) => {
         setToDate(new Date())
         setFromDate(() => {
             const date = new Date();
-            date.setMonth(date.getMonth() - 1);
+            // date.setMonth(date.getMonth() - 1);
             return date;
 
         })
@@ -329,6 +329,27 @@ const Reports = (props) => {
 
 
     }, [])
+
+    useEffect(()=>{
+        console.log("calls going")
+        if(date_props!=undefined){
+            setFromDate(date_props)
+        }
+        if(trans_type_props!=undefined){
+            if(trans_type_props=="UPI"){
+                setIsUpi(true)
+            }
+            else if(trans_type_props=="PG"){
+                setIsPg(true)
+
+            }
+        }
+        if(status_props!=undefined){
+            setCurrStatus(status_props)
+        }
+        setIsFilterUpdate(!isFilterUpdate)
+
+    },[])
 
     useEffect(() => {
         setFilterModal(false);
@@ -544,13 +565,12 @@ const Reports = (props) => {
                             >
                                 <View style={style.iconContainer}>
                                     <StatIcon />
-                                    <RightArrow />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions </Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
                                     </View>

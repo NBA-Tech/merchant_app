@@ -183,7 +183,6 @@ const Home = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            // console.log("API call")
             adjustDatesAndFetchData();
         }, [])
     );

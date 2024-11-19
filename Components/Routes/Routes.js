@@ -13,6 +13,7 @@ import SettlementReport from '../Settlement/SettlementReport';
 import TransactionReceipt from '../Transaction/TransactionReceipt';
 import { AuthContext } from '../../AuthProvider';
 import Payment from '../Payment/Payment';
+import PaymentGateway from '../Payment/PaymentGateway';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -69,11 +70,12 @@ const Routes = () => {
             
           </>
         )}
+      <Stack.Screen name="payment" component={Payment} />
+      <Stack.Screen name="payment_gateway" component={PaymentGateway} />
 
         <Stack.Screen name="mpin" component={Mpin} />
         <Stack.Screen name="main" component={BottomTabNavigator} />
       <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
-      <Stack.Screen name="payment" component={Payment} />
 
 
 

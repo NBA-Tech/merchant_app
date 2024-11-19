@@ -16,7 +16,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession,convertRupeesToPaise } from '../../HelperFunctions';
 import { TextField } from '../../Core_ui/TextField';
-
+import DotsLoader from '../../DotsLoader';
 const style = StyleSheet.create({
     paymentContainer: {
         flex: 1,
@@ -54,6 +54,7 @@ const Payment = (props) => {
     const globalStyle = useContext(StyleContext);
     const { transDate, setTransDate } = useContext(DataContext)
     const [merchantSessionData, setMerchentSessionData] = useState()
+    const [loading,setLoading]=useState(false)
     const orderInfoRef = useRef('');
     const currencyRef = useRef('');
     const amountRef = useRef('');
@@ -67,6 +68,7 @@ const Payment = (props) => {
     const chAddrZipRef = useRef('');
 
     const handlePayment=async()=>{
+        setLoading(true)
         let payload={
             orderDetails:{
                 orderInfo:orderInfoRef.current.getValue(),
@@ -92,7 +94,6 @@ const Payment = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(payload,headers)
 
         const get_payent_url=await fetch(`${BASE_URL}/merchant/orderCreate`,{
             method:'POST',
@@ -102,6 +103,10 @@ const Payment = (props) => {
 
         const payment_url_res=await get_payent_url.json()
         console.log(payment_url_res)
+        if(payment_url_res?.statusCode==200){
+            navigation.navigate('payment_gateway',{url:payment_url_res?.obj})
+        }
+        setLoading(false)
     }
 
     useEffect(()=>{
@@ -199,7 +204,8 @@ const Payment = (props) => {
                             customeStyleButton={style.button}
                             onClick={handlePayment}
                         >
-                            Pay Now
+                            {loading ? <DotsLoader /> : 'Pay Now'}
+                            
                         </Button>
 
                     </View>

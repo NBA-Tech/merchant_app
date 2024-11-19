@@ -138,6 +138,7 @@ const TransactionReceipt = (props) => {
             if (!merchantSessionData) {
                 return
             }
+
             let x_token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
                 {
@@ -155,6 +156,7 @@ const TransactionReceipt = (props) => {
                 paymentMethod: paymentMethod
 
             }
+            console.log(payload)
             const get_trans_details = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
                 method: 'POST',
                 headers: {
@@ -165,6 +167,8 @@ const TransactionReceipt = (props) => {
             })
 
             const get_trans_details_res = await get_trans_details.json()
+
+            console.log("get_trans_details_res",get_trans_details_res)
             if (get_trans_details_res?.msg == "SUCCESS") {
                 setTransDetails(get_trans_details_res?.obj?.[0])
 
@@ -236,7 +240,7 @@ const TransactionReceipt = (props) => {
                                     <View style={style.bodyContainer}>
                                         <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>Transactions worth </Text>
                                         <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>₹  {transDetails?.amount}</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>{FormatDate(timeStamp)}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>{new Date(timeStamp).toISOString().split('.')[0]}</Text>
                                     </View>
 
                                     <View style={style.iconContainer}>

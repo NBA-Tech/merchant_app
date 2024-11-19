@@ -141,12 +141,15 @@ function Transactions(props) {
     const CardElement = ({ cardDetails }) => (
         cardDetails.map((value, index) => (
             <View style={style.nestedCard} key={index}>
+                <TouchableOpacity onPress={value?.onClick}>
                 <View style={style.nestedElement}>
                     <Text style={globalStyle.boldTextBlack}>{value?.heading}</Text>
                     <Text style={globalStyle.boldTextBlack}>{value?.amount}</Text>
                     <RightArrow fill={"#1286ED"} />
+                    
 
                 </View>
+                </TouchableOpacity>
 
             </View>
 
@@ -222,14 +225,13 @@ function Transactions(props) {
                         cardDetails: <CardElement cardDetails={[
                             {
                                 heading: 'Success',
-                                amount: `${successTransactions.length} Transactions`
-                            }, {
-                                heading: 'Pending ',
-                                amount: `${pendingTransactions.length} Transactions`
+                                amount: `${successTransactions.length} Transactions`,
+                                onClick:()=>handleFilterTrans('',"SUCCESS")
                             },
                             {
                                 heading: 'Failed',
-                                amount: `${failTransactions.length} Transactions`
+                                amount: `${failTransactions.length} Transactions`,
+                                onClick:()=>handleFilterTrans('',"FAILED")
                             }
                         ]} />
                     },
@@ -266,7 +268,7 @@ function Transactions(props) {
 
 
     }
-    const handleFilterTrans=(value)=>{
+    const handleFilterTrans=(value,status)=>{
         if(value=='UPI Collect'){
             value='UPI'
         }
@@ -274,8 +276,7 @@ function Transactions(props) {
             value='PG'
 
         }
-        console.log(transDate)
-        navigation.navigate('reports',{date_props:transDate,trans_type_props:value})
+        navigation.navigate('reports',{date_props:transDate,trans_type_props:value,status:status})
     }
 
     useEffect(() => {
@@ -362,7 +363,7 @@ function Transactions(props) {
                     <View style={style.transbodyContainer}>
                         {transCardsDetails && transCardsDetails.map((value, index) => (
                             <Card customStyle={style.cardCustomStyle} key={index}>
-                                <TouchableOpacity onPress={()=>{handleFilterTrans(value?.name)}}>
+                                <TouchableOpacity onPress={()=>{handleFilterTrans(value?.name,'')}}>
                                     <View style={style.settlementContainer}>
                                         {loading ? (
                                             <CardLoader />

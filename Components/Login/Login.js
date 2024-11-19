@@ -116,7 +116,6 @@ function Login(props) {
             return
 
         }
-        console.log(mobile,email)
         if(mobile==undefined || mobile=='' || email==undefined || email==''){
             Toast.show({
                 type: ALERT_TYPE.WARNING,
