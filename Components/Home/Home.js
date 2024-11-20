@@ -91,18 +91,12 @@ const Home = (props) => {
 
     
     const get_transaction_data = async (from_date, to_date) => {
+        console.log(from_date)
         let payload = {
             paymentMethods: [
                 "ALL"
             ],
-            transactionDate: {
-                from: from_date,
-                to: to_date
-            },
-            transactionAmount: {
-                from: 0,
-                to: 100000
-            }
+            settlementDate
 
         }
         let headers = {
@@ -150,6 +144,38 @@ const Home = (props) => {
 
         }
         setLoading(false);
+    }
+
+    const getSettlement=async(from_date,to_date)=>{
+        let payload = {
+            paymentMethods: [
+                "ALL"
+            ],
+            transactionDate: {
+                from: from_date,
+                to: to_date
+            },
+            transactionAmount: {
+                from: 0,
+                to: 100000
+            }
+
+        }
+        let headers = {
+            'content-type': 'application/json',
+            'x-client-id': merchantSessionData?.clientDetails?.id,
+            'x-client-secret': merchantSessionData?.clientDetails?.secret
+
+        }
+
+        const get_settlement_data_api = await fetch(`${BASE_URL}/app/txn/getAllSettlementDetails`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+        })
+
+        const get_settlement_data_res = await get_settlement_data_api.json()
+
     }
 
 

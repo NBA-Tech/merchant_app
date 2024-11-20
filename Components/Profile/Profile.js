@@ -1,12 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image, SafeAreaView, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card'
-import { DeviceDetailsIcon, HelpIcon, LogoutIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
+import { DeviceDetailsIcon, HelpIcon, LogoutIcon, QrIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
 import Footer from '../Footer';
+import { getMerchantSession } from '../../HelperFunctions';
+import { BASE_URL } from '../../Config';
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -83,7 +85,34 @@ const style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
 
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 15,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto-Regular',
+        color: "#0C1421"
+    },
 
 
 })
@@ -91,10 +120,96 @@ const style = StyleSheet.create({
 const Profile = (props) => {
     const { navigation } = props
     const globalStyle = useContext(StyleContext);
+    const [myQr, setMyQr] = useState()
+    const [merchantSessionData, setMerchentSessionData] = useState()
+    const [isQrModal, setIsQrModal] = useState(false)
+    const [userData, setUserData] = useState(undefined)
+
+
+    const getUserQr = async () => {
+        if (merchantSessionData) {
+            const get_qr_api = await fetch(`${BASE_URL}/app/createQR`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    merchantId: merchantSessionData?.id,
+                    profile: true
+                })
+            })
+            const get_qr_api_res = await get_qr_api.json()
+            if (get_qr_api_res?.sttusCode == 200) {
+                // console.log(get_qr_api_res?.obj)
+                setMyQr(get_qr_api_res?.obj)
+            }
+
+        }
+    }
+
+    const getUserData = async () => {
+        let payload = {
+            merchantId: merchantSessionData?.id,
+            status: "ACTIVE"
+        }
+
+        const merchant_basic_info_api = await fetch(`${BASE_URL}/app/merchant/getMerchantData`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        const merchant_basic_info_response = await merchant_basic_info_api.json()
+        console.log(merchant_basic_info_response)
+        if (merchant_basic_info_response?.statusCode == 200) {
+            setUserData(merchant_basic_info_response?.obj)
+        }
+
+
+    }
+
+    useEffect(() => {
+        (async () => {
+            await getUserQr()
+            await getUserData()
+        })()
+
+    }, [merchantSessionData])
+
+    useEffect(() => {
+        const getSession = async () => {
+            setMerchentSessionData(await getMerchantSession())
+
+        }
+        getSession()
+
+
+    }, [])
     return (
         <SafeAreaView style={style.profilePage}>
 
             <View style={[globalStyle.backgroundWhite]}>
+
+                <Modal
+                    visible={isQrModal}
+                    transparent={true}
+                    animationType="slide"
+                    onRequestClose={() => { setIsQrModal(false) }}
+                >
+                    <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
+                        <View style={style.centeredView}>
+                            <View style={style.modalView}>
+                            <Text style={globalStyle.boldTextBlack}>{userData?.name ?? 'Loading...'}</Text>
+                                <Image
+                                    source={{ uri: `data:image/png;base64,${myQr}` }}
+                                    style={{ width: wp('80%'), height: hp('40%') }}
+                                />
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+
 
                 <View style={style.homeContainer}>
 
@@ -102,16 +217,16 @@ const Profile = (props) => {
                         <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
                         <View style={style.profilePic}>
                             <Image source={require('../../assets/images/profile.png')} />
-                            <Text style={globalStyle.mediumText}>Ray John</Text>
+                            <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
                             <View style={style.detailsContainer}>
                                 <Text style={globalStyle.mediumText}>
-                                    +91 8647614545
+                                    {userData?.name ?? 'Loading...'}
                                 </Text>
                                 <Text style={style.separateBar}>
                                     |
                                 </Text>
                                 <Text style={globalStyle.mediumText}>
-                                    example@gmail.com
+                                    {userData?.email ?? 'Loading...'}
                                 </Text>
                             </View>
 
@@ -129,6 +244,19 @@ const Profile = (props) => {
                                         </View>
                                     </Card>
                                 </View>
+
+                                <View>
+                                    <Card customStyle={style.cardContent} onClick={() => { setIsQrModal(!isQrModal) }}>
+                                        <View style={style.leftDetails}>
+                                            <QrIcon fill='#1286ED' />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>My QR</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} />
+                                        </View>
+                                    </Card>
+                                </View>
+
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
@@ -174,7 +302,7 @@ const Profile = (props) => {
                                     </Card>
                                 </View>
 
-                                
+
                             </ScrollView>
 
 

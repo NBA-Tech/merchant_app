@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -14,7 +14,7 @@ import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
-import { FormatDate, getMerchantSession,convertRupeesToPaise } from '../../HelperFunctions';
+import { FormatDate, getMerchantSession, convertRupeesToPaise } from '../../HelperFunctions';
 import { TextField } from '../../Core_ui/TextField';
 import DotsLoader from '../../DotsLoader';
 const style = StyleSheet.create({
@@ -46,82 +46,87 @@ const style = StyleSheet.create({
         backgroundColor: "#1385EC",
         paddingVertical: hp('1.5%'),
         borderRadius: 8,
-        marginHorizontal:hp('3%')
+        marginHorizontal: hp('3%')
     },
+    cardCustomStyle: {
+        flex: 1,
+        alignSelf: 'center',
+        padding: hp('2%'),
+        alignItems: 'center'
+    },
+
 })
 const Payment = (props) => {
     const { navigation } = props
     const globalStyle = useContext(StyleContext);
     const { transDate, setTransDate } = useContext(DataContext)
     const [merchantSessionData, setMerchentSessionData] = useState()
-    const [loading,setLoading]=useState(false)
-    const orderInfoRef = useRef('');
-    const currencyRef = useRef('');
+    const [loading, setLoading] = useState(false)
+    const [isQr, setIsQr] = useState(false)
+    const [qr, setQr] = useState('')
+
     const amountRef = useRef('');
-    const firstNameRef = useRef('');
-    const lastNameRef = useRef('');
-    const chMobileRef = useRef('');
-    const chEmailRef = useRef('');
-    const chAddrStreetRef = useRef('');
-    const chAddrCityRef = useRef('');
-    const chAddrStateRef = useRef('');
-    const chAddrZipRef = useRef('');
 
-    const handlePayment=async()=>{
+
+
+    const handlePayment = async () => {
         setLoading(true)
-        let payload={
-            orderDetails:{
-                orderInfo:orderInfoRef.current.getValue(),
-                currency:currencyRef.current.getValue(),
-                amount:convertRupeesToPaise(amountRef.current.getValue()),
-
-            },
-            customerDetails:{
-                firstName:firstNameRef.current.getValue(),
-                lastName:lastNameRef.current.getValue(),
-                chMobile:chMobileRef.current.getValue(),
-                chEmail:chEmailRef.current.getValue(),
-                chAddrStreet:chAddrStreetRef.current.getValue(),
-                chAddrCity:chAddrCityRef.current.getValue(),
-                chAddrState:chAddrStateRef.current.getValue(),
-                chAddrZip:chAddrZipRef.current.getValue()
-            }
+        setIsQr(false)
+        let amount = amountRef.current.getValue()
+        if (amount == 0) {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'OOPS !',
+                textBody: 'Amount should be greater than 0',
+            });
+            return
         }
-
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
             'x-client-secret': merchantSessionData?.clientDetails?.secret
-
         }
-
-        const get_payent_url=await fetch(`${BASE_URL}/merchant/orderCreate`,{
-            method:'POST',
-            headers:headers,
-            body:JSON.stringify(payload)
+        let payload = {
+            custRefId: "",
+            custFirstName: "",
+            custLastName: "",
+            custGstNum: "",
+            custMobileNum: "",
+            qrType: "DYNAMIC",
+            amount: amount,
+            validTill: ""
+        }
+        const generate_qr_api = await fetch(`${BASE_URL}/app/txn/generateQr`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
         })
 
-        const payment_url_res=await get_payent_url.json()
-        console.log(payment_url_res)
-        if(payment_url_res?.statusCode==200){
-            navigation.navigate('payment_gateway',{url:payment_url_res?.obj})
+        const generate_qr_api_res = await generate_qr_api.json()
+        if (generate_qr_api_res?.statusCode == 200) {
+            setQr(generate_qr_api_res?.obj)
+            console.log(generate_qr_api_res?.obj)
+            setIsQr(true)
         }
         setLoading(false)
+
+
+
     }
 
-    useEffect(()=>{
-        const getSession=async()=>{
+    useEffect(() => {
+        const getSession = async () => {
             setMerchentSessionData(await getMerchantSession())
 
         }
         getSession()
-        
 
-    },[])
+
+    }, [])
 
     return (
         <View style={style.home}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{marginBottom:hp('2%')}}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ marginBottom: hp('2%') }}>
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.paymentContainer}>
@@ -131,72 +136,13 @@ const Payment = (props) => {
 
                     <View style={style.paymentBodyContainer}>
                         <View style={style.payment}>
-                            <Text style={globalStyle.boldTextBlack}>Order Id *</Text>
+
+                            <Text style={globalStyle.boldTextBlack}>Enter Amount</Text>
                             <TextField
                                 cutomStyle={style.textField}
-                                placeHolder={'Eg: 123411212'}
-                                ref={orderInfoRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Currency *</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg : INR'}
-                                ref={currencyRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Amount *</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg: 90'}
+                                placeHolder={'Eg:90'}
                                 ref={amountRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>First Name</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'eg : Ajay'}
-                                ref={firstNameRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Last Name</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg: Hardika'}
-                                ref={lastNameRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Mobile Number</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg: 934412312312'}
-                                ref={chMobileRef}
                                 keyboardType="numeric"
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Email</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'John@gmail.com'}
-                                ref={chEmailRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>State</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg: IL'}
-                                ref={chAddrStateRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>City</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg: SA'}
-                                ref={chAddrCityRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>Street</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'EG: NO:3 IL'}
-                                ref={chAddrStreetRef}
-                            />
-                            <Text style={globalStyle.boldTextBlack}>ZipCode</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg:6411'}
-                                ref={chAddrZipRef}
                             />
 
                         </View>
@@ -204,9 +150,29 @@ const Payment = (props) => {
                             customeStyleButton={style.button}
                             onClick={handlePayment}
                         >
-                            {loading ? <DotsLoader /> : 'Pay Now'}
-                            
+                            {loading ? <DotsLoader /> : 'Generate'}
+
                         </Button>
+                        {isQr && (
+                            <View style={style.qrContainer}>
+
+                                <Card customStyle={style.cardCustomStyle}>
+                                    <Image
+                                        source={{ uri: `data:image/png;base64,${qr}` }}
+                                        style={{ width: wp('80%'), height: hp('60%') }}
+                                    />
+
+
+
+                                </Card>
+
+                            </View>
+
+                        )
+
+                        }
+
+
 
                     </View>
                 </View>
