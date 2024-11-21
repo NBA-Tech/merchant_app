@@ -156,7 +156,7 @@ const TransactionReceipt = (props) => {
                 paymentMethod: paymentMethod
 
             }
-            console.log(payload)
+            
             const get_trans_details = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
                 method: 'POST',
                 headers: {
@@ -167,7 +167,8 @@ const TransactionReceipt = (props) => {
             })
 
             const get_trans_details_res = await get_trans_details.json()
-
+            console.log(x_token)
+            console.log("payload",payload)
             console.log("get_trans_details_res",get_trans_details_res)
             if (get_trans_details_res?.msg == "SUCCESS") {
                 setTransDetails(get_trans_details_res?.obj?.[0])

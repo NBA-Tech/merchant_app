@@ -135,24 +135,32 @@ const Payment = (props) => {
                     </View>
 
                     <View style={style.paymentBodyContainer}>
-                        <View style={style.payment}>
+                        {!isQr && (
+                            <View>
+                                <View style={style.payment}>
 
-                            <Text style={globalStyle.boldTextBlack}>Enter Amount</Text>
-                            <TextField
-                                cutomStyle={style.textField}
-                                placeHolder={'Eg:90'}
-                                ref={amountRef}
-                                keyboardType="numeric"
-                            />
+                                    <Text style={globalStyle.boldTextBlack}>Enter Amount</Text>
+                                    <TextField
+                                        cutomStyle={style.textField}
+                                        placeHolder={'Eg:90'}
+                                        ref={amountRef}
+                                        keyboardType="numeric"
+                                    />
 
-                        </View>
-                        <Button
-                            customeStyleButton={style.button}
-                            onClick={handlePayment}
-                        >
-                            {loading ? <DotsLoader /> : 'Generate'}
+                                </View>
+                                <Button
+                                    customeStyleButton={style.button}
+                                    onClick={handlePayment}
+                                >
+                                    {loading ? <DotsLoader /> : 'Generate'}
 
-                        </Button>
+                                </Button>
+                            </View>
+
+                        )
+
+                        }
+
                         {isQr && (
                             <View style={style.qrContainer}>
 

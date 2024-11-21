@@ -11,7 +11,7 @@ import Reports from '../Reports/Reports';
 import Profile from '../Profile/Profile';
 import SettlementReport from '../Settlement/SettlementReport';
 import TransactionReceipt from '../Transaction/TransactionReceipt';
-import { AuthContext } from '../../AuthProvider';
+import { AuthProvider, useAuth } from '../../AuthProvider';
 import Payment from '../Payment/Payment';
 import PaymentGateway from '../Payment/PaymentGateway';
 const Stack = createStackNavigator();
@@ -31,19 +31,20 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="reports" component={Reports} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
       <Tab.Screen name="profile" component={Profile} />
-
     </Tab.Navigator>
   );
 };
 
 // Stack Navigator containing Login, Mpin, and Bottom Tabs
 const Routes = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     const checkSession = async () => {
+      console.log("comes");
       try {
         const token = await AsyncStorage.getItem('merchant_status_data');
+        console.log(token, isAuthenticated);
         if (token !== null) {
           setIsAuthenticated(true);
         }
@@ -57,34 +58,31 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={isAuthenticated ? "main" : "login"}
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        {!isAuthenticated && (
-          <>
-        <Stack.Screen name="login" component={Login} />
-
-            
-          </>
-        )}
-
-
-        <Stack.Screen name="mpin" component={Mpin} />
-        <Stack.Screen name="main" component={BottomTabNavigator} />
-      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
-      <Stack.Screen name="payment" component={Payment} />
-      <Stack.Screen name="payment_gateway" component={PaymentGateway} />
-
-
-
-
-
-      </Stack.Navigator>
+      {isAuthenticated ? (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="main" component={BottomTabNavigator} />
+          <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
+          <Stack.Screen name="payment" component={Payment} />
+          <Stack.Screen name="payment_gateway" component={PaymentGateway} />
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="login" component={Login} />
+          <Stack.Screen name="mpin" component={Mpin} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };
+
+
 
 export default Routes;

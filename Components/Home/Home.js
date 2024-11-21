@@ -96,7 +96,16 @@ const Home = (props) => {
             paymentMethods: [
                 "ALL"
             ],
-            settlementDate
+            transactionDate: {
+                from: from_date,
+                to: to_date
+            },
+            transactionAmount: {
+                from: 0,
+                to: 100000
+            }
+
+
 
         }
         let headers = {

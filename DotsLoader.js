@@ -28,9 +28,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',      // Centers the content horizontally
     },
     loaderText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#ffffff',
+        justifyContent:'center',
+        alignContent:'center'
     },
 });
 

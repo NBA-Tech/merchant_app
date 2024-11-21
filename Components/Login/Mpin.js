@@ -11,7 +11,7 @@ import { BASE_URL } from '../../Config';
 import { base64Encode, base64Decode, encryptAES256, decryptAES256 } from '../../Encryption';
 import { getMerchantSession } from '../../HelperFunctions';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
-
+import { AuthProvider, useAuth } from '../../AuthProvider';
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -89,6 +89,7 @@ function Mpin(props) {
     const mPin2 = useRef(null)
     const mPin3 = useRef(null)
     const mPin4 = useRef(null)
+    const { isAuthenticated, setIsAuthenticated } = useAuth()
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
@@ -127,7 +128,8 @@ function Mpin(props) {
                 textBody: 'Welcome back!',
             });
     
-                navigation.navigate('main',{screen:'home'})
+                // navigation.navigate('main',{screen:'home'})
+                setIsAuthenticated(true)
 
 
         }
@@ -186,7 +188,8 @@ function Mpin(props) {
             textBody: set_mpin_res?.obj,
         });
 
-        navigation.navigate('main',{screen:'home'})
+        // navigation.navigate('main',{screen:'home'})
+        setIsAuthenticated(true)
 
 
     }
@@ -269,8 +272,9 @@ function Mpin(props) {
                                 customeStyleButton={style.buttonFilled}
                                 customeStyleText={style.textFilled}
                                 onClick={typeMpin=='setMpin'?setMpin:validateMpin}
+                                disabled={loading?true:false}
                             >
-                                {typeMpin == 'setMpin' ? 'Set' : 'Login'}
+                                {loading? <DotsLoader/>: typeMpin == 'setMpin' ? 'Set' : 'Login'}
                             </Button>
 
                         </View>

@@ -9,6 +9,9 @@ import { DeviceDetailsIcon, HelpIcon, LogoutIcon, QrIcon, RightArrow, SettingsIc
 import Footer from '../Footer';
 import { getMerchantSession } from '../../HelperFunctions';
 import { BASE_URL } from '../../Config';
+import { AuthContext } from '../../AuthProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthProvider, useAuth } from '../../AuthProvider';
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -124,6 +127,7 @@ const Profile = (props) => {
     const [merchantSessionData, setMerchentSessionData] = useState()
     const [isQrModal, setIsQrModal] = useState(false)
     const [userData, setUserData] = useState(undefined)
+    const { isAuthenticated, setIsAuthenticated } = useAuth()
 
 
     const getUserQr = async () => {
@@ -168,6 +172,13 @@ const Profile = (props) => {
 
 
     }
+    const handleLogout=async ()=>{
+        
+        await AsyncStorage.removeItem('merchant_status_data');
+        console.log("remoed")
+        setIsAuthenticated(false)
+
+    }
 
     useEffect(() => {
         (async () => {
@@ -200,7 +211,12 @@ const Profile = (props) => {
                     <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
                         <View style={style.centeredView}>
                             <View style={style.modalView}>
-                            <Text style={globalStyle.boldTextBlack}>{userData?.name ?? 'Loading...'}</Text>
+                                <Text style={globalStyle.boldTextBlack}>{userData?.name ?? 'Loading...'}</Text>
+                                <Text style={globalStyle.blackSubText}>{userData?.bName ?? 'Loading...'}</Text>
+                                <Image
+                                    source={require('../../assets/images/logo.png')}
+                                    style={{ width: wp('80%'), height: hp('10%') }}
+                                />
                                 <Image
                                     source={{ uri: `data:image/png;base64,${myQr}` }}
                                     style={{ width: wp('80%'), height: hp('40%') }}
@@ -291,7 +307,7 @@ const Profile = (props) => {
                                     </Card>
                                 </View>
                                 <View>
-                                    <Card customStyle={style.cardContent}>
+                                    <Card customStyle={style.cardContent} onClick={handleLogout}>
                                         <View style={style.leftDetails}>
                                             <LogoutIcon />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
