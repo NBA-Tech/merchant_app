@@ -91,7 +91,6 @@ const Home = (props) => {
 
     
     const get_transaction_data = async (from_date, to_date) => {
-        console.log(from_date)
         let payload = {
             paymentMethods: [
                 "ALL"
@@ -152,30 +151,25 @@ const Home = (props) => {
               setTotalTrans(0)
 
         }
-        setLoading(false);
+        // setLoading(false);
     }
 
-    const getSettlement=async(from_date,to_date)=>{
+    const getSettlement=async(date)=>{
         let payload = {
-            paymentMethods: [
+            paymentMethod: [
                 "ALL"
             ],
-            transactionDate: {
-                from: from_date,
-                to: to_date
-            },
-            transactionAmount: {
-                from: 0,
-                to: 100000
-            }
+            settlementDate:date.split("T")[0]
 
         }
+        
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
+        console.log(payload,headers)
 
         const get_settlement_data_api = await fetch(`${BASE_URL}/app/txn/getAllSettlementDetails`, {
             method: 'POST',
@@ -184,6 +178,11 @@ const Home = (props) => {
         })
 
         const get_settlement_data_res = await get_settlement_data_api.json()
+        console.log(get_settlement_data_res)
+
+        if(get_settlement_data_res?.statusCode==200){
+            
+        }
 
     }
 
@@ -209,6 +208,8 @@ const Home = (props) => {
         const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
 
         await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
+        await getSettlement(startOfDay.toISOString())
+        setLoading(false)
     };
 
 

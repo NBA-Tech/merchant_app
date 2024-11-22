@@ -64,6 +64,7 @@ const Routes = () => {
             headerShown: false,
           }}
         >
+          <Stack.Screen name="mpin" component={Mpin} />
           <Stack.Screen name="main" component={BottomTabNavigator} />
           <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
           <Stack.Screen name="payment" component={Payment} />

@@ -98,6 +98,7 @@ function Mpin(props) {
     };
 
     const validateMpin=async ()=>{
+        setLoading(true)
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
@@ -128,7 +129,7 @@ function Mpin(props) {
                 textBody: 'Welcome back!',
             });
     
-                // navigation.navigate('main',{screen:'home'})
+                navigation.navigate('main',{screen:'home'})
                 setIsAuthenticated(true)
 
 

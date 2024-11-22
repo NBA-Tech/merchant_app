@@ -64,6 +64,8 @@ const Payment = (props) => {
     const [loading, setLoading] = useState(false)
     const [isQr, setIsQr] = useState(false)
     const [qr, setQr] = useState('')
+    const [currOrderId,setCurrOrderId]=useState(undefined)
+    const [intervalId, setIntervalId] = useState(null)
 
     const amountRef = useRef('');
 
@@ -103,14 +105,47 @@ const Payment = (props) => {
         })
 
         const generate_qr_api_res = await generate_qr_api.json()
+        // console.log(generate_qr_api_res)
         if (generate_qr_api_res?.statusCode == 200) {
             setQr(generate_qr_api_res?.obj)
-            console.log(generate_qr_api_res?.obj)
+            setCurrOrderId(generate_qr_api_res?.msg)
+
             setIsQr(true)
         }
         setLoading(false)
 
 
+
+    }
+    const qrStatusCheckApi=async()=>{
+        let headers = {
+            'content-type': 'application/json',
+            'x-client-id': merchantSessionData?.clientDetails?.id,
+        }
+        let payload={
+            orderId:currOrderId
+        }
+
+        const id=setInterval(async() => {
+            console.log("headers",headers)
+
+            const check_qr_status=await fetch(`${BASE_URL}/app/txn/getQRPaymentStatus`,{
+                method:'POST',
+                headers:headers,
+                body:JSON.stringify(payload)
+            })
+            const qr_res=await check_qr_status.json()
+            console.log(qr_res)
+            if(qr_res?.msg=="SUCCESS"){
+                clearInterval(id)
+            }
+            else if(qr_res?.msg=="FAILURE"){
+                clearInterval(id)
+
+            }
+            // clearInterval(id)r
+        }, 3000);
+        setIntervalId(id)
 
     }
 
@@ -123,6 +158,17 @@ const Payment = (props) => {
 
 
     }, [])
+
+    useEffect(()=>{
+        if(isQr){
+            qrStatusCheckApi()
+
+        }
+        else{
+            clearInterval(intervalId)
+        }
+
+    },[isQr])
 
     return (
         <View style={style.home}>
@@ -162,18 +208,27 @@ const Payment = (props) => {
                         }
 
                         {isQr && (
-                            <View style={style.qrContainer}>
+                            <View>
+                                <View style={style.qrContainer}>
 
-                                <Card customStyle={style.cardCustomStyle}>
-                                    <Image
-                                        source={{ uri: `data:image/png;base64,${qr}` }}
-                                        style={{ width: wp('80%'), height: hp('60%') }}
-                                    />
+                                    <Card customStyle={style.cardCustomStyle}>
+                                        <Image
+                                            source={{ uri: `data:image/png;base64,${qr}` }}
+                                            style={{ width: wp('80%'), height: hp('60%') }}
+                                        />
 
 
 
-                                </Card>
+                                    </Card>
 
+                                </View>
+                                <Button
+                                    customeStyleButton={style.button}
+                                    onClick={()=>{setIsQr(false)}}
+                                >
+                                    {loading ? <DotsLoader /> : 'Close'}
+
+                                </Button>
                             </View>
 
                         )
