@@ -102,7 +102,6 @@ const Payment = (props) => {
         })
 
         const payment_url_res=await get_payent_url.json()
-        console.log(payment_url_res)
         if(payment_url_res?.statusCode==200){
             navigation.navigate('payment_gateway',{url:payment_url_res?.obj})
         }

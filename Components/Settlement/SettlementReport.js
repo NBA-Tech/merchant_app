@@ -122,7 +122,6 @@ function SettlementReport(props) {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(payload, headers)
 
         const get_settlement_data_api = await fetch(`${BASE_URL}/app/txn/getAllSettlementDetails`, {
             method: 'POST',
@@ -131,7 +130,6 @@ function SettlementReport(props) {
         })
 
         const get_settlement_data_res = await get_settlement_data_api.json()
-        console.log(get_settlement_data_res)
 
         if (get_settlement_data_res?.statusCode == 200) {
             if (trans_type == "ALL") {

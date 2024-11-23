@@ -17,7 +17,7 @@ const SplashScreen = ({ navigation }) => {
         await new Promise((resolve) => {
           Animated.timing(scaleValue, {
             toValue: 1, // Final scale
-            duration: 1000, // Duration of scaling animation
+            duration: 500, // Duration of scaling animation
             useNativeDriver: true,
           }).start(resolve);
         });
@@ -26,7 +26,7 @@ const SplashScreen = ({ navigation }) => {
         await new Promise((resolve) => {
           Animated.timing(text1X, {
             toValue: 0, // Move to the starting of the row
-            duration: 1000,
+            duration: 500,
             delay: 100, // Delay to start after the image scaling
             useNativeDriver: true,
           }).start(resolve);
@@ -36,20 +36,23 @@ const SplashScreen = ({ navigation }) => {
         await new Promise((resolve) => {
           Animated.timing(text2X, {
             toValue: 0, // Center position relative to row
-            duration: 1000,
+            duration: 500,
             delay: 100, // Delay after the first text animation
             useNativeDriver: true,
           }).start(resolve);
         });
+        setTimeout(async () => {
+          const token = await AsyncStorage.getItem('merchant_status_data');
+          if (token != null) {
+            navigation.navigate('mpin');
+          } else {
+            navigation.navigate('login');
+          }
+          
+        }, 2000);
 
         // After all animations are completed, check token and navigate
-        const token = await AsyncStorage.getItem('merchant_status_data');
-        console.log(token);
-        if (token != null) {
-          navigation.navigate('mpin');
-        } else {
-          navigation.navigate('login');
-        }
+       
       };
 
       runAnimations();

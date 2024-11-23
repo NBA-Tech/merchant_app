@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState,useCallback } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView,BackHandler } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
@@ -13,6 +13,9 @@ import { getMerchantSession } from '../../HelperFunctions';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { useBackHandler } from '../../BackHandler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
+
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -82,7 +85,6 @@ const style = StyleSheet.create({
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
-    console.log(typeMpin)
     const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
@@ -101,8 +103,19 @@ function Mpin(props) {
     };
 
     const validateMpin=async ()=>{
-        setLoading(true)
+        
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
+        if(mpin.length!=4){
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Oops',
+                textBody: "Fill 4 digit MPIN",
+            });
+            return
+
+        }
+        setLoading(true)
+        
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
@@ -153,6 +166,7 @@ function Mpin(props) {
     }
 
     const setMpin=async()=>{
+        setLoading(true)
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
         if(mpin=='' || mpin.length!=4){
             Toast.show({
@@ -213,13 +227,22 @@ function Mpin(props) {
     }
 
 
-    useEffect(() => {
-        (async () => {
-            setMerchentSessionData(await getMerchantSession())
+    useFocusEffect(
+        useCallback(() => {
+            const fetchMerchantSession = async () => {
+                const sessionData = await getMerchantSession();
+                setMerchentSessionData(sessionData);
+            };
+    
+            fetchMerchantSession();
+    
+            // Optionally, you can return a cleanup function here if needed
+            return () => {
+                // Cleanup code (if necessary)
+            };
+        }, []) // Dependency array; add dependencies if required
+    );
 
-        })()
-
-    }, [])
 
     useEffect(() => {
         const backAction = () => {

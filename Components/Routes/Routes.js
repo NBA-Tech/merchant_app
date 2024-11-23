@@ -35,6 +35,9 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="reports" component={Reports} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
       <Tab.Screen name="profile" component={Profile} />
+      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
+      <Stack.Screen name="payment" component={Payment} />
+      <Stack.Screen name="payment_status" component={PaymentStatus} />
     </Tab.Navigator>
   );
 };
@@ -46,9 +49,7 @@ const AuthStack = () => {
       <Stack.Screen name="splash_screen" component={SplashScreen} />
       <Stack.Screen name="mpin" component={Mpin} />
       <Stack.Screen name="main" component={BottomTabNavigator} />
-      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
-      <Stack.Screen name="payment" component={Payment} />
-      <Stack.Screen name="payment_status" component={PaymentStatus} />
+
     </Stack.Navigator>
   );
 };

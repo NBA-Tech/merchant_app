@@ -331,7 +331,6 @@ const Reports = (props) => {
     }, [])
 
     useEffect(()=>{
-        console.log("calls going")
         if(date_props!=undefined){
             setFromDate(date_props)
         }
@@ -368,7 +367,6 @@ const Reports = (props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            // console.log("API-TRANS")
             setFilterModal(false);
             setLoading(true);
 

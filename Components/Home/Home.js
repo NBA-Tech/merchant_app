@@ -173,7 +173,6 @@ const Home = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log(payload,headers)
 
         const get_settlement_data_api = await fetch(`${BASE_URL}/app/txn/getAllSettlementDetails`, {
             method: 'POST',
@@ -182,7 +181,6 @@ const Home = (props) => {
         })
 
         const get_settlement_data_res = await get_settlement_data_api.json()
-        console.log(get_settlement_data_res)
 
         if(get_settlement_data_res?.statusCode==200){
             const total_amount = get_settlement_data_res?.obj?.reduce(
@@ -300,7 +298,7 @@ const Home = (props) => {
                         </View>
                     </View>
                     <View style={style.homeBodyContainer}>
-                        <Card customStyle={style.cardCustomStyle}>
+                        <Card customStyle={style.cardCustomStyle} onClick={()=>{navigation.navigate('settlement_report')}}>
                             <View style={style.settlementContainer}>
                                 {loading ? (
                                     <CardLoader />

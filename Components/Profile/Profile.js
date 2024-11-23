@@ -144,7 +144,6 @@ const Profile = (props) => {
             })
             const get_qr_api_res = await get_qr_api.json()
             if (get_qr_api_res?.sttusCode == 200) {
-                // console.log(get_qr_api_res?.obj)
                 setMyQr(get_qr_api_res?.obj)
             }
 
@@ -165,7 +164,6 @@ const Profile = (props) => {
             body: JSON.stringify(payload)
         })
         const merchant_basic_info_response = await merchant_basic_info_api.json()
-        console.log(merchant_basic_info_response)
         if (merchant_basic_info_response?.statusCode == 200) {
             setUserData(merchant_basic_info_response?.obj)
         }
@@ -175,7 +173,6 @@ const Profile = (props) => {
     const handleLogout=async ()=>{
         
         await AsyncStorage.removeItem('merchant_status_data');
-        console.log("remoed")
         setIsAuthenticated(false)
         navigation.navigate('login')
 

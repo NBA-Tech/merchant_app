@@ -196,7 +196,7 @@ function Login(props) {
     };
     const handleOtp = async () => {
         const otp_values=getOtp()
-        if(otp_values=='' || !otp_values){
+        if(!otp_values || otp_values.length!=6){
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Oops',
@@ -241,11 +241,11 @@ function Login(props) {
             }
         }
         if (validate_otp_api_response?.value == "Valid") {
-            await AsyncStorage.removeItem('merchant_status_data');
+            // await AsyncStorage.removeItem('merchant_status_data');
 
             await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
 
-                navigation.navigate('mpin',{type:'setMpin'})
+            navigation.navigate('mpin',{type:'setMpin'})
 
         }
         else {

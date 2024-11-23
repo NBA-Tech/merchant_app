@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef,useCallback } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -17,6 +17,8 @@ import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession, convertRupeesToPaise } from '../../HelperFunctions';
 import { TextField } from '../../Core_ui/TextField';
 import DotsLoader from '../../DotsLoader';
+import { useFocusEffect } from '@react-navigation/native';
+
 const style = StyleSheet.create({
     paymentContainer: {
         flex: 1,
@@ -105,7 +107,6 @@ const Payment = (props) => {
         })
 
         const generate_qr_api_res = await generate_qr_api.json()
-        // console.log(generate_qr_api_res)
         if (generate_qr_api_res?.statusCode == 200) {
             setQr(generate_qr_api_res?.obj)
             setCurrOrderId(generate_qr_api_res?.msg)
@@ -118,6 +119,9 @@ const Payment = (props) => {
 
     }
     const qrStatusCheckApi=async()=>{
+        if(intervalId){
+            return
+        }
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
@@ -127,7 +131,6 @@ const Payment = (props) => {
         }
 
         const id=setInterval(async() => {
-            console.log("headers",headers)
 
             const check_qr_status=await fetch(`${BASE_URL}/app/txn/getQRPaymentStatus`,{
                 method:'POST',
@@ -135,7 +138,6 @@ const Payment = (props) => {
                 body:JSON.stringify(payload)
             })
             const qr_res=await check_qr_status.json()
-            console.log(qr_res)
             if(qr_res?.msg=="SUCCESS"){
                 setIsQr(false)
                 clearInterval(id)
@@ -160,19 +162,24 @@ const Payment = (props) => {
         }
         getSession()
 
-
     }, [])
 
-    useEffect(()=>{
-        if(isQr){
-            qrStatusCheckApi()
+    useFocusEffect(
+        useCallback(() => {
+            if (isQr) {
+                qrStatusCheckApi();
+            } else if (intervalId) {
+                clearInterval(intervalId);
+            }
 
-        }
-        else{
-            clearInterval(intervalId)
-        }
-
-    },[isQr])
+            return () => {
+                if (intervalId) {
+                    setIsQr(false)
+                    clearInterval(intervalId);
+                }
+            };
+        }, [isQr, intervalId]) 
+    );
 
     return (
         <View style={style.home}>
