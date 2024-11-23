@@ -334,14 +334,13 @@ function Transactions(props) {
                         >
                             <View style={style.iconContainer}>
                                 <StatIcon />
-                                <RightArrow />
                             </View>
                             {loading ? (
                                 <CardLoader />
                             ) : (
                                 <View style={style.bodyContainer}>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
-                                        Successful Transactions worth
+                                        Successful Transactions 
                                     </Text>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
                                         ₹ {totalTransAmount}

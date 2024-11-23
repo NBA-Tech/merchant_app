@@ -12,6 +12,8 @@ import { BankIcon, CardIcon, RightArrow, UpiIcon } from '../../SvgIcons';
 import Button from '../../Core_ui/Button';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { DataContext } from '../../DataContext';
+import CardLoader from '../../Core_ui/CardLoader';
+import { BASE_URL } from '../../Config';
 const style = StyleSheet.create({
     home: {
         backgroundColor: "#ffffff",
@@ -31,7 +33,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: wp('2%'),
-        justifyContent:'center',
+        justifyContent: 'center',
 
 
     },
@@ -94,11 +96,67 @@ function SettlementReport(props) {
     const [merchantSessionData, setMerchentSessionData] = useState();
     const [dateModal, setDateModal] = useState(false);
     const [loading, setLoading] = useState(false)
+    const [settlementAmount, setSettlementAmount] = useState(0)
+    const [totalUPIAmount, setTotalUPIAmount] = useState(0)
+    const [totalPGAmount, setTotalPGAmount] = useState(0)
+    const [totalUPI, setTotalUPI] = useState(0)
+    const [totalPG, setTotalPG] = useState(0)
 
 
 
     const toggleDateModal = () => {
         setDateModal(!dateModal)
+    }
+    const getSettlement = async (trans_type, date) => {
+        let payload = {
+            paymentMethod: [
+                trans_type
+            ],
+            settlementDate: date.split("T")[0]
+
+        }
+
+        let headers = {
+            'content-type': 'application/json',
+            'x-client-id': merchantSessionData?.clientDetails?.id,
+            'x-client-secret': merchantSessionData?.clientDetails?.secret
+
+        }
+        console.log(payload, headers)
+
+        const get_settlement_data_api = await fetch(`${BASE_URL}/app/txn/getAllSettlementDetails`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+        })
+
+        const get_settlement_data_res = await get_settlement_data_api.json()
+        console.log(get_settlement_data_res)
+
+        if (get_settlement_data_res?.statusCode == 200) {
+            if (trans_type == "ALL") {
+                const total_amount = get_settlement_data_res?.obj?.reduce(
+                    (sum, { summaryDetails }) => sum + parseFloat(summaryDetails?.totalAmount || 0),
+                    0
+                ).toFixed(2);
+
+                setSettlementAmount(total_amount)
+            }
+
+            else if (trans_type == "UPI") {
+                setTotalUPIAmount(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalAmount)
+                setTotalUPI(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
+
+            }
+            else if (trans_type == "PG") {
+                setTotalPGAmount(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalAmount)
+                setTotalPG(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
+            }
+
+
+        }
+
+
     }
     useEffect(() => {
         const getSession = async () => {
@@ -111,20 +169,18 @@ function SettlementReport(props) {
     }, [])
 
     useEffect(() => {
-        const adjustDatesAndFetchData = async () => {
-            setDateModal(false)
-            setLoading(true);
+        (async () => {
+            setLoading(true)
 
-            // Create startOfDay and endOfDay in UTC
-            const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
-            const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
-
-            // await get_transaction_data(startOfDay.toISOString(), endOfDay.toISOString());
-
-
-        };
-
-        adjustDatesAndFetchData();
+            await Promise.all(
+                ["PG", "UPI", "ALL"].map(async (value) => {
+                    const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
+                    // const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
+                    await getSettlement(value, startOfDay.toISOString());
+                })
+            );
+            setLoading(false)
+        })();
     }, [transDate, merchantSessionData]);
 
     return (
@@ -133,59 +189,60 @@ function SettlementReport(props) {
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal}  isBackHeader={true} navHeading={'Settlements'}  navigation={navigation}/>
+                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} isBackHeader={true} navHeading={'Settlements'} navigation={navigation} />
                             <Card hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}  >
-                                <View style={style.cardRow}>
-                                    <Text style={globalStyle.headingText}>
-                                        Total: ₹1000
-                                    </Text>
-                                    <RightArrow fill={'#002D57'} />
-                                </View>
+                                {loading ? (
+                                    <CardLoader />
+                                ) : (
+                                    <View style={style.cardRow}>
+                                        <Text style={globalStyle.headingText}>
+                                            Total: ₹ {settlementAmount ?? 0}
+                                        </Text>
+                                        <RightArrow fill={'#002D57'} />
+                                    </View>
+
+                                )}
+
 
                             </Card>
                         </View>
                     </View>
                     <View style={style.cardContent}>
                         <Card>
-                            <View style={style.cardRow}>
-                                <View style={style.leftDetails}>
-                                    <CardIcon />
-
-
-                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>Card</Text>
-                                </View>
+                            {loading ? (
+                                <CardLoader />
+                            ) : (
                                 <View>
-                                    <Text style={globalStyle.mediumText}>
-                                    ₹500
-                                    </Text>
-                                </View>
-                            </View>
+                                    <View style={style.cardRow}>
+                                        <View style={style.leftDetails}>
+                                            <CardIcon />
 
-                            <View style={style.cardRow}>
-                                <View style={style.leftDetails}>
-                                    <UpiIcon/>
 
-                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>UPI</Text>
-                                </View>
-                                <View>
-                                    <Text style={globalStyle.mediumText}>
-                                    ₹500
-                                    </Text>
-                                </View>
-                            </View>
-                            <View style={style.cardRow}>
-                                <View style={style.leftDetails}>
-                                    <BankIcon/>
+                                            <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>PG</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={globalStyle.mediumText}>
+                                                ₹{totalPGAmount ?? 0}
+                                            </Text>
+                                        </View>
+                                    </View>
 
-                                    <Text style={[globalStyle.boldBlackText,{marginHorizontal:wp('1%')}]}>Net Banking</Text>
+                                    <View style={style.cardRow}>
+                                        <View style={style.leftDetails}>
+                                            <UpiIcon />
+
+                                            <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>UPI</Text>
+                                        </View>
+                                        <View>
+                                            <Text style={globalStyle.mediumText}>
+                                                ₹{totalUPIAmount ?? 0}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    
                                 </View>
-                                <View>
-                                    <Text style={globalStyle.mediumText}>
-                                    ₹0
-                                    </Text>
-                                </View>
-                            </View>
+                            )}
                         </Card>
 
                     </View>

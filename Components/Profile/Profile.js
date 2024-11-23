@@ -177,6 +177,7 @@ const Profile = (props) => {
         await AsyncStorage.removeItem('merchant_status_data');
         console.log("remoed")
         setIsAuthenticated(false)
+        navigation.navigate('login')
 
     }
 

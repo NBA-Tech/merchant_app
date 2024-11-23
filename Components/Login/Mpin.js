@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView,BackHandler } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -12,6 +12,7 @@ import { base64Encode, base64Decode, encryptAES256, decryptAES256 } from '../../
 import { getMerchantSession } from '../../HelperFunctions';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { AuthProvider, useAuth } from '../../AuthProvider';
+import { useBackHandler } from '../../BackHandler';
 const style = StyleSheet.create({
     loginContainer: {
         flex: 1,
@@ -81,6 +82,7 @@ const style = StyleSheet.create({
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
+    console.log(typeMpin)
     const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
@@ -90,6 +92,7 @@ function Mpin(props) {
     const mPin3 = useRef(null)
     const mPin4 = useRef(null)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
+    const { showExitModal,setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
@@ -128,6 +131,7 @@ function Mpin(props) {
                 title: 'Login Success',
                 textBody: 'Welcome back!',
             });
+            setLoading(false)
     
                 navigation.navigate('main',{screen:'home'})
                 setIsAuthenticated(true)
@@ -140,6 +144,7 @@ function Mpin(props) {
                 title: 'Failed',
                 textBody: 'Check Mpin',
             });
+            setLoading(false)
 
         }
 
@@ -188,9 +193,11 @@ function Mpin(props) {
             title: 'Login Success',
             textBody: set_mpin_res?.obj,
         });
-
-        // navigation.navigate('main',{screen:'home'})
+        setLoading(false)
         setIsAuthenticated(true)
+
+        navigation.navigate('main',{screen:'home'})
+        
 
 
     }
@@ -200,6 +207,7 @@ function Mpin(props) {
             title: 'Failed',
             textBody: set_mpin_res?.obj,
         });
+        setLoading(false)
     }
 
     }
@@ -212,6 +220,20 @@ function Mpin(props) {
         })()
 
     }, [])
+
+    useEffect(() => {
+        const backAction = () => {
+            setShowExitModal(true)
+            return true
+
+        };
+    
+        BackHandler.addEventListener('hardwareBackPress', backAction);
+    
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', backAction);
+        };
+      }, [navigation]);
 
 
     return (

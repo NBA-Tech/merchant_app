@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet,BackHandler  } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -16,6 +16,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
 import { FormatDate,getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
+import { useBackHandler } from '../../BackHandler';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -87,6 +88,9 @@ const Home = (props) => {
     const [dateModal, setDateModal] = useState(false)
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
+    const [settlementAmount,setSettlementAmount]=useState(0)
+    const [settlementCount,setSettlementCount]=useState(0)
+    const {showExitModal,setShowExitModal, handleCloseModal, handleExitApp}=useBackHandler()
 
 
     
@@ -181,6 +185,18 @@ const Home = (props) => {
         console.log(get_settlement_data_res)
 
         if(get_settlement_data_res?.statusCode==200){
+            const total_amount = get_settlement_data_res?.obj?.reduce(
+                (sum, { summaryDetails }) => sum + parseFloat(summaryDetails?.totalAmount || 0),
+                0
+            ).toFixed(2);
+
+            const total_settlement_count = get_settlement_data_res?.obj?.reduce(
+                (count, { settlementDetails }) => count + (settlementDetails?.length || 0),
+                0
+            );
+
+            setSettlementAmount(total_amount)
+            setSettlementCount(total_settlement_count)
             
         }
 
@@ -213,16 +229,30 @@ const Home = (props) => {
     };
 
 
-    useEffect(() => {
-        adjustDatesAndFetchData();
-    }, [transDate, merchantSessionData]);
+    // useEffect(() => {
+    //     adjustDatesAndFetchData();
+    // }, [transDate, merchantSessionData]);
 
     useFocusEffect(
         React.useCallback(() => {
             adjustDatesAndFetchData();
-        }, [])
+        }, [transDate,merchantSessionData])
     );
 
+
+    useEffect(() => {
+        const backAction = () => {
+            setShowExitModal(true)
+            return true
+
+        };
+    
+        BackHandler.addEventListener('hardwareBackPress', backAction);
+    
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', backAction);
+        };
+      }, [navigation]);
 
 
     return (
@@ -281,11 +311,11 @@ const Home = (props) => {
                                         </View>
                                         <View style={style.settlement}>
                                             <BankIcon />
-                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ 1000.00 </Text>
+                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {settlementAmount??0} </Text>
                                             <RightArrow fill={"#1286ED"} />
                                         </View>
                                         <View style={style.settlementHeader}>
-                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>0 Transactions</Text>
+                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{settlementCount??0} Settlements</Text>
                                         </View>
                                     </View>
                                 )}

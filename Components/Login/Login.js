@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity,BackHandler } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -12,7 +12,7 @@ import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isValidEmail } from '../../HelperFunctions';
-
+import { useBackHandler } from '../../BackHandler';
 
 const style = StyleSheet.create({
     loginContainer: {
@@ -82,6 +82,8 @@ function Login(props) {
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
     const [seconds, setSeconds] = useState(0);
+    const { showExitModal,setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
+
 
     const handleChange = (text, nextInputRef) => {
         if (text.length === 1 && nextInputRef) {
@@ -194,12 +196,13 @@ function Login(props) {
     };
     const handleOtp = async () => {
         const otp_values=getOtp()
-        if(otp_values==''){
+        if(otp_values=='' || !otp_values){
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Oops',
                 textBody: 'OTP field is empty',
             });
+            return
 
         }
         setLoading(true)
@@ -286,6 +289,21 @@ function Login(props) {
 
 
     }
+
+    useEffect(() => {
+        const backAction = () => {
+            setShowExitModal(true)
+            return true
+
+        };
+    
+        BackHandler.addEventListener('hardwareBackPress', backAction);
+    
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', backAction);
+        };
+      }, [navigation]);
+
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>

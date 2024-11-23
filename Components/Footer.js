@@ -29,7 +29,7 @@ const style = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-end',
         alignItems: 'center',
-        paddingHorizontal:4
+        paddingHorizontal:wp('0.7%')
 
     },
 
@@ -46,7 +46,7 @@ const Footer = (props) => {
                     <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Home</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Home</Text>
 
 
             </TouchableOpacity>
@@ -57,7 +57,7 @@ const Footer = (props) => {
                     <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Transactions</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Transactions</Text>
 
 
 
@@ -68,7 +68,7 @@ const Footer = (props) => {
                     <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Payments</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Payments</Text>
 
 
             </TouchableOpacity>
@@ -78,7 +78,7 @@ const Footer = (props) => {
                     <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Settlements</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Settlements</Text>
 
 
                 </TouchableOpacity>
@@ -89,7 +89,7 @@ const Footer = (props) => {
                     <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} />
                 </View>
 
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start' }]}>Profile</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Profile</Text>
 
             </TouchableOpacity>
 

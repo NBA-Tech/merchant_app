@@ -137,10 +137,14 @@ const Payment = (props) => {
             const qr_res=await check_qr_status.json()
             console.log(qr_res)
             if(qr_res?.msg=="SUCCESS"){
+                setIsQr(false)
                 clearInterval(id)
+                navigation.navigate('payment_status',{status:"SUCCESS"})
             }
             else if(qr_res?.msg=="FAILURE"){
                 clearInterval(id)
+                setIsQr(false)
+                navigation.navigate('payment_status',{status:"FAILURE"})
 
             }
             // clearInterval(id)r
