@@ -92,6 +92,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+         release {
+            storeFile file('arthpay-key.keystore')
+            storePassword 'Kumarpapa@2003'
+            keyAlias 'arthpay_app_alias'
+            keyPassword 'Kumarpapa@2003'
+        }
     }
     buildTypes {
         debug {
@@ -100,8 +106,8 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
+            signingConfig signingConfigs.release
+            minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
