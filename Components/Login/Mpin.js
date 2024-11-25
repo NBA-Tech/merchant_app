@@ -282,6 +282,7 @@ function Mpin(props) {
                                 onChange={(text) => handleChange(text, mPin2)}
                                 keyboardType="numeric"
                                 maxLength={1}
+                                isPassword={true}
                             />
 
                             <TextField
@@ -291,6 +292,7 @@ function Mpin(props) {
                                 onChange={(text) => handleChange(text, mPin3)}
                                 keyboardType="numeric"
                                 maxLength={1}
+                                isPassword={true}
                             />
                             <TextField
                                 ref={mPin3}
@@ -299,6 +301,7 @@ function Mpin(props) {
                                 onChange={(text) => handleChange(text, mPin4)}
                                 keyboardType="numeric"
                                 maxLength={1}
+                                isPassword={true}
                             />
                             <TextField
                                 ref={mPin4}
@@ -307,6 +310,7 @@ function Mpin(props) {
                                 onChange={(text) => handleChange(text, null)}
                                 keyboardType="numeric"
                                 maxLength={1}
+                                isPassword={true}
                             />
 
                         </View>

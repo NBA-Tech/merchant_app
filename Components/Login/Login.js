@@ -352,7 +352,7 @@ function Login(props) {
                                         tintColors={{ true: '#007AFF', false: '#000000' }} // Customize colors
                                     />
                                     <Text style={[globalStyle.normalText, { flexWrap: 'wrap', marginLeft: wp('2%') }]}>
-                                        I accept terms, Conditions, and Privacy policy of GVP InfoTech
+                                        I accept terms, Conditions, and Privacy policy of Arthpay Mobile App
                                     </Text>
                                 </View>
                                 <Button
