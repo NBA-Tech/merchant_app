@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity,BackHandler } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler,Linking  } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -44,6 +44,7 @@ const style = StyleSheet.create({
         backgroundColor: "#1385EC",
         paddingVertical: hp('1.5%'),
         borderRadius: 8,
+        marginVertical:hp('2%')
     },
     MpinContainer: {
         flexDirection: 'row',
@@ -61,7 +62,15 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         marginBottom: hp('3%')
-    }
+    },
+    normalText: {
+        fontSize: 16,
+        color: '#000',
+      },
+      link: {
+        color: '#1E90FF', // Highlight the link text (e.g., blue color)
+        textDecorationLine: 'underline',
+      },
 
 
 });
@@ -82,7 +91,7 @@ function Login(props) {
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
     const [seconds, setSeconds] = useState(0);
-    const { showExitModal,setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
+    const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
 
     const handleChange = (text, nextInputRef) => {
@@ -118,7 +127,7 @@ function Login(props) {
             return
 
         }
-        if(mobile==undefined || mobile=='' || email==undefined || email==''){
+        if (mobile == undefined || mobile == '' || email == undefined || email == '') {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS',
@@ -127,7 +136,7 @@ function Login(props) {
             return
 
         }
-        if(mobile.length<10){
+        if (mobile.length < 10) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS',
@@ -136,7 +145,7 @@ function Login(props) {
             return
 
         }
-        if(pasword==undefined || pasword==''){
+        if (pasword == undefined || pasword == '') {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS',
@@ -145,7 +154,7 @@ function Login(props) {
             return
 
         }
-        if(!isValidEmail(email)){
+        if (!isValidEmail(email)) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS',
@@ -195,8 +204,8 @@ function Login(props) {
             .join('');
     };
     const handleOtp = async () => {
-        const otp_values=getOtp()
-        if(!otp_values || otp_values.length!=6){
+        const otp_values = getOtp()
+        if (!otp_values || otp_values.length != 6) {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Oops',
@@ -245,7 +254,7 @@ function Login(props) {
 
             await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
 
-            navigation.navigate('mpin',{type:'setMpin'})
+            navigation.navigate('mpin', { type: 'setMpin' })
 
         }
         else {
@@ -259,7 +268,7 @@ function Login(props) {
 
     }
 
-    const handleResendOtp=async()=>{
+    const handleResendOtp = async () => {
         let payload = {
             name: "",
             email: email,
@@ -275,9 +284,9 @@ function Login(props) {
             },
             body: JSON.stringify(payload)
         })
-        const send_otp_api_res=await send_otp_api.json()
-        
-        if(send_otp_api_res?.statusCode==200){
+        const send_otp_api_res = await send_otp_api.json()
+
+        if (send_otp_api_res?.statusCode == 200) {
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
                 title: 'SUCCESS',
@@ -296,13 +305,13 @@ function Login(props) {
             return true
 
         };
-    
+
         BackHandler.addEventListener('hardwareBackPress', backAction);
-    
+
         return () => {
-          BackHandler.removeEventListener('hardwareBackPress', backAction);
+            BackHandler.removeEventListener('hardwareBackPress', backAction);
         };
-      }, [navigation]);
+    }, [navigation]);
 
 
     return (
@@ -351,8 +360,16 @@ function Login(props) {
                                         onValueChange={setIsChecked}
                                         tintColors={{ true: '#007AFF', false: '#000000' }} // Customize colors
                                     />
-                                    <Text style={[globalStyle.normalText, { flexWrap: 'wrap', marginLeft: wp('2%') }]}>
-                                        I accept terms, Conditions, and Privacy policy of Arthpay Mobile App
+                                    <Text style={[style.normalText, { flexWrap: 'wrap' }]}>
+                                        I accept{' '}
+                                        <Text style={style.link} onPress={()=>{Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf')}}>
+                                            terms & conditions
+                                        </Text>
+                                        ,{' '}
+                                        <Text style={style.link} onPress={()=>{Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf')}}>
+                                            privacy policy
+                                        </Text>{' '}
+                                        of GVP Infotech Limited (Arthpay)
                                     </Text>
                                 </View>
                                 <Button

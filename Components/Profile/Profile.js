@@ -209,8 +209,8 @@ const Profile = (props) => {
                     <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
                         <View style={style.centeredView}>
                             <View style={style.modalView}>
-                                <Text style={globalStyle.boldTextBlack}>{userData?.name ?? 'Loading...'}</Text>
-                                <Text style={globalStyle.blackSubText}>{userData?.bName ?? 'Loading...'}</Text>
+                                <Text style={[globalStyle.boldTextBlack,{fontSize:wp('5%')}]}>{userData?.name ?? 'Loading...'}</Text>
+                                <Text style={[globalStyle.boldTextBlack,{fontSize:wp('5%')}]}>{userData?.bName ?? 'Loading...'}</Text>
                                 <Image
                                     source={require('../../assets/images/logo.png')}
                                     style={{ width: wp('80%'), height: hp('10%') }}
@@ -233,13 +233,13 @@ const Profile = (props) => {
                             <Image source={require('../../assets/images/profile.png')} />
                             <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
                             <View style={style.detailsContainer}>
-                                <Text style={globalStyle.mediumText}>
+                                <Text style={[globalStyle.mediumText,{fontSize:wp('4%')}]}>
                                     {userData?.name ?? 'Loading...'}
                                 </Text>
                                 <Text style={style.separateBar}>
                                     |
                                 </Text>
-                                <Text style={globalStyle.mediumText}>
+                                <Text style={[globalStyle.mediumText,{fontSize:wp('4%')}]}>
                                     {userData?.email ?? 'Loading...'}
                                 </Text>
                             </View>
