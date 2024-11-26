@@ -93,12 +93,19 @@ function Login(props) {
     const [seconds, setSeconds] = useState(0);
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
-
-    const handleChange = (text, nextInputRef) => {
-        if (text.length === 1 && nextInputRef) {
+    const handleChange = (text, currentRef, nextInputRef, direction) => {
+        if (direction === 'forward' && text.length === 1 && nextInputRef) {
             nextInputRef.current.focus();
         }
     };
+    
+    const handleKeyPress = (nativeEvent, prevInputRef, currentRef, direction) => {
+        if (direction === 'backward' && nativeEvent.key === 'Backspace' && !nativeEvent.text && prevInputRef) {
+            prevInputRef.current.focus();
+        }
+    };
+
+
 
     useEffect(() => {
         if (seconds === 0) return;
@@ -389,7 +396,8 @@ function Login(props) {
                                         ref={mPin1}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, mPin2)}
+                                        onChange={(text) => handleChange(text, mPin1, mPin2, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}      
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -398,7 +406,8 @@ function Login(props) {
                                         ref={mPin2}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, mPin3)}
+                                        onChange={(text) => handleChange(text, mPin2, mPin3, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}      
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -406,7 +415,8 @@ function Login(props) {
                                         ref={mPin3}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, mPin4)}
+                                        onChange={(text) => handleChange(text, mPin3, mPin4, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}    
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -414,7 +424,8 @@ function Login(props) {
                                         ref={mPin4}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, mPin5)}
+                                        onChange={(text) => handleChange(text, mPin4, mPin5, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}    
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -422,7 +433,8 @@ function Login(props) {
                                         ref={mPin5}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, mPin6)}
+                                        onChange={(text) => handleChange(text, mPin5, mPin6, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin4, mPin5, 'backward')}    
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -430,7 +442,8 @@ function Login(props) {
                                         ref={mPin6}
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
-                                        onChange={(text) => handleChange(text, null)}
+                                        onChange={(text) => handleChange(text, mPin6, null, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin5, mPin6, 'backward')}    
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />

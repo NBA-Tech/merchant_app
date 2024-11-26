@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef,useCallback } from 'react';
+import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
@@ -118,67 +118,67 @@ const Payment = (props) => {
 
 
     }
-    const qrStatusCheckApi=async()=>{
-        if(intervalId){
-            return
-        }
-        let headers = {
+
+    const qrStatusCheckApi = useCallback(async () => {
+        if (intervalId || !currOrderId || !merchantSessionData) return;
+
+        const headers = {
             'content-type': 'application/json',
-            'x-client-id': merchantSessionData?.clientDetails?.id,
-        }
-        let payload={
-            orderId:currOrderId
-        }
+            'x-client-id': merchantSessionData?.clientDetails?.id || '',
+        };
 
-        const id=setInterval(async() => {
+        const payload = { orderId: currOrderId };
 
-            const check_qr_status=await fetch(`${BASE_URL}/app/txn/getQRPaymentStatus`,{
-                method:'POST',
-                headers:headers,
-                body:JSON.stringify(payload)
-            })
-            const qr_res=await check_qr_status.json()
-            if(qr_res?.msg=="SUCCESS"){
-                setIsQr(false)
-                clearInterval(id)
-                navigation.navigate('payment_status',{status:"SUCCESS"})
+        const id = setInterval(async () => {
+            try {
+                const response = await fetch(`${BASE_URL}/app/txn/getQRPaymentStatus`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(payload),
+                });
+
+                const result = await response.json();
+                console.log('QR Status:', result);
+
+                if (result?.msg === 'SUCCESS') {
+                    clearInterval(id);
+                    setIsQr(false);
+                    navigation.navigate('payment_status', { status: 'SUCCESS' });
+                } else if (result?.msg === 'FAILURE') {
+                    clearInterval(id);
+                    setIsQr(false);
+                    navigation.navigate('payment_status', { status: 'FAILURE' });
+                }
+            } catch (error) {
+                console.error('Error checking QR status:', error);
             }
-            else if(qr_res?.msg=="FAILURE"){
-                clearInterval(id)
-                setIsQr(false)
-                navigation.navigate('payment_status',{status:"FAILURE"})
-
-            }
-            // clearInterval(id)r
         }, 3000);
-        setIntervalId(id)
 
-    }
+        setIntervalId(id);
+    }, [currOrderId, merchantSessionData, intervalId, navigation]);
 
     useEffect(() => {
-        const getSession = async () => {
-            setMerchentSessionData(await getMerchantSession())
-
-        }
-        getSession()
-
-    }, [])
+        const fetchSessionData = async () => {
+            const sessionData = await getMerchantSession();
+            setMerchentSessionData(sessionData);
+        };
+        fetchSessionData();
+    }, []);
 
     useFocusEffect(
         useCallback(() => {
             if (isQr) {
                 qrStatusCheckApi();
-            } else if (intervalId) {
-                clearInterval(intervalId);
             }
 
             return () => {
                 if (intervalId) {
                     setIsQr(false)
                     clearInterval(intervalId);
+                    setIntervalId(null);
                 }
             };
-        }, [isQr, intervalId]) 
+        }, [isQr, qrStatusCheckApi])
     );
 
     return (
@@ -235,7 +235,7 @@ const Payment = (props) => {
                                 </View>
                                 <Button
                                     customeStyleButton={style.button}
-                                    onClick={()=>{setIsQr(false)}}
+                                    onClick={() => { setIsQr(false) }}
                                 >
                                     {loading ? <DotsLoader /> : 'Close'}
 

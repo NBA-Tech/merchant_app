@@ -187,6 +187,7 @@ const Reports = (props) => {
     const date_props = props?.route?.params?.date_props
     const trans_type_props = props?.route?.params?.trans_type_props
     const status_props = props?.route?.params?.status
+    console.log(status_props)
 
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
@@ -252,6 +253,7 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
+        console.log(get_transaction_data_res,payload,headers)
 
         if (get_transaction_data_res?.msg == "Success") {
             let total_trans_temp = []
@@ -350,19 +352,6 @@ const Reports = (props) => {
 
     },[])
 
-    useEffect(() => {
-        setFilterModal(false);
-        setLoading(true);
-
-        const trans_type = [
-            isUpi ? "UPI" : "",
-            isPg ? "PG" : ""
-        ].filter(Boolean);
-
-        getTransactionDetails(trans_type, fromDate, toDate)
-            .finally(() => setLoading(false));
-
-    }, [merchantSessionData, isFilterUpdate])
 
 
     useFocusEffect(
@@ -374,6 +363,7 @@ const Reports = (props) => {
                 isUpi ? "UPI" : "",
                 isPg ? "PG" : ""
             ].filter(Boolean);
+            console.log(trans_type)
 
             getTransactionDetails(trans_type, fromDate, toDate)
                 .finally(() => setLoading(false));

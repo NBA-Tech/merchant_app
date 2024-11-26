@@ -22,6 +22,20 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Bottom Tab Navigator for authenticated users
+const ReportsStack = ({ route }) => {
+  console.log("routerouterouteroute",route?.params?.Screen)
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={route?.params?.Screen || 'reports'} // Use `params.Screen` to determine the initial screen
+    >
+      <Stack.Screen name="reports" component={Reports} />
+      <Stack.Screen name="trans" component={Transactions} />
+    </Stack.Navigator>
+  );
+};
+
+
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
@@ -31,8 +45,9 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen name="home" component={Home} />
-      <Tab.Screen name="trans" component={Transactions} />
-      <Tab.Screen name="reports" component={Reports} />
+     
+      <Tab.Screen name="reportsMain" component={ReportsStack} />
+      <Tab.Screen name="reportsTab" component={Reports} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
       <Tab.Screen name="profile" component={Profile} />
       <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />

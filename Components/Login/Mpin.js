@@ -96,9 +96,15 @@ function Mpin(props) {
     const { isAuthenticated, setIsAuthenticated } = useAuth()
     const { showExitModal,setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
-    const handleChange = (text, nextInputRef) => {
-        if (text.length === 1 && nextInputRef) {
+    const handleChange = (text, currentRef, nextInputRef, direction) => {
+        if (direction === 'forward' && text.length === 1 && nextInputRef) {
             nextInputRef.current.focus();
+        }
+    };
+    
+    const handleKeyPress = (nativeEvent, prevInputRef, currentRef, direction) => {
+        if (direction === 'backward' && nativeEvent.key === 'Backspace' && !nativeEvent.text && prevInputRef) {
+            prevInputRef.current.focus();
         }
     };
 
@@ -279,7 +285,8 @@ function Mpin(props) {
                                 ref={mPin1}
                                 cutomStyle={style.textField}
                                 placeHolder={''}
-                                onChange={(text) => handleChange(text, mPin2)}
+                                onChange={(text) => handleChange(text, mPin1, mPin2, 'forward')}
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}                            
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -289,7 +296,8 @@ function Mpin(props) {
                                 ref={mPin2}
                                 cutomStyle={style.textField}
                                 placeHolder={''}
-                                onChange={(text) => handleChange(text, mPin3)}
+                                onChange={(text) => handleChange(text, mPin2, mPin3, 'forward')}
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}   
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -298,7 +306,8 @@ function Mpin(props) {
                                 ref={mPin3}
                                 cutomStyle={style.textField}
                                 placeHolder={''}
-                                onChange={(text) => handleChange(text, mPin4)}
+                                onChange={(text) => handleChange(text, mPin3, mPin4, 'forward')}
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}   
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -307,7 +316,8 @@ function Mpin(props) {
                                 ref={mPin4}
                                 cutomStyle={style.textField}
                                 placeHolder={''}
-                                onChange={(text) => handleChange(text, null)}
+                                onChange={(text) => handleChange(text, mPin4, null, 'forward')}
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}   
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}

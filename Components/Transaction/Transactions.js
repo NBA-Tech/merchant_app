@@ -244,6 +244,7 @@ function Transactions(props) {
 
             }
             else if (transType == "UPI") {
+                console.log(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
 
@@ -263,7 +264,6 @@ function Transactions(props) {
             setTotalTrans(0)
         }
 
-        setLoading(false)
 
 
 
@@ -301,6 +301,7 @@ function Transactions(props) {
                     await getTransaction(value, startOfDay.toISOString(), endOfDay.toISOString());
                 })
             );
+            setLoading(false)
         })();
     }, [transDate, merchantSessionData]);
 
@@ -340,7 +341,7 @@ function Transactions(props) {
                             ) : (
                                 <View style={style.bodyContainer}>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
-                                        Successful Transactions 
+                                        Transactions worth 
                                     </Text>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
                                         ₹ {totalTransAmount}
