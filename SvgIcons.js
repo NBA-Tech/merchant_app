@@ -465,16 +465,15 @@ export const PaymentFailIcon= ({ width = 102, height = 107, fill = '#BA0003' }) 
   </Svg>
 )
 
-export const ProfileUserIcon = () => {
+export const ProfileUserIcon = ({width='80',height='80'}) => {
   return (
       <Svg
-          width="600"
-          height="600"
+          width={width}
+          height={height}
           viewBox="0 0 600 600"
           fill="white"
           xmlns="http://www.w3.org/2000/svg"
       >
-          <Title>Abstract user icon</Title>
           <Defs>
               <ClipPath id="circular-border">
                   <Circle cx="300" cy="300" r="280" />

@@ -24,7 +24,7 @@ const style = StyleSheet.create({
     },
     headerBg: {
         backgroundColor: '#073761',
-        height: hp('20%'),
+        height: hp('15%'),
         borderBottomLeftRadius: 300,
         borderBottomRightRadius: 300,
         position: 'absolute',
@@ -71,7 +71,7 @@ const style = StyleSheet.create({
         alignItems: 'center',
         marginTop: hp('2%'),
         marginHorizontal: wp('5%'),
-        height: hp('60%'), // Ensure the section is scrollable with a fixed height
+        height: hp('65%'), // Ensure the section is scrollable with a fixed height
     },
     leftDetails: {
         display: 'flex',
