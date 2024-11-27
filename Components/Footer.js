@@ -6,32 +6,33 @@ import { HouseIcon, ArrowIcon, QrIcon, BankIcon, UserIcon } from '../SvgIcons';
 
 const style = StyleSheet.create({
     footerContainer: {
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
+        borderTopLeftRadius: wp('4%'),
+        borderTopRightRadius: wp('4%'),
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
         backgroundColor: '#F7F7F7', // Slightly less white
         borderWidth: 1, // Add border width
         borderColor: '#D4D7E3', // Black border color
         shadowColor: 'rgba(0, 0, 0, 0.25)', // Semi-transparent black for shadow
-        shadowOffset: {
-            width: 0,
-            height: 2, // Vertical offset
-        },
+        shadowOffset: { width: 0, height: hp('0.5%') },
         shadowOpacity: 1, // Shadow opacity
-        shadowRadius: 4, // Blur radius
+        shadowRadius: wp('1%'),
         elevation: 4, // For Android shadow
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: hp('1%'),
+        paddingHorizontal: wp('3%'),
+    
     },
     footerElements: {
-        margin: hp('0.5%'),
         flexDirection: 'column',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal:wp('0.7%')
+        paddingHorizontal: wp('1%'),
 
     },
+ 
 
 })
 
@@ -46,7 +47,7 @@ const Footer = (props) => {
                     <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Home</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Home</Text>
 
 
             </TouchableOpacity>
@@ -57,7 +58,7 @@ const Footer = (props) => {
                     <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Transactions</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Transactions</Text>
 
 
 
@@ -68,7 +69,7 @@ const Footer = (props) => {
                     <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Payments</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Payments</Text>
 
 
             </TouchableOpacity>
@@ -78,7 +79,7 @@ const Footer = (props) => {
                     <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} />
 
                 </View>
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Settlements</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Settlements</Text>
 
 
                 </TouchableOpacity>
@@ -89,7 +90,7 @@ const Footer = (props) => {
                     <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} />
                 </View>
 
-                <Text style={[globalStyle.mediumText, { textAlign: 'flex-start',fontSize:wp('4%') }]}>Profile</Text>
+                <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Profile</Text>
 
             </TouchableOpacity>
 

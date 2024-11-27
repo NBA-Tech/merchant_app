@@ -31,11 +31,13 @@ const style = StyleSheet.create({
     },
     settlementContainer: {
         flexDirection: 'column',
+     
     },
     settlement: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: hp('1%'),
+        alignItems:'center'
     },
     home: {
         backgroundColor: "#ffffff",
@@ -127,13 +129,13 @@ function Transactions(props) {
             name: "UPI Collect",
             totalAmount: totalUPIAmount,
             totalTrans: `${totalUPI} Transactions`,
-            icon: <UpiIcon />
+            icon: <UpiIcon width={wp('8%')} height={wp('10%')}/>
         },
         {
             name: 'PG Collect',
             totalAmount: totalPGAmount,
             totalTrans: `${totalPG} Transactions`,
-            icon: <CardIcon />
+            icon: <CardIcon width={wp('8%')} height={wp('10%')}/>
         }
     ]
 
@@ -145,7 +147,7 @@ function Transactions(props) {
                 <View style={style.nestedElement}>
                     <Text style={globalStyle.boldTextBlack}>{value?.heading}</Text>
                     <Text style={globalStyle.boldTextBlack}>{value?.amount}</Text>
-                    <RightArrow fill={"#1286ED"} />
+                    <RightArrow fill={"#1286ED"} width={wp('8%')} height={wp('6.5%')} />
                     
 
                 </View>
@@ -380,7 +382,7 @@ function Transactions(props) {
                                                     
                                               </View>
                                                 <View style={style.rightContainer}>
-                                                    <RightArrow fill={"#1286ED"} />
+                                                    <RightArrow fill={"#1286ED"} width={wp('8%')} height={wp('6.5%')}/>
                                                 </View>
                                             </View>
 
@@ -408,13 +410,13 @@ function Transactions(props) {
                                             <CardLoader />
                                         ) : (
                                             <View style={style.settlement}>
-                                                <MenuIcon />
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Transactions Status</Text>
+                                                <MenuIcon width={wp('8%')} height={wp('10%')}/>
+                                                <Text style={[globalStyle.boldTextBlack,{alignItems:'center'}]}>Transactions Status</Text>
 
                                                 {toggle ? (
                                                     <DropDownIcon />
                                                 ) : (
-                                                    <RightArrow fill="#1286ED" />
+                                                    <RightArrow fill="#1286ED" width={wp('8%')} height={wp('6.5%')}/>
                                                 )}
                                             </View>
 

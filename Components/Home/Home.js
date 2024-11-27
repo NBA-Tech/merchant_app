@@ -51,6 +51,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: hp('1%'),
+        alignItems:'center',
     },
     buttonContainer: {
         marginHorizontal: wp('0%'),
@@ -282,8 +283,9 @@ const Home = (props) => {
                                 onClick={()=>{navigation.navigate('trans')}}
                             >
                                 <View style={style.iconContainer}>
-                                    <StatIcon />
-                                    <RightArrow />
+                                    <StatIcon width={wp('6%')} height={wp('6%')}/>
+                                    <RightArrow width={wp('7%')} 
+    height={wp('7%')} />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
@@ -308,9 +310,10 @@ const Home = (props) => {
                                             <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Settlement amount</Text>
                                         </View>
                                         <View style={style.settlement}>
-                                            <BankIcon />
+                                            <BankIcon width={wp('10%')} height={wp('8%')} />
                                             <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {settlementAmount??0} </Text>
-                                            <RightArrow fill={"#1286ED"} />
+                                            <RightArrow fill={"#1286ED"} width={wp('7%')} 
+    height={wp('7%')} />
                                         </View>
                                         <View style={style.settlementHeader}>
                                             <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{settlementCount??0} Settlements</Text>
@@ -331,25 +334,26 @@ const Home = (props) => {
                                             </View>
                                             <View style={style.reportData}>
                                                 <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Download Monthly Reports</Text>
-                                                <RightArrow fill={"#1286ED"} />
+                                                <RightArrow fill={"#1286ED"} width={wp('7%')} 
+    height={wp('7%')} />
                                             </View>
                                             <View style={style.reportData}>
                                                 <Button
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={style.reportData}>
-                                                        <DownloadIcon />
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Transaction</Text>
+                                                    <View style={[style.reportData,{alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}]}>
+                                                        <DownloadIcon width={wp('6%')} height={wp('6%')}/>
+                                                        <Text style={[globalStyle.boldTextBlack, {textAlign: 'center', marginTop: hp('0%')  }]}>Transaction</Text>
                                                     </View>
                                                 </Button>
                                                 <Button
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={style.reportData}>
-                                                        <DownloadIcon />
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Settlement</Text>
+                                                    <View style={[style.reportData,{alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}]}>
+                                                        <DownloadIcon width={wp('6%')} height={wp('6%')}/>
+                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center',marginTop: hp('0%')}]}>Settlement</Text>
                                                     </View>
                                                 </Button>
                                             </View>
