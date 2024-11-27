@@ -187,7 +187,6 @@ const Reports = (props) => {
     const date_props = props?.route?.params?.date_props
     const trans_type_props = props?.route?.params?.trans_type_props
     const status_props = props?.route?.params?.status
-    console.log(status_props)
 
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
@@ -214,7 +213,7 @@ const Reports = (props) => {
 
     const status = [
         { label: 'SUCCESS', value: 'SUCCESS' },
-        { label: 'FAILED', value: 'FAILED' },
+        { label: 'FAILED', value: 'FAILURE' },
     ];
     const paymentMethods = [
         { label: 'UPI', value: 'upi' },
@@ -232,10 +231,6 @@ const Reports = (props) => {
                 from: from_date.toISOString().split('T')[0],
                 to: to_date.toISOString().split('T')[0]
             },
-            transactionAmount: {
-                from: 0,
-                to: 100000
-            }
 
         }
         let headers = {
@@ -244,6 +239,7 @@ const Reports = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
+        console.log("hello world",payload)
 
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
@@ -253,14 +249,16 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log(get_transaction_data_res,payload,headers)
+        console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo)
 
         if (get_transaction_data_res?.msg == "Success") {
             let total_trans_temp = []
+            let total_amount = 0
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
                     if (currStatus == "" || currStatus == transaction?.status) {
                         total_trans_temp.push(transaction);
+                        total_amount += parseFloat(transaction?.amount || 0);
 
                     }
                 });
@@ -272,21 +270,23 @@ const Reports = (props) => {
                 return dateB - dateA; // Descending order
             });
 
-            const total_amount = get_transaction_data_res?.obj.reduce(
-                (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
-                0
-            ).toFixed(2);
+            // const total_transaction_count = get_transaction_data_res?.obj.reduce(
+            //     (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
+            //     0
+            // );
 
-            const total_transaction_count = get_transaction_data_res?.obj.reduce(
-                (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
-                0
-            );
-
-            setTransAmount(total_amount)
-            setTotalTrans(total_transaction_count)
+            setTransAmount(total_amount.toFixed(2))
+            setTotalTrans(total_trans_temp?.length)
 
             setAllTransData(total_trans)
-            setNoTrans(false)
+            if (total_trans_temp?.length == 0) {
+
+                setNoTrans(true)
+            }
+            else {
+                setNoTrans(false)
+            }
+
 
 
         }
@@ -319,7 +319,16 @@ const Reports = (props) => {
     }
 
     const handleTransDetails = (value) => {
-        navigation.navigate('transactionreceipt', { 'txnId': value?.orderId, 'paymentMethod': value?.paymentMethod, 'clientId': merchantSessionData?.clientDetails?.id, 'timeStamp': value?.timeStamp })
+        console.log(value?.orderId)
+        navigation.navigate('reportsMain', {
+            screen: 'transactionreceipt',
+            params: {
+                txnId: value?.orderId,
+                paymentMethod: value?.paymentMethod,
+                clientId: merchantSessionData?.clientDetails?.id,
+                timeStamp: value?.timeStamp,
+            },
+        });
 
     }
     useEffect(() => {
@@ -332,25 +341,26 @@ const Reports = (props) => {
 
     }, [])
 
-    useEffect(()=>{
-        if(date_props!=undefined){
-            setFromDate(date_props)
+    useEffect(() => {
+        if (date_props != undefined) {
+            setFromDate(date_props?.fromDate)
+            setToDate(date_props?.toDate)
         }
-        if(trans_type_props!=undefined){
-            if(trans_type_props=="UPI"){
+        if (trans_type_props != undefined) {
+            if (trans_type_props == "UPI") {
                 setIsUpi(true)
             }
-            else if(trans_type_props=="PG"){
+            else if (trans_type_props == "PG") {
                 setIsPg(true)
 
             }
         }
-        if(status_props!=undefined){
+        if (status_props != undefined) {
             setCurrStatus(status_props)
         }
         setIsFilterUpdate(!isFilterUpdate)
 
-    },[])
+    }, [])
 
 
 
@@ -363,7 +373,7 @@ const Reports = (props) => {
                 isUpi ? "UPI" : "",
                 isPg ? "PG" : ""
             ].filter(Boolean);
-            console.log(trans_type)
+            console.log("hello world",trans_type, fromDate, toDate)
 
             getTransactionDetails(trans_type, fromDate, toDate)
                 .finally(() => setLoading(false));
@@ -558,7 +568,7 @@ const Reports = (props) => {
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Transactions Worth </Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
                                     </View>
@@ -609,9 +619,15 @@ const Reports = (props) => {
                                                         <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
                                                             Status : {value?.status}
                                                         </Text>
-                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                            Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
-                                                        </Text>
+                                                        {value?.timeStamp && (
+                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                                Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
+                                                            </Text>
+
+                                                        )
+
+                                                        }
+
                                                     </View>
                                                     <View style={style.rightContainer}>
                                                         <RightArrow fill={"#1286ED"} />

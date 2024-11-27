@@ -248,6 +248,7 @@ function Transactions(props) {
             else if (transType == "UPI") {
                 console.log(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
+                console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
                 setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
 
             }
@@ -278,7 +279,7 @@ function Transactions(props) {
             value='PG'
 
         }
-        navigation.navigate('reports',{date_props:transDate,trans_type_props:value,status:status})
+        navigation.navigate('reports',{date_props:{fromDate:transDate,toDate:transDate},trans_type_props:value,status:status})
     }
 
     useEffect(() => {
@@ -336,7 +337,7 @@ function Transactions(props) {
                             customStyle={style.cardContainer}
                         >
                             <View style={style.iconContainer}>
-                                <StatIcon />
+                                <StatIcon  width={wp('10%')} height={wp('8%')}/>
                             </View>
                             {loading ? (
                                 <CardLoader />

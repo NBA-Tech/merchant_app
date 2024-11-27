@@ -105,10 +105,6 @@ const Home = (props) => {
                 from: from_date,
                 to: to_date
             },
-            transactionAmount: {
-                from: 0,
-                to: 100000
-            }
 
 
 
@@ -285,7 +281,7 @@ const Home = (props) => {
                                 onClick={()=>{navigation.navigate('reportsMain',{screen:'trans'})}}
                             >
                                 <View style={style.iconContainer}>
-                                    <StatIcon width={wp('6%')} height={wp('6%')}/>
+                                    <StatIcon width={wp('10%')} height={wp('8%')}/>
                                     <RightArrow width={wp('7%')} 
     height={wp('7%')} />
                                 </View>

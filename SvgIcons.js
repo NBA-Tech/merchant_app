@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, { Path, Defs, LinearGradient, Stop,G,Mask,Rect,ClipPath } from 'react-native-svg';
+import Svg, { Path, Defs, LinearGradient, Stop,G,Mask,Rect,ClipPath, Circle, Title } from 'react-native-svg';
 import { Dimensions } from 'react-native';
 import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -276,19 +276,19 @@ export const CreditCard = ({ color = '#D9D9D9', size = 24 }) => (
   </Svg>
 );
 
-export const GreenTick = () => {
+export const GreenTick = ({fill="#43A047",width=49,height=49}) => {
   return (
-    <Svg width="48" height="49" viewBox="0 0 48 49" fill="none">
+    <Svg width={width} height={height} viewBox="0 0 48 49" fill="none">
       <Path
         d="M24 4.5L29.253 8.332L35.756 8.32L37.753 14.508L43.021 18.32L41 24.5L43.021 30.68L37.753 34.492L35.756 40.68L29.253 40.668L24 44.5L18.747 40.668L12.244 40.68L10.247 34.492L4.979 30.68L7 24.5L4.979 18.32L10.247 14.508L12.244 8.32L18.747 8.332L24 4.5Z"
-        stroke="#43A047"
+        stroke={fill}
         strokeWidth="4"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M17 24.5L22 29.5L32 19.5"
-        stroke="#43A047"
+        stroke={fill}
         strokeWidth="4"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -464,3 +464,39 @@ export const PaymentFailIcon= ({ width = 102, height = 107, fill = '#BA0003' }) 
     />
   </Svg>
 )
+
+export const ProfileUserIcon = () => {
+  return (
+      <Svg
+          width="600"
+          height="600"
+          viewBox="0 0 600 600"
+          fill="white"
+          xmlns="http://www.w3.org/2000/svg"
+      >
+          <Title>Abstract user icon</Title>
+          <Defs>
+              <ClipPath id="circular-border">
+                  <Circle cx="300" cy="300" r="280" />
+              </ClipPath>
+              <ClipPath id="avoid-antialiasing-bugs">
+                  <Rect width="100%" height="498" />
+              </ClipPath>
+          </Defs>
+          <Circle
+              cx="300"
+              cy="300"
+              r="280"
+              fill="black"
+              clipPath="url(#avoid-antialiasing-bugs)"
+          />
+          <Circle cx="300" cy="230" r="115" />
+          <Circle
+              cx="300"
+              cy="550"
+              r="205"
+              clipPath="url(#circular-border)"
+          />
+      </Svg>
+  );
+};

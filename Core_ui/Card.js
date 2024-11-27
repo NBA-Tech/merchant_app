@@ -33,11 +33,23 @@ function Card(props) {
             </ImageBackground>
         </TouchableOpacity>
     ) : (
-        <TouchableOpacity onPress={onClick}>
-            <View style={[style.DefaultCardContainer, customStyle]}>
-                {children}
+        (onClick ? (
+            <TouchableOpacity onPress={onClick}>
+                <View style={[style.DefaultCardContainer, customStyle]}>
+                    {children}
+                </View>
+            </TouchableOpacity>
+
+        ) : (
+            <View>
+                <View style={[style.DefaultCardContainer, customStyle]}>
+                    {children}
+                </View>
             </View>
-        </TouchableOpacity>
+        )
+
+        )
+
     );
 }
 

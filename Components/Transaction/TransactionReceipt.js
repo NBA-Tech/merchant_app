@@ -14,6 +14,8 @@ import { getMerchantSession } from '../../HelperFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormatDate } from '../../HelperFunctions';
 import CardLoader from '../../Core_ui/CardLoader';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 const style = StyleSheet.create({
     reportPage: {
@@ -33,6 +35,7 @@ const style = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 16,
         elevation: 5,
+        flexWrap: 'wrap',
     },
     infoCard: {
         flexDirection: 'row',
@@ -55,7 +58,6 @@ const style = StyleSheet.create({
     },
     cardCustomStyleCard: {
         alignSelf: 'center',
-        paddingTop: 30
     },
     bodyContainer: {
         flexDirection: 'column',
@@ -90,6 +92,7 @@ const style = StyleSheet.create({
 const TransactionReceipt = (props) => {
     const { navigation } = props
     const { txnId, paymentMethod, clientId, timeStamp } = props?.route?.params
+    console.log(props?.route?.params)
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(true)
     const [transDetails, setTransDetails] = useState()
@@ -133,8 +136,10 @@ const TransactionReceipt = (props) => {
     }, [merchantSessionData])
 
 
-    useEffect(() => {
+    useFocusEffect(
+        useCallback(() => {
         (async () => {
+            console.log("okay",merchantSessionData)
             if (!merchantSessionData) {
                 return
             }
@@ -156,6 +161,7 @@ const TransactionReceipt = (props) => {
                 paymentMethod: paymentMethod
 
             }
+            console.log("payload",x_token)
             
             const get_trans_details = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
                 method: 'POST',
@@ -167,6 +173,7 @@ const TransactionReceipt = (props) => {
             })
 
             const get_trans_details_res = await get_trans_details.json()
+            console.log(get_trans_details_res)
             if (get_trans_details_res?.msg == "SUCCESS") {
                 setTransDetails(get_trans_details_res?.obj?.[0])
 
@@ -175,7 +182,7 @@ const TransactionReceipt = (props) => {
 
         })()
 
-    }, [merchantSessionData])
+    },[merchantSessionData]))
     return (
         <View style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>
@@ -208,7 +215,7 @@ const TransactionReceipt = (props) => {
                                         </View>
                                         <View style={style.rightContainer}>
                                             {transDetails?.status=="SUCCESS"?(
-                                            <GreenTick />
+                                            <GreenTick width={wp('10%')}/>
 
                                             ):(
                                                 <FailedCrossIcon/>
@@ -249,7 +256,7 @@ const TransactionReceipt = (props) => {
                                     </View>
 
                                     <View style={style.iconContainer}>
-                                        <UpiIcon width={32} height={32} />
+                                        <UpiIcon width={wp('10%')} height={hp('10%')} />
                                     </View>
 
                                 </View>

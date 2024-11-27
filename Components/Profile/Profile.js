@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card'
-import { DeviceDetailsIcon, HelpIcon, LogoutIcon, QrIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
+import { DeviceDetailsIcon, HelpIcon, LogoutIcon, ProfileUserIcon, QrIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import { getMerchantSession } from '../../HelperFunctions';
 import { BASE_URL } from '../../Config';
@@ -86,7 +86,9 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 16,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        paddingVertical:hp('2.3%'),
+        marginVertical:hp('0.7%')
 
     },
     centeredView: {
@@ -230,7 +232,7 @@ const Profile = (props) => {
                     <View style={style.headerBg}>
                         <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
                         <View style={style.profilePic}>
-                            <Image source={require('../../assets/images/profile.png')} />
+                            <ProfileUserIcon/>
                             <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
                             <View style={style.detailsContainer}>
                                 <Text style={[globalStyle.mediumText,{fontSize:wp('4%')}]}>

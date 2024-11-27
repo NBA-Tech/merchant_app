@@ -62,6 +62,5 @@ export const globalStyle = StyleSheet.create({
     blueCircleBorder: {
         backgroundColor: "#D9EDFF",
         borderRadius: wp('10%'), // Responsive border radius
-        padding: wp('1.5%'), // Responsive padding
     },
 });

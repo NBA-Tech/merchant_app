@@ -53,7 +53,6 @@ const style = StyleSheet.create({
     cardCustomStyle: {
         flex: 1,
         alignSelf: 'center',
-        padding: hp('2%'),
         alignItems: 'center'
     },
 
@@ -225,7 +224,11 @@ const Payment = (props) => {
                                     <Card customStyle={style.cardCustomStyle}>
                                         <Image
                                             source={{ uri: `data:image/png;base64,${qr}` }}
-                                            style={{ width: wp('80%'), height: hp('60%') }}
+                                            style={{
+                                                width: wp('80%'), // Full width of the screen
+                                                height: hp('85%'), // Full height of the screen
+                                                resizeMode: 'contain', // Ensure the image scales properly
+                                            }}
                                         />
 
 

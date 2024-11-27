@@ -31,6 +31,7 @@ const ReportsStack = ({ route }) => {
     >
       <Stack.Screen name="reports" component={Reports} />
       <Stack.Screen name="trans" component={Transactions} />
+      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
     </Stack.Navigator>
   );
 };
@@ -50,7 +51,6 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="reportsTab" component={Reports} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
       <Tab.Screen name="profile" component={Profile} />
-      <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
       <Stack.Screen name="payment" component={Payment} />
       <Stack.Screen name="payment_status" component={PaymentStatus} />
     </Tab.Navigator>

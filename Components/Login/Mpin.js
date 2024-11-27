@@ -35,7 +35,8 @@ const style = StyleSheet.create({
     textField: {
         backgroundColor: "#F2FAFD",
         width: 'max-content',
-        height: hp('10%')
+        height: hp('10%'),
+        textAlign:'center'
     },
     button: {
         backgroundColor: "#1385EC",
