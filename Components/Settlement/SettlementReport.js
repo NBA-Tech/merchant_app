@@ -197,7 +197,6 @@ function SettlementReport(props) {
                                         <Text style={globalStyle.headingText}>
                                             Total: ₹ {settlementAmount ?? 0}
                                         </Text>
-                                        <RightArrow fill={'#002D57'} />
                                     </View>
 
                                 )}

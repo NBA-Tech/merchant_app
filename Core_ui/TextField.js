@@ -4,7 +4,7 @@ import { TextInput } from 'react-native-paper';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 export const TextField = forwardRef((props, ref) => {
-  const { placeHolder, onChange, cutomStyle, placeHolderTextColor, isPassword, keyboardType, maxLength } = props;
+  const { placeHolder, onChange, cutomStyle, placeHolderTextColor, isPassword, keyboardType, maxLength,onKeyPress } = props;
   const [inputValue, setInputValue] = useState(""); // State to track input value
   const inputRef = useRef();
 
@@ -34,6 +34,7 @@ export const TextField = forwardRef((props, ref) => {
         secureTextEntry={isPassword}
         keyboardType={keyboardType}
         maxLength={maxLength}
+        onKeyPress={onKeyPress}
       />
     </View>
   );

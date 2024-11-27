@@ -78,6 +78,7 @@ const style = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
     },
+    
 });
 
 const Home = (props) => {
@@ -126,6 +127,7 @@ const Home = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
+        console.log(get_transaction_data_res)
 
 
         if (get_transaction_data_res?.msg == "Success") {
@@ -280,7 +282,7 @@ const Home = (props) => {
                                 hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}
                                 customStyle={style.cardContainer}
-                                onClick={()=>{navigation.navigate('trans')}}
+                                onClick={()=>{navigation.navigate('reportsMain',{screen:'trans'})}}
                             >
                                 <View style={style.iconContainer}>
                                     <StatIcon width={wp('6%')} height={wp('6%')}/>

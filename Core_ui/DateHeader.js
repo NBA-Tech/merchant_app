@@ -106,7 +106,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             {isDate && (
                 <View style={style.dateContainer}>
                     <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
-                        <LeftArrow fill={"#FFFFFF"} />
+                        <LeftArrow fill={"#FFFFFF"}  width={"24"} height={"24"}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={dateOnClick}>
                         <Text style={[globalStyle.headingText, style.date]}>{date}</Text>

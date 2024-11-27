@@ -52,7 +52,7 @@ const Footer = (props) => {
 
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('reports') }}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('reportsTab') }}>
 
                 <View style={active == "transfer" ? globalStyle.blueCircleBorder : ''}>
                     <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} />
