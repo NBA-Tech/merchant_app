@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler,Linking  } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler,Linking,AppState   } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -13,6 +13,8 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isValidEmail } from '../../HelperFunctions';
 import { useBackHandler } from '../../BackHandler';
+import BackgroundTimer from 'react-native-background-timer';
+
 
 const style = StyleSheet.create({
     loginContainer: {
@@ -102,6 +104,8 @@ function Login(props) {
     const mPin6 = useRef(null)
     const [seconds, setSeconds] = useState(0);
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
+    const [appState, setAppState] = useState(AppState.currentState);
+    const [retryOtp,setRetryOtp]=useState(true)
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
         if (direction === 'forward' && text.length === 1 && nextInputRef) {
@@ -309,12 +313,42 @@ function Login(props) {
                 title: 'SUCCESS',
                 textBody: 'OTP SENT',
             });
+            [mPin1, mPin2, mPin3, mPin4, mPin5, mPin6].map((value,index)=>{
+                value.current.setValue('')
+            })
+            mPin1.current.focus()
             setSeconds(120)
+            setRetryOtp(!retryOtp)
         }
 
 
 
     }
+
+    useEffect(() => {
+        if(isOtp){
+
+        const subscription = AppState.addEventListener('change', nextAppState => {
+          setAppState(nextAppState);
+        });
+    
+        // Start the timer when the component mounts
+        const intervalId = BackgroundTimer.setInterval(() => {
+          setSeconds(prev => {
+            if (prev <= 1) {
+              BackgroundTimer.clearInterval(intervalId);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000); // 1-second interval
+    
+        return () => {
+          BackgroundTimer.clearInterval(intervalId); // Cleanup on unmount
+          subscription.remove();
+        };
+    }
+      }, [isOtp,retryOtp]);
 
 
     return (

@@ -17,6 +17,8 @@ import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useBackHandler } from '../../BackHandler';
+import { useAutoLogout } from '../../AutoLogoutContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -93,6 +95,7 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler()
+    const { resetTimer } = useAutoLogout(); 
 
 
 
@@ -142,15 +145,6 @@ const Home = (props) => {
             setTotalTrans(total_transaction_count)
         }
         else {
-            Toast.show({
-                type: ALERT_TYPE.WARNING,
-                title: 'OOPS !',
-                textBody: 'No Transaction Found',
-                duration: 1
-            });
-            setTimeout(() => {
-                Toast.hide();
-            }, 1000);
             setTransAmount(0)
             setTotalTrans(0)
 
@@ -215,6 +209,8 @@ const Home = (props) => {
 
     }, [])
     const adjustDatesAndFetchData = async () => {
+        await AsyncStorage.setItem('is_mpin_set',"true")
+        resetTimer()
         setDateModal(false);
         setLoading(true);
 

@@ -175,6 +175,7 @@ const Profile = (props) => {
     const handleLogout=async ()=>{
         
         await AsyncStorage.removeItem('merchant_status_data');
+        await AsyncStorage.removeItem('is_mpin_set');
         setIsAuthenticated(false)
         navigation.navigate('login')
 

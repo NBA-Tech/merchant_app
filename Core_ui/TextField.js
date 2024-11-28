@@ -11,6 +11,7 @@ export const TextField = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     getValue: () => inputValue,  // Returns the current input value from state
     focus: () => inputRef.current?.focus(),  // Focuses the TextInput
+    setValue: (value) => setInputValue(value),
   }));
 
 

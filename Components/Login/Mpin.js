@@ -87,6 +87,7 @@ const style = StyleSheet.create({
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
+    console.log("typeMpin",typeMpin)
     const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
@@ -115,7 +116,7 @@ function Mpin(props) {
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
         if(mpin.length!=4){
             Toast.show({
-                type: ALERT_TYPE.SUCCESS,
+                type: ALERT_TYPE.WARNING,
                 title: 'Oops',
                 textBody: "Fill 4 digit MPIN",
             });
@@ -174,7 +175,7 @@ function Mpin(props) {
     }
 
     const setMpin=async()=>{
-        setLoading(true)
+
         let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
         if(mpin=='' || mpin.length!=4){
             Toast.show({
@@ -185,6 +186,7 @@ function Mpin(props) {
             return
 
         }
+        setLoading(true)
         let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
@@ -241,6 +243,10 @@ function Mpin(props) {
                 const sessionData = await getMerchantSession();
                 setMerchentSessionData(sessionData);
             };
+            [mPin1,mPin2,mPin3,mPin4].map((value,index)=>{
+                value.current.setValue('')
+            })
+            mPin1.current.focus()
     
             fetchMerchantSession();
     

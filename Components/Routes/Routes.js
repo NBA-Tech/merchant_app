@@ -18,7 +18,7 @@ import SplashScreen from '../Home/SplashScreen';
 import PaymentStatus from '../Payment/PaymentStatus';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { BackHandlerProvider } from '../../BackHandler';
-
+import { AutoLogoutProvider } from '../../AutoLogoutContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -93,6 +93,7 @@ const Routes = () => {
     const checkSession = async () => {
       try {
         const token = await AsyncStorage.getItem('merchant_status_data');
+        console.log("token",token,isAuthenticated)
         if (token !== null) {
           setIsAuthenticated(true);
         }
@@ -100,6 +101,7 @@ const Routes = () => {
         console.log('Failed to load session token', e);
       }
     };
+    console.log("Session check")
 
     checkSession();
   }, [isAuthenticated]);
@@ -118,8 +120,10 @@ const Routes = () => {
   return (
     <NavigationContainer onStateChange={onStateChange}>
       <BackHandlerProvider currentRoute={currentRoute}>
+        <AutoLogoutProvider>
 
         {isAuthenticated ? <AuthStack /> : <UnauthStack />}
+        </AutoLogoutProvider>
       </BackHandlerProvider>
     </NavigationContainer >
   );
