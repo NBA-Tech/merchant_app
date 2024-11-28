@@ -14,7 +14,6 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
     useEffect(() => {
         const backAction = () => {
             if(currentRoute.includes("transactionreceipt")){
-            console.log(currentRoute,"true")
 
                 navigation.navigate('reportsTab',{screen:'reports'})
             }

@@ -64,7 +64,7 @@ const style = StyleSheet.create({
         marginBottom: hp('3%')
     },
     normalText: {
-        fontSize: 16,
+        fontSize: wp('4.2%'),
         color: '#000',
       },
       link: {

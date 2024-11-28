@@ -251,7 +251,6 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log("currStatus",currStatus)
 
         if (get_transaction_data_res?.msg == "Success") {
             let total_trans_temp = []
@@ -343,7 +342,6 @@ const Reports = (props) => {
     }, [])
 
     useEffect(() => {
-        console.log("status_props",status_props)
         if (date_props != undefined) {
             setFromDate(date_props?.fromDate)
             setToDate(date_props?.toDate)

@@ -174,10 +174,6 @@ function Transactions(props) {
             transactionDate: {
                 from: from_date,
                 to: to_date
-            },
-            transactionAmount: {
-                from: 0,
-                to: 100000
             }
 
         }
@@ -255,16 +251,28 @@ function Transactions(props) {
                 setTotalPG(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
             }
         }
-        else if(transType == "ALL"){
-            setTotalPGAmount(0)
-            setTotalPG(0)
-            setTotalUPIAmount(0)
-            setTotalUPI(0)
+        else{
             setCards({})
-            setTotalTransAmount(0)
-            setTotalTrans(0)
-        }
 
+            if(transType == "ALL"){
+                setTotalTransAmount(0)
+                setTotalTrans(0)
+            }
+            else if(transType=="PG"){
+                setTotalPGAmount(0)
+                setTotalPG(0)
+    
+            }
+            else if(transType=="UPI"){
+                setTotalUPIAmount(0)
+                setTotalUPI(0)
+
+
+            }
+    
+
+        }
+    
 
 
 
