@@ -145,11 +145,12 @@ const style = StyleSheet.create({
         paddingBottom: 12,
         paddingLeft: 20,
         alignItems: 'center',
-        gap: 10, // This may not work depending on the React Native version; an alternative is to use margin or justifyContent with flex properties
+        gap: 10, 
         flexShrink: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignContent: 'center'
+        alignContent: 'center',
+       
     },
     button: {
         backgroundColor: "#ffffff",
@@ -414,11 +415,11 @@ const Reports = (props) => {
 
                                         <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
                                             <TouchableOpacity style={style.filterRow} onPress={() => { setIsUpi(!isUpi) }}>
-                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline]}>UPI    {isUpi ? 'X' : ''}</Text>
+                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline,{ fontSize: wp('5%') } ]}>UPI    {isUpi ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
                                             <TouchableOpacity style={style.filterRow} onPress={() => { setIsPg(!isPg) }}>
-                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline]}>PG     {isPg ? 'X' : ''}</Text>
+                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline,{ fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
 
@@ -447,7 +448,8 @@ const Reports = (props) => {
                                                 }}
                                                 itemTextStyle={{
                                                     color: '#000000', // Items in the dropdown list should also be black
-                                                    fontFamily: 'IBMPlexSans-Bold'
+                                                    fontFamily: 'IBMPlexSans-Bold',
+                                                     fontSize: wp('3%'),
                                                 }}
                                                 dropdownStyle={{
                                                     backgroundColor: '#E5F3FF', // Dropdown background color to white
@@ -471,14 +473,14 @@ const Reports = (props) => {
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setFromDateModal(!fromDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%') }]}>{fromDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%'), marginTop: hp('0%') }]}>{fromDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setToDateModal(!toDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%') }]}>{toDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%'),marginTop: hp('0%') }]}>{toDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
@@ -560,14 +562,14 @@ const Reports = (props) => {
                                 customStyle={style.cardCustomStyleCard}
                             >
                                 <View style={style.iconContainer}>
-                                <StatIcon width={wp('10%')} height={hp('8%')}/>
+                                <StatIcon width={wp('8%')} height={hp('5%')}/>
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>Transactions Worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>₹  {transAmount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>Transactions Worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'}]}>₹  {transAmount}</Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
                                 )}

@@ -76,7 +76,7 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: hp('3%'),
+        marginBottom: hp('0.5%'),
     },
     cardData: {
         flexDirection: 'row',
@@ -336,16 +336,16 @@ function Transactions(props) {
                             customStyle={style.cardContainer}
                         >
                             <View style={style.iconContainer}>
-                                <StatIcon  width={wp('10%')} height={hp('8%')}/>
+                                <StatIcon  width={wp('8%')} height={hp('5%')}/>
                             </View>
                             {loading ? (
                                 <CardLoader />
                             ) : (
                                 <View style={style.bodyContainer}>
-                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'}]}>
                                         Transactions worth 
                                     </Text>
-                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>
                                         ₹ {totalTransAmount}
                                     </Text>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
@@ -378,7 +378,7 @@ function Transactions(props) {
                                                 <View style={style.infoContainer}>
                                                     <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.name}</Text>
 
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {value?.totalAmount} </Text>
+                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center',paddingVertical: hp('1%'), }]}>₹ {value?.totalAmount} </Text>
                                                     <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.totalTrans} </Text>
                                                     
                                               </View>

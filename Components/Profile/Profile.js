@@ -302,7 +302,7 @@ const Profile = (props) => {
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}  width={wp('8%')} height={hp('6.5%')}/>
+                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>

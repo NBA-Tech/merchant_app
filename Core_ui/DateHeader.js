@@ -10,10 +10,12 @@ import { DataContext } from '../DataContext';
 
 const style = StyleSheet.create({
     dateContainer: {
-        flexDirection: 'row',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-between',
         marginVertical: hp('2%'),
-        justifyContent: 'space-between',
-        alignItems: 'center'
+     
+
     },
     date: {
         textAlign: 'center',
@@ -64,7 +66,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
 
     const handleRightClick = () => {
         const currentDate = new Date();
-        
+
         // Check if the transDate is the same as the current date (ignoring the time)
         if (transDate.toDateString() !== currentDate.toDateString()) {
             const date = new Date(transDate);
@@ -105,15 +107,22 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
 
             {isDate && (
                 <View style={style.dateContainer}>
-                    <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
-                        <LeftArrow fill={"#FFFFFF"}   width={wp('6%')} height={hp('6.5%')}/>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={dateOnClick}>
-                        <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleRightClick}>
-                        <RightArrow fill={"#FFFFFF"}width={wp('6%')} height={hp('6.5%')} />
-                    </TouchableOpacity>
+                    <View>
+                        <TouchableOpacity onPress={handleLeftClick}>
+                            <LeftArrow fill={"#FFFFFF"} width={wp('6%')} height={hp('6.5%')} />
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity onPress={dateOnClick}>
+                            <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TouchableOpacity onPress={handleRightClick}>
+                            <RightArrow fill={"#FFFFFF"} width={wp('6%')} height={hp('6.5%')} />
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
 
             )
