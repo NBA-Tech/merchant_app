@@ -246,9 +246,7 @@ function Transactions(props) {
 
             }
             else if (transType == "UPI") {
-                console.log("amount",get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
-                console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
                 setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
 
             }
@@ -292,9 +290,6 @@ function Transactions(props) {
 
     }, [])
 
-    useEffect(()=>{
-        console.log("totalUPIAmount",totalUPIAmount)
-    },[totalUPI])
 
 
     useEffect(() => {

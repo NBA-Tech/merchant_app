@@ -8,7 +8,6 @@ import { ConnectivityProvider } from './ConnectivityContext';
 import NoInternetPopup from './NoInternetPopup';
 import { DataProvider } from './DataContext';
 import { AuthProvider } from './AuthProvider';
-import { BackHandlerProvider } from './BackHandler';
 
 function App(): React.JSX.Element {
 
@@ -16,7 +15,7 @@ function App(): React.JSX.Element {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BackHandlerProvider>
+
       <ConnectivityProvider>
         <AuthProvider>
           <GlobalStyleProvider>
@@ -26,13 +25,12 @@ function App(): React.JSX.Element {
                 <NoInternetPopup />
 
                 {/* Exit Confirmation Modal */}
-               
+
               </AlertNotificationRoot>
             </DataProvider>
           </GlobalStyleProvider>
         </AuthProvider>
       </ConnectivityProvider>
-      </BackHandlerProvider>
     </GestureHandlerRootView>
   );
 }

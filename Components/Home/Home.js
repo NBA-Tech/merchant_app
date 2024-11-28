@@ -123,7 +123,6 @@ const Home = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log(get_transaction_data_res)
 
 
         if (get_transaction_data_res?.msg == "Success") {
@@ -236,20 +235,6 @@ const Home = (props) => {
         }, [transDate, merchantSessionData])
     );
 
-
-    useEffect(() => {
-        const backAction = () => {
-            setShowExitModal(true)
-            return true
-
-        };
-
-        BackHandler.addEventListener('hardwareBackPress', backAction);
-
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', backAction);
-        };
-    }, [navigation]);
 
 
     return (

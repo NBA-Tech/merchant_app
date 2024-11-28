@@ -92,7 +92,6 @@ const style = StyleSheet.create({
 const TransactionReceipt = (props) => {
     const { navigation } = props
     const { txnId, paymentMethod, clientId, timeStamp } = props?.route?.params
-    console.log(props?.route?.params)
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(true)
     const [transDetails, setTransDetails] = useState()
@@ -139,7 +138,6 @@ const TransactionReceipt = (props) => {
     useFocusEffect(
         useCallback(() => {
         (async () => {
-            console.log("okay",merchantSessionData)
             if (!merchantSessionData) {
                 return
             }
@@ -161,7 +159,6 @@ const TransactionReceipt = (props) => {
                 paymentMethod: paymentMethod
 
             }
-            console.log("payload",x_token)
             
             const get_trans_details = await fetch(`${BASE_URL}/app/txn/getTransactionDetails`, {
                 method: 'POST',
@@ -173,7 +170,6 @@ const TransactionReceipt = (props) => {
             })
 
             const get_trans_details_res = await get_trans_details.json()
-            console.log(get_trans_details_res)
             if (get_trans_details_res?.msg == "SUCCESS") {
                 setTransDetails(get_trans_details_res?.obj?.[0])
 

@@ -6,13 +6,21 @@ import { NoInterNetIcon } from './SvgIcons'; // Assuming you have this icon comp
 const BackHandlerContext = createContext();
 
 // BackHandlerProvider to manage back button state
-export const BackHandlerProvider = ({ children }) => {
+export const BackHandlerProvider = ({ children, currentRoute }) => {
     const [showExitModal, setShowExitModal] = useState(false);
+    const noExitRoutes=['reports','trans','transactionreceipt','reportsTab','settlement_report','profile','payment','payment_status']
 
     useEffect(() => {
         const backAction = () => {
-            setShowExitModal(true); // Show the exit confirmation modal
-            return true; // Prevent default back button behavior
+            if (noExitRoutes.includes(currentRoute)) {
+                return false
+            }
+            else {
+                setShowExitModal(true); // Show the exit confirmation modal
+                return true; // Prevent default back button behavior
+
+            }
+
         };
 
         const backHandler = BackHandler.addEventListener(
@@ -21,7 +29,7 @@ export const BackHandlerProvider = ({ children }) => {
         );
 
         return () => backHandler.remove(); // Cleanup the listener on unmount
-    }, []);
+    }, [currentRoute]);
 
     const handleExitApp = () => {
         BackHandler.exitApp(); // Exit the app
@@ -32,7 +40,7 @@ export const BackHandlerProvider = ({ children }) => {
     };
 
     return (
-        <BackHandlerContext.Provider value={{ showExitModal,setShowExitModal, handleCloseModal, handleExitApp }}>
+        <BackHandlerContext.Provider value={{ showExitModal, setShowExitModal, handleCloseModal, handleExitApp }}>
             {children}
 
             {/* Exit Confirmation Modal */}

@@ -241,7 +241,6 @@ const Reports = (props) => {
             'x-client-secret': merchantSessionData?.clientDetails?.secret
 
         }
-        console.log("hello world",payload)
 
 
         const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
@@ -251,7 +250,6 @@ const Reports = (props) => {
         })
 
         const get_transaction_data_res = await get_transaction_data_api.json()
-        console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo)
 
         if (get_transaction_data_res?.msg == "Success") {
             let total_trans_temp = []
@@ -321,7 +319,6 @@ const Reports = (props) => {
     }
 
     const handleTransDetails = (value) => {
-        console.log(value?.orderId)
         navigation.navigate('reportsMain', {
             screen: 'transactionreceipt',
             params: {
@@ -375,7 +372,6 @@ const Reports = (props) => {
                 isUpi ? "UPI" : "",
                 isPg ? "PG" : ""
             ].filter(Boolean);
-            console.log("hello world",trans_type, fromDate, toDate)
 
             getTransactionDetails(trans_type, fromDate, toDate)
                 .finally(() => setLoading(false));

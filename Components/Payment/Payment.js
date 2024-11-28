@@ -106,9 +106,7 @@ const Payment = (props) => {
         })
 
         const generate_qr_api_res = await generate_qr_api.json()
-        console.log("payload",payload)
-        console.log("headers",headers)
-        console.log(generate_qr_api_res)
+
 
         if (generate_qr_api_res?.statusCode == 200) {
             setQr(generate_qr_api_res?.obj)
@@ -131,7 +129,6 @@ const Payment = (props) => {
     }
 
     const qrStatusCheckApi = useCallback(async () => {
-        console.log(intervalId,currOrderId,merchantSessionData)
         if (intervalId || !currOrderId || !merchantSessionData) return;
 
         const headers = {
@@ -150,16 +147,15 @@ const Payment = (props) => {
                 });
 
                 const result = await response.json();
-                console.log('QR Status:', result);
 
                 if (result?.msg === 'SUCCESS') {
                     clearInterval(id);
                     setIsQr(false);
-                    navigation.navigate('payment_status', { status: 'SUCCESS' });
+                    navigation.navigate('payment_status', { status: 'SUCCESS',amount:amountRef.current.getValue() });
                 } else if (result?.msg === 'FAILURE') {
                     clearInterval(id);
                     setIsQr(false);
-                    navigation.navigate('payment_status', { status: 'FAILURE' });
+                    navigation.navigate('payment_status', { status: 'FAILURE',amount:amountRef.current.getValue() });
                 }
             } catch (error) {
                 console.error('Error checking QR status:', error);

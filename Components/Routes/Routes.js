@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -17,13 +17,13 @@ import PaymentGateway from '../Payment/PaymentGateway';
 import SplashScreen from '../Home/SplashScreen';
 import PaymentStatus from '../Payment/PaymentStatus';
 import { AuthProvider, useAuth } from '../../AuthProvider';
+import { BackHandlerProvider } from '../../BackHandler';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // Bottom Tab Navigator for authenticated users
 const ReportsStack = ({ route }) => {
-  console.log("routerouterouteroute",route?.params?.Screen)
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
@@ -46,7 +46,7 @@ const BottomTabNavigator = () => {
       }}
     >
       <Tab.Screen name="home" component={Home} />
-     
+
       <Tab.Screen name="reportsMain" component={ReportsStack} />
       <Tab.Screen name="reportsTab" component={Reports} />
       <Tab.Screen name="settlement_report" component={SettlementReport} />
@@ -72,17 +72,22 @@ const AuthStack = () => {
 // Unauthenticated Stack Navigator
 const UnauthStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="splash_screen" component={SplashScreen} />
-      <Stack.Screen name="login" component={Login} />
-      <Stack.Screen name="mpin" component={Mpin} />
-    </Stack.Navigator>
+    <BackHandlerProvider routes={['home', 'transactionreceipt']}>
+
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="splash_screen" component={SplashScreen} />
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="mpin" component={Mpin} />
+      </Stack.Navigator>
+    </BackHandlerProvider>
+
   );
 };
 
 // Main Routes Component
 const Routes = () => {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [currentRoute, setCurrentRoute] = useState()
 
   useEffect(() => {
     const checkSession = async () => {
@@ -99,10 +104,24 @@ const Routes = () => {
     checkSession();
   }, [isAuthenticated]);
 
+  const onStateChange = (state) => {
+    if (state) {
+      let route = state.routes[state.index];
+      while (route.state && route.state.index !== undefined) {
+          route = route.state.routes[route.state.index];
+      }
+
+      setCurrentRoute(route.name)
+    }
+  };
+
   return (
-    <NavigationContainer>
-      {isAuthenticated ? <AuthStack /> : <UnauthStack />}
-    </NavigationContainer>
+    <NavigationContainer onStateChange={onStateChange}>
+      <BackHandlerProvider currentRoute={currentRoute}>
+
+        {isAuthenticated ? <AuthStack /> : <UnauthStack />}
+      </BackHandlerProvider>
+    </NavigationContainer >
   );
 };
 

@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
 
 const PaymentStatus = (props) => {
   const {navigation}=props
-  const {status}=props?.route?.params
+  const { status = undefined, amount = undefined } = props?.route?.params || {};
+
   const mainCircleScale = useRef(new Animated.Value(0)).current; // Starts at 0 scale
   const innerCircleScale = useRef(new Animated.Value(0)).current; // Starts at 0 scale
 
@@ -104,7 +105,7 @@ const PaymentStatus = (props) => {
           </Animated.View>
         </Animated.View>
       </View>
-      <Text style={[styles.statusText,{color:status=="SUCCESS"?"#079B0C":"#FF0E12"}]}>{status=="SUCCESS"?'PAYMENT SUCCESSFULL':'PAYMENT FAILED'}</Text>
+      <Text style={[styles.statusText,{color:status=="SUCCESS"?"#079B0C":"#FF0E12"}]}>{status=="SUCCESS"?`PAYMENT SUCCESSFULL FOR RS.${amount}`:`PAYMENT FAILED FOR RS.${amount}`}</Text>
 
       <Button buttonText={'Done'} customeStyleButton={{backgroundColor:status=="SUCCESS"?"#03B80C":"#B80306"}} onClick={()=>{navigation.navigate('payment')}}/>
     </View>

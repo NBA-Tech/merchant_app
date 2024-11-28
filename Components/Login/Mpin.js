@@ -252,19 +252,6 @@ function Mpin(props) {
     );
 
 
-    useEffect(() => {
-        const backAction = () => {
-            setShowExitModal(true)
-            return true
-
-        };
-    
-        BackHandler.addEventListener('hardwareBackPress', backAction);
-    
-        return () => {
-          BackHandler.removeEventListener('hardwareBackPress', backAction);
-        };
-      }, [navigation]);
 
 
     return (
