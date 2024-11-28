@@ -48,10 +48,10 @@ export const LoginFooter = () => {
 
 export const LeftArrow = ({ fill = "white", width = 24, height = 24 }) => (
   <Svg width={width} height={height} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <Path 
-          d="M15.975 2.5L17.75 4.275L9.525 12.5L17.75 20.725L15.975 22.5L5.975 12.5L15.975 2.5Z" 
-          fill={fill} 
-      />
+    <Path 
+        d="M15.975 2.5L17.75 4.275L9.525 12.5L17.75 20.725L15.975 22.5L5.975 12.5L15.975 2.5Z" 
+        fill={fill} 
+    />
   </Svg>
 );
 
@@ -77,8 +77,8 @@ export const StatIcon = ({fill='white',height=24,width=24}) => (
   </Svg>
 );
 
-export const RightArrow = ({fill="#ffffff",width=24,height=24}) => (
-  <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 20 24" fill="none">
+export const RightArrow = ({ fill = "#ffffff", width = 24, height = 24 }) => (
+  <Svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 25" fill="none">
     <Path
       d="M6.025 22L4.25 20.225L12.475 12L4.25 3.775L6.025 2L16.025 12L6.025 22Z"
       fill={fill}

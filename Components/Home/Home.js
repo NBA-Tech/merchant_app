@@ -27,7 +27,7 @@ const style = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: hp('3%'),
+        marginBottom: hp('0.5%'),
     },
     cardContainer: {
         flexDirection: 'column',
@@ -42,7 +42,7 @@ const style = StyleSheet.create({
     settlement: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: hp('1%'),
+        alignItems:'center'
     },
     reportContainer: {
         flexDirection: 'column',
@@ -281,15 +281,16 @@ const Home = (props) => {
                                 onClick={() => { navigation.navigate('reportsMain', { screen: 'trans' }) }}
                             >
                                 <View style={style.iconContainer}>
-                                    <StatIcon width={wp('10%')} height={hp('8%')} />
+                                    <StatIcon width={wp('8%')} height={hp('5%')} />
+                                    
                                     <RightArrow width={wp('6%')} height={hp('6.5%')} />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>Successful Transactions worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>₹ {transAmount} </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'  }]}>Successful Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>₹ {transAmount} </Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
                                 )}
@@ -337,18 +338,24 @@ const Home = (props) => {
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={[style.reportData, { alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }]}>
-                                                        <DownloadIcon width={wp('6%')} height={hp('6%')} />
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
+                                                    <View style={style.reportData}>
+                                                       <View style={{display:'flex',flexDirection:'row'}}>
+                                                       <DownloadIcon width={wp('6%')} height={hp('4%')} />
+                                                       <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
+                                                       </View>
+                                                      
                                                     </View>
                                                 </Button>
                                                 <Button
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={[style.reportData, { alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }]}>
-                                                        <DownloadIcon width={wp('6%')} height={hp('6%')} />
+                                                    <View style={style.reportData}>
+                                                        <View style={{display:'flex',flexDirection:'row'}}>
+                                                        <DownloadIcon  width={wp('6%')} height={hp('4%')}/>
                                                         <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Settlement</Text>
+                                                        </View>
+                                                       
                                                     </View>
                                                 </Button>
                                             </View>

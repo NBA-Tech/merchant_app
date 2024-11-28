@@ -250,8 +250,8 @@ const TransactionReceipt = (props) => {
                             ) : (
                                 <View style={style.cardContainer}>
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>Transactions worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>₹  {transDetails?.amount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163'  }]}>Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163'}]}>₹  {transDetails?.amount}</Text>
                                         <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>{new Date(timeStamp).toISOString().split('.')[0]}</Text>
                                     </View>
 
@@ -273,35 +273,35 @@ const TransactionReceipt = (props) => {
                                     <View>
                                         {transDetails?.id && (
                                             <>
-                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Transaction Id </Text>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242",fontSize: wp('4.5%') }]]}>Transaction Id </Text>
                                                 <Text style={[globalStyle.blueMediumText]}>{transDetails?.id} </Text>
                                             </>
                                         )}
 
                                         {transDetails?.transactedFrom && (
                                             <>
-                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Transaction From </Text>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242",fontSize: wp('4.5%') }]]}>Transaction From </Text>
                                                 <Text style={[globalStyle.blueMediumText]}>{transDetails?.transactedFrom} </Text>
                                             </>
                                         )}
 
                                         {transDetails?.utr_NO && (
                                             <>
-                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>UTR </Text>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242",fontSize: wp('4.5%') }]]}>UTR </Text>
                                                 <Text style={[globalStyle.blueMediumText]}>{transDetails?.utr_NO} </Text>
                                             </>
                                         )}
 
                                         {transDetails?.rrn && (
                                             <>
-                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>RRN </Text>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242",fontSize: wp('4.5%') }]]}>RRN </Text>
                                                 <Text style={[globalStyle.blueMediumText]}>{transDetails?.rrn} </Text>
                                             </>
                                         )}
 
                                         {transDetails?.status && (
                                             <>
-                                                <Text style={[[globalStyle.boldText, { color: "#424242" }]]}>Status</Text>
+                                                <Text style={[[globalStyle.boldText, { color: "#424242",fontSize: wp('4.5%') }]]}>Status</Text>
                                                 <Text style={[globalStyle.blueMediumText]}>{transDetails?.status} </Text>
                                             </>
                                         )}
@@ -320,7 +320,7 @@ const TransactionReceipt = (props) => {
                                 style={style.buttonStyle}
                             >
                                 <ShareIcon fill={'#ffffff'} size={wp('6%')}/>
-                                <Text style={[[globalStyle.boldText, { color: "#ffffff", paddingBottom: 10 }]]}>Share Transaction Report</Text>
+                                <Text style={[[globalStyle.boldText, { color: "#ffffff", paddingBottom: 10,fontSize: wp('4.5%') }]]}>Share Transaction Report</Text>
 
                             </View>
 
