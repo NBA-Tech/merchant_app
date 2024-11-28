@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { StyleContext } from '../GlobalStyleProvider';
 import { LeftArrow, RightArrow, BackIcon } from '../SvgIcons';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../Config';
 import { DataContext } from '../DataContext';
@@ -93,7 +93,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
                 (
                     <View style={[style.navContainer, customStyle]}>
                         <TouchableOpacity onPress={() => { navigation.goBack() }}>
-                            <BackIcon size='30' />
+                            <BackIcon size={hp('4.2%')} />
                         </TouchableOpacity>
                         <Text style={[globalStyle.headingText, { color: '#ffffff', marginBottom: 10, marginHorizontal: 10 }]}>{navHeading}</Text>
 
@@ -106,13 +106,13 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             {isDate && (
                 <View style={style.dateContainer}>
                     <TouchableOpacity style={{ marginVertical: hp('1%') }} onPress={handleLeftClick}>
-                        <LeftArrow fill={"#FFFFFF"}  width={"24"} height={"24"}/>
+                        <LeftArrow fill={"#FFFFFF"}   width={wp('6%')} height={hp('6.5%')}/>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={dateOnClick}>
                         <Text style={[globalStyle.headingText, style.date]}>{date}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleRightClick}>
-                        <RightArrow fill={"#FFFFFF"} width={"24"} height={"24"} />
+                        <RightArrow fill={"#FFFFFF"}width={wp('6%')} height={hp('6.5%')} />
                     </TouchableOpacity>
                 </View>
 

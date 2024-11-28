@@ -44,7 +44,7 @@ const Footer = (props) => {
         <View style={style.footerContainer}>
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('home') }}>
                 <View style={active == "home" ? globalStyle.blueCircleBorder : ''}>
-                    <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} width={wp('10%')}/>
+                    <HouseIcon fill={active == "home" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
                 </View>
                 <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Home</Text>
@@ -55,7 +55,7 @@ const Footer = (props) => {
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('reportsTab') }}>
 
                 <View style={active == "transfer" ? globalStyle.blueCircleBorder : ''}>
-                    <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} width={wp('10%')}/>
+                    <ArrowIcon fill={active == "transfer" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
                 </View>
                 <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Transactions</Text>
@@ -66,7 +66,7 @@ const Footer = (props) => {
 
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('payment') }}>
                 <View style={active == "payment" ? globalStyle.blueCircleBorder : ''}>
-                    <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} width={wp('10%')}/>
+                    <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
                 </View>
                 <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Payments</Text>
@@ -76,7 +76,7 @@ const Footer = (props) => {
 
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('settlement_report') }}>
                 <View style={active == "settlement_report" ? globalStyle.blueCircleBorder : ''}>
-                    <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} width={wp('10%')}/>
+                    <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
                 </View>
                 <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Settlements</Text>
@@ -87,7 +87,7 @@ const Footer = (props) => {
             <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('profile') }}>
 
                 <View style={active == "profile" ? globalStyle.blueCircleBorder : ''}>
-                    <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} width={wp('10%')}/>
+                    <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
                 </View>
 
                 <Text style={[globalStyle.mediumText, { textAlign: 'center',fontSize:wp('3.5%') }]}>Profile</Text>

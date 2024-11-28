@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   defaultStyleText: {
     fontFamily: 'IBMPlexSans-Bold',
     textAlign: 'center',
-    color:"#ffffff"
+    color:"#ffffff",
+    fontSize:wp('4%')
   },
 });
 

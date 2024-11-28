@@ -73,7 +73,7 @@ const style = StyleSheet.create({
         borderRadius: 20
     },
     download: {
-        fontSize: 18,
+        fontSize: wp('4%'),
         fontWeight: '500',
     },
     settlementAmount: {
@@ -213,7 +213,7 @@ function SettlementReport(props) {
                                 <View>
                                     <View style={style.cardRow}>
                                         <View style={style.leftDetails}>
-                                            <CardIcon />
+                                            <CardIcon  width={wp('8%')} height={hp('6.5%')}/>
 
 
                                             <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>PG</Text>
@@ -227,7 +227,7 @@ function SettlementReport(props) {
 
                                     <View style={style.cardRow}>
                                         <View style={style.leftDetails}>
-                                            <UpiIcon />
+                                            <UpiIcon  width={wp('8%')} height={hp('6.5%')}/>
 
                                             <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>UPI</Text>
                                         </View>

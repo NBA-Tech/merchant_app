@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet,BackHandler  } from 'react-native';
+import { View, Text, StyleSheet, BackHandler } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -14,7 +14,7 @@ import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
-import { FormatDate,getMerchantSession } from '../../HelperFunctions';
+import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useBackHandler } from '../../BackHandler';
 const style = StyleSheet.create({
@@ -51,7 +51,7 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginVertical: hp('1%'),
-        alignItems:'center',
+        alignItems: 'center',
     },
     buttonContainer: {
         marginHorizontal: wp('0%'),
@@ -78,11 +78,11 @@ const style = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
     },
-    
+
 });
 
 const Home = (props) => {
-    const {navigation}=props
+    const { navigation } = props
     const globalStyle = useContext(StyleContext);
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);
@@ -90,12 +90,12 @@ const Home = (props) => {
     const [dateModal, setDateModal] = useState(false)
     const [transAmount, setTransAmount] = useState(0)
     const [totalTrans, setTotalTrans] = useState(0)
-    const [settlementAmount,setSettlementAmount]=useState(0)
-    const [settlementCount,setSettlementCount]=useState(0)
-    const {showExitModal,setShowExitModal, handleCloseModal, handleExitApp}=useBackHandler()
+    const [settlementAmount, setSettlementAmount] = useState(0)
+    const [settlementCount, setSettlementCount] = useState(0)
+    const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler()
 
 
-    
+
     const get_transaction_data = async (from_date, to_date) => {
         let payload = {
             paymentMethods: [
@@ -145,27 +145,27 @@ const Home = (props) => {
                 type: ALERT_TYPE.WARNING,
                 title: 'OOPS !',
                 textBody: 'No Transaction Found',
-                duration:1
+                duration: 1
             });
             setTimeout(() => {
                 Toast.hide();
-              }, 1000);
-              setTransAmount(0)
-              setTotalTrans(0)
+            }, 1000);
+            setTransAmount(0)
+            setTotalTrans(0)
 
         }
         // setLoading(false);
     }
 
-    const getSettlement=async(date)=>{
+    const getSettlement = async (date) => {
         let payload = {
             paymentMethod: [
                 "ALL"
             ],
-            settlementDate:date.split("T")[0]
+            settlementDate: date.split("T")[0]
 
         }
-        
+
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
@@ -181,7 +181,7 @@ const Home = (props) => {
 
         const get_settlement_data_res = await get_settlement_data_api.json()
 
-        if(get_settlement_data_res?.statusCode==200){
+        if (get_settlement_data_res?.statusCode == 200) {
             const total_amount = get_settlement_data_res?.obj?.reduce(
                 (sum, { summaryDetails }) => sum + parseFloat(summaryDetails?.totalAmount || 0),
                 0
@@ -194,7 +194,7 @@ const Home = (props) => {
 
             setSettlementAmount(total_amount)
             setSettlementCount(total_settlement_count)
-            
+
         }
 
     }
@@ -204,15 +204,15 @@ const Home = (props) => {
     const toggleDateModal = () => {
         setDateModal(!dateModal)
     }
-    useEffect(()=>{
-        const getSession=async()=>{
+    useEffect(() => {
+        const getSession = async () => {
             setMerchentSessionData(await getMerchantSession())
 
         }
         getSession()
-        
 
-    },[])
+
+    }, [])
     const adjustDatesAndFetchData = async () => {
         setDateModal(false);
         setLoading(true);
@@ -233,7 +233,7 @@ const Home = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             adjustDatesAndFetchData();
-        }, [transDate,merchantSessionData])
+        }, [transDate, merchantSessionData])
     );
 
 
@@ -243,13 +243,13 @@ const Home = (props) => {
             return true
 
         };
-    
+
         BackHandler.addEventListener('hardwareBackPress', backAction);
-    
+
         return () => {
-          BackHandler.removeEventListener('hardwareBackPress', backAction);
+            BackHandler.removeEventListener('hardwareBackPress', backAction);
         };
-      }, [navigation]);
+    }, [navigation]);
 
 
     return (
@@ -258,7 +258,7 @@ const Home = (props) => {
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
-                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal}  />
+                            <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} />
                             {dateModal && (
                                 <DateTimePicker
                                     value={transDate}
@@ -278,27 +278,26 @@ const Home = (props) => {
                                 hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}
                                 customStyle={style.cardContainer}
-                                onClick={()=>{navigation.navigate('reportsMain',{screen:'trans'})}}
+                                onClick={() => { navigation.navigate('reportsMain', { screen: 'trans' }) }}
                             >
                                 <View style={style.iconContainer}>
-                                    <StatIcon width={wp('10%')} height={wp('8%')}/>
-                                    <RightArrow width={wp('7%')} 
-    height={wp('7%')} />
+                                    <StatIcon width={wp('10%')} height={hp('8%')} />
+                                    <RightArrow width={wp('6%')} height={hp('6.5%')} />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Successful Transactions worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹ {transAmount} </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>Successful Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>₹ {transAmount} </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
                                 )}
                             </Card>
                         </View>
                     </View>
                     <View style={style.homeBodyContainer}>
-                        <Card customStyle={style.cardCustomStyle} onClick={()=>{navigation.navigate('settlement_report')}}>
+                        <Card customStyle={style.cardCustomStyle} onClick={() => { navigation.navigate('settlement_report') }}>
                             <View style={style.settlementContainer}>
                                 {loading ? (
                                     <CardLoader />
@@ -308,13 +307,12 @@ const Home = (props) => {
                                             <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>Settlement amount</Text>
                                         </View>
                                         <View style={style.settlement}>
-                                            <BankIcon width={wp('10%')} height={wp('8%')} />
-                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {settlementAmount??0} </Text>
-                                            <RightArrow fill={"#1286ED"} width={wp('7%')} 
-    height={wp('7%')} />
+                                            <BankIcon width={wp('8%')} height={hp('8%')} />
+                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>₹ {settlementAmount ?? 0} </Text>
+                                            <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')} />
                                         </View>
                                         <View style={style.settlementHeader}>
-                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{settlementCount??0} Settlements</Text>
+                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{settlementCount ?? 0} Settlements</Text>
                                         </View>
                                     </View>
                                 )}
@@ -332,26 +330,25 @@ const Home = (props) => {
                                             </View>
                                             <View style={style.reportData}>
                                                 <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Download Monthly Reports</Text>
-                                                <RightArrow fill={"#1286ED"} width={wp('7%')} 
-    height={wp('7%')} />
+                                                <RightArrow width={wp('6%')} height={hp('6.5%')}/>
                                             </View>
                                             <View style={style.reportData}>
                                                 <Button
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={[style.reportData,{alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}]}>
-                                                        <DownloadIcon width={wp('6%')} height={wp('6%')}/>
-                                                        <Text style={[globalStyle.boldTextBlack, {textAlign: 'center', marginTop: hp('0%')  }]}>Transaction</Text>
+                                                    <View style={[style.reportData, { alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }]}>
+                                                        <DownloadIcon width={wp('6%')} height={hp('6%')} />
+                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
                                                     </View>
                                                 </Button>
                                                 <Button
                                                     customeStyleContainer={style.buttonContainer}
                                                     customeStyleButton={style.button}
                                                 >
-                                                    <View style={[style.reportData,{alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}]}>
-                                                        <DownloadIcon width={wp('6%')} height={wp('6%')}/>
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center',marginTop: hp('0%')}]}>Settlement</Text>
+                                                    <View style={[style.reportData, { alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }]}>
+                                                        <DownloadIcon width={wp('6%')} height={hp('6%')} />
+                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Settlement</Text>
                                                     </View>
                                                 </Button>
                                             </View>
@@ -363,7 +360,7 @@ const Home = (props) => {
                     </View>
                 </View>
             </ScrollView>
-            <Footer active={'home'} navigation={navigation}/>
+            <Footer active={'home'} navigation={navigation} />
         </View>
     );
 };

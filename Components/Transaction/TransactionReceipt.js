@@ -218,7 +218,7 @@ const TransactionReceipt = (props) => {
                                             <GreenTick width={wp('10%')}/>
 
                                             ):(
-                                                <FailedCrossIcon/>
+                                                <FailedCrossIcon  width={wp('10%')}/>
                                             )
 
                                             }
@@ -250,9 +250,9 @@ const TransactionReceipt = (props) => {
                             ) : (
                                 <View style={style.cardContainer}>
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>Transactions worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>₹  {transDetails?.amount}</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: 18 }]}>{new Date(timeStamp).toISOString().split('.')[0]}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>₹  {transDetails?.amount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>{new Date(timeStamp).toISOString().split('.')[0]}</Text>
                                     </View>
 
                                     <View style={style.iconContainer}>
@@ -319,7 +319,7 @@ const TransactionReceipt = (props) => {
                             <View
                                 style={style.buttonStyle}
                             >
-                                <ShareIcon fill={'#ffffff'} />
+                                <ShareIcon fill={'#ffffff'} size={wp('6%')}/>
                                 <Text style={[[globalStyle.boldText, { color: "#ffffff", paddingBottom: 10 }]]}>Share Transaction Report</Text>
 
                             </View>

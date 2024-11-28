@@ -129,13 +129,13 @@ function Transactions(props) {
             name: "UPI Collect",
             totalAmount: totalUPIAmount,
             totalTrans: `${totalUPI} Transactions`,
-            icon: <UpiIcon width={wp('8%')} height={wp('10%')}/>
+            icon: <UpiIcon width={wp('8%')} height={hp('10%')}/>
         },
         {
             name: 'PG Collect',
             totalAmount: totalPGAmount,
             totalTrans: `${totalPG} Transactions`,
-            icon: <CardIcon width={wp('8%')} height={wp('10%')}/>
+            icon: <CardIcon width={wp('8%')} height={hp('10%')}/>
         }
     ]
 
@@ -147,7 +147,7 @@ function Transactions(props) {
                 <View style={style.nestedElement}>
                     <Text style={globalStyle.boldTextBlack}>{value?.heading}</Text>
                     <Text style={globalStyle.boldTextBlack}>{value?.amount}</Text>
-                    <RightArrow fill={"#1286ED"} width={wp('8%')} height={wp('6.5%')} />
+                    <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')} />
                     
 
                 </View>
@@ -246,7 +246,7 @@ function Transactions(props) {
 
             }
             else if (transType == "UPI") {
-                console.log(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
+                console.log("amount",get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
                 console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
                 setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
@@ -257,7 +257,7 @@ function Transactions(props) {
                 setTotalPG(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
             }
         }
-        else{
+        else if(transType == "ALL"){
             setTotalPGAmount(0)
             setTotalPG(0)
             setTotalUPIAmount(0)
@@ -291,6 +291,10 @@ function Transactions(props) {
 
 
     }, [])
+
+    useEffect(()=>{
+        console.log("totalUPIAmount",totalUPIAmount)
+    },[totalUPI])
 
 
     useEffect(() => {
@@ -337,19 +341,19 @@ function Transactions(props) {
                             customStyle={style.cardContainer}
                         >
                             <View style={style.iconContainer}>
-                                <StatIcon  width={wp('10%')} height={wp('8%')}/>
+                                <StatIcon  width={wp('10%')} height={hp('8%')}/>
                             </View>
                             {loading ? (
                                 <CardLoader />
                             ) : (
                                 <View style={style.bodyContainer}>
-                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
                                         Transactions worth 
                                     </Text>
-                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
                                         ₹ {totalTransAmount}
                                     </Text>
-                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>
+                                    <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>
                                         {totalTrans} Transactions
                                     </Text>
                                 </View>
@@ -384,7 +388,7 @@ function Transactions(props) {
                                                     
                                               </View>
                                                 <View style={style.rightContainer}>
-                                                    <RightArrow fill={"#1286ED"} width={wp('8%')} height={wp('6.5%')}/>
+                                                    <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')}/>
                                                 </View>
                                             </View>
 
@@ -412,13 +416,13 @@ function Transactions(props) {
                                             <CardLoader />
                                         ) : (
                                             <View style={style.settlement}>
-                                                <MenuIcon width={wp('8%')} height={wp('10%')}/>
+                                                <MenuIcon width={wp('7%')} height={hp('6%')}/>
                                                 <Text style={[globalStyle.boldTextBlack,{alignItems:'center'}]}>Transactions Status</Text>
 
                                                 {toggle ? (
-                                                    <DropDownIcon />
+                                                    <DropDownIcon  width={wp('6%')} height={hp('6.5%')}/>
                                                 ) : (
-                                                    <RightArrow fill="#1286ED" width={wp('8%')} height={wp('6.5%')}/>
+                                                    <RightArrow fill="#1286ED" width={wp('6%')} height={hp('6.5%')}/>
                                                 )}
                                             </View>
 

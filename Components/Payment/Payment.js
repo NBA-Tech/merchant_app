@@ -106,11 +106,23 @@ const Payment = (props) => {
         })
 
         const generate_qr_api_res = await generate_qr_api.json()
+        console.log("payload",payload)
+        console.log("headers",headers)
+        console.log(generate_qr_api_res)
+
         if (generate_qr_api_res?.statusCode == 200) {
             setQr(generate_qr_api_res?.obj)
             setCurrOrderId(generate_qr_api_res?.msg)
 
             setIsQr(true)
+        }
+        else{
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'FAILED !',
+                textBody: generate_qr_api_res?.obj,
+            });
+
         }
         setLoading(false)
 
@@ -119,6 +131,7 @@ const Payment = (props) => {
     }
 
     const qrStatusCheckApi = useCallback(async () => {
+        console.log(intervalId,currOrderId,merchantSessionData)
         if (intervalId || !currOrderId || !merchantSessionData) return;
 
         const headers = {

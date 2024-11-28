@@ -34,12 +34,13 @@ const style = StyleSheet.create({
     iconContainer: {
         flexDirection: 'row',
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         marginBottom: hp('3%'),
     },
     bodyContainer: {
         flexDirection: 'column',
+        marginHorizontal:wp('1%')
     },
     homeBodyContainer: {
         backgroundColor: "#ffffff",
@@ -60,7 +61,7 @@ const style = StyleSheet.create({
         marginVertical: hp('2%')
     },
     dropdown: {
-        height: 40,
+        height: hp('5%'),
         borderRadius: 8,
         paddingHorizontal: 8,
         color: '#000000',
@@ -80,7 +81,8 @@ const style = StyleSheet.create({
     cardCustomStyleCard: {
         alignSelf: 'center',
         marginTop: hp('2%'),
-        paddingTop: 30
+        paddingTop: 30,
+        padding:wp('2%')
     },
     infoContainer: {
         flexDirection: 'column',
@@ -412,7 +414,7 @@ const Reports = (props) => {
                                     }
                                 >
                                     <View style={style.filterContainer}>
-                                        <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Payment method</Text>
+                                        <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Payment method</Text>
 
                                         <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
                                             <TouchableOpacity style={style.filterRow} onPress={() => { setIsUpi(!isUpi) }}>
@@ -428,7 +430,7 @@ const Reports = (props) => {
 
                                         </View>
 
-                                        <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Status</Text>
+                                        <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Status</Text>
 
                                         <View style={style.filterRow}>
                                             <Dropdown
@@ -439,12 +441,12 @@ const Reports = (props) => {
                                                 ]}
                                                 placeholderStyle={{
                                                     color: '#000000', // Placeholder text black
-                                                    fontSize: 16, // Example for adjusting font size (optional)
+                                                    fontSize: wp('3.5%'), // Example for adjusting font size (optional)
                                                     fontFamily: 'IBMPlexSans-Bold'
                                                 }}
                                                 selectedTextStyle={{
                                                     color: '#000000', // Selected text black
-                                                    fontSize: 16, // Adjust as necessary
+                                                    fontSize: wp('3.5%'), // Adjust as necessary
                                                     fontFamily: 'IBMPlexSans-Bold'
                                                 }}
                                                 itemTextStyle={{
@@ -454,7 +456,7 @@ const Reports = (props) => {
                                                 dropdownStyle={{
                                                     backgroundColor: '#E5F3FF', // Dropdown background color to white
                                                 }}
-                                                maxHeight={300}
+                                                maxHeight={hp('10%')}
                                                 labelField="label"
                                                 valueField="value"
                                                 placeholder={!isStatusFocus ? 'Select Status' : '...'}
@@ -468,19 +470,19 @@ const Reports = (props) => {
 
                                         </View>
                                         <View >
-                                            <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: 18 }]}>Date</Text>
+                                            <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Date</Text>
                                             <View style={style.filterRow}>
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setFromDateModal(!fromDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: 15 }]}>{fromDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%') }]}>{fromDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setToDateModal(!toDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: 15 }]}>{toDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%') }]}>{toDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
@@ -531,7 +533,7 @@ const Reports = (props) => {
                                                     disabled={loading}
                                                     onClick={handleFilterReset}
                                                 >
-                                                    <Text style={{ color: '#1286ED' }}>
+                                                    <Text style={{ color: '#1286ED',fontSize: wp('3.5%') }}>
                                                         Reset Filter
                                                     </Text>
                                                 </Button>
@@ -541,7 +543,7 @@ const Reports = (props) => {
                                                     disabled={loading}
                                                     onClick={() => { setIsFilterUpdate(!isFilterUpdate) }}
                                                 >
-                                                    <Text style={{ color: '#FFFFFF' }}>
+                                                    <Text style={{ color: '#FFFFFF',fontSize: wp('3.5%') }}>
                                                         Filter
                                                     </Text>
                                                 </Button>
@@ -562,15 +564,15 @@ const Reports = (props) => {
                                 customStyle={style.cardCustomStyleCard}
                             >
                                 <View style={style.iconContainer}>
-                                    <StatIcon />
+                                <StatIcon width={wp('10%')} height={hp('8%')}/>
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>Transactions Worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>₹  {transAmount}</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: 18 }]}>{totalTrans} Transactions</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>Transactions Worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>₹  {transAmount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
                                 )}
                             </Card>
@@ -607,7 +609,7 @@ const Reports = (props) => {
                                             <View style={style.settlementContainer}>
                                                 <View style={style.cardData}>
                                                     <View style={style.logoContainer}>
-                                                        {value?.paymentMethod === "UPI" ? <UpiIcon /> : <CardIcon />}
+                                                        {value?.paymentMethod === "UPI" ? <UpiIcon width={wp('8%')} height={hp('10%')}/> : <CardIcon width={wp('8%')} height={hp('10%')}/>}
                                                     </View>
                                                     <View style={style.infoContainer}>
                                                         <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
@@ -630,7 +632,7 @@ const Reports = (props) => {
 
                                                     </View>
                                                     <View style={style.rightContainer}>
-                                                        <RightArrow fill={"#1286ED"} />
+                                                        <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')}/>
                                                     </View>
                                                 </View>
                                             </View>

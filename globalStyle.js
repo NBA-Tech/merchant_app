@@ -18,49 +18,54 @@ export const globalStyle = StyleSheet.create({
         color: "#FFFFFF",
     },
     boldBlackText: {
-        fontSize: wp('4.5%'), // Responsive font size
+        fontSize: wp('5.5%'), // Responsive font size
         fontStyle: 'normal',
         fontFamily: 'IBMPlexSans-Bold',
         color: "#000000",
     },
     blueMediumText: {
         color: "#1286ED",
-        fontSize: wp('4.2%'), // Responsive font size
+        fontSize: wp('5.2%'), // Responsive font size
         fontFamily: 'IBMPlexSans-SemiBold',
     },
     boldTextBlack: {
         color: "#323232",
-        fontSize: wp('4.5%'), // Responsive font size
+        fontSize: wp('5.5%'), // Responsive font size
         fontStyle: 'normal',
         fontFamily: 'IBMPlexSans-Bold',
-        marginTop: hp('0.5%'), // Responsive margin
     },
     headingText: {
-        fontSize: wp('6%'), // Responsive font size for headings
+        fontSize: wp('7%'), // Responsive font size for headings
         fontStyle: 'normal',
         fontFamily: 'IBMPlexSans-Bold',
         marginTop: hp('1%'), // Responsive margin
         color: "#FFFFFF",
     },
     blackSubText: {
-        fontSize: wp('4%'), // Responsive font size for subtext
+        fontSize: wp('5%'), // Responsive font size for subtext
         fontStyle: 'normal',
         fontFamily: 'IBMPlexSans-Light',
         color: "#323232",
     },
     mediumText: {
         color: "#323232",
-        fontSize: wp('4%'), // Responsive font size
+        fontSize: wp('5%'), // Responsive font size
         fontFamily: 'IBMPlexSans-Medium',
     },
     normalText: {
         color: "#1D3039",
-        fontSize: wp('3%'), // Responsive font size for smaller text
+        fontSize: wp('4%'), // Responsive font size for smaller text
         fontFamily: 'IBMPlexSans-Light',
         fontWeight: 'bold',
     },
     blueCircleBorder: {
         backgroundColor: "#D9EDFF",
-        borderRadius: wp('10%'), // Responsive border radius
+        width: wp('10%'), // Set width
+        height: wp('10%'), // Make height equal to width
+        borderRadius: wp('5%'), // Half of width/height for a perfect circle
+        justifyContent: 'center', // Center content vertically
+        alignItems: 'center', // Center content horizontally
+        padding: wp('0.5%'), // Optional: Padding inside the circle
     },
+    
 });

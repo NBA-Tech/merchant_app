@@ -36,7 +36,8 @@ const style = StyleSheet.create({
         backgroundColor: "#F2FAFD",
         width: 'max-content',
         height: hp('10%'),
-        textAlign:'center'
+        textAlign:'center',
+        width:wp('20%')
     },
     button: {
         backgroundColor: "#1385EC",

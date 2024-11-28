@@ -252,11 +252,11 @@ const Profile = (props) => {
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <DeviceDetailsIcon />
+                                            <DeviceDetailsIcon  size={wp('7%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Device Details</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
@@ -264,11 +264,11 @@ const Profile = (props) => {
                                 <View>
                                     <Card customStyle={style.cardContent} onClick={() => { setIsQrModal(!isQrModal) }}>
                                         <View style={style.leftDetails}>
-                                            <QrIcon fill='#1286ED' />
+                                            <QrIcon fill='#1286ED'  width={wp('8%')} height={hp('6.5%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>My QR</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
@@ -276,44 +276,44 @@ const Profile = (props) => {
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <StaffIcon />
+                                            <StaffIcon size={wp('7%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Add Staff</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <SettingsIcon />
+                                            <SettingsIcon  size={wp('7%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Settings</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <HelpIcon />
+                                            <HelpIcon   size={wp('7%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'}  width={wp('8%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent} onClick={handleLogout}>
                                         <View style={style.leftDetails}>
-                                            <LogoutIcon />
+                                            <LogoutIcon  size={wp('7%')}/>
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} />
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
                                         </View>
                                     </Card>
                                 </View>
