@@ -170,6 +170,7 @@ const TransactionReceipt = (props) => {
             })
 
             const get_trans_details_res = await get_trans_details.json()
+            console.log(get_trans_details_res)
             if (get_trans_details_res?.msg == "SUCCESS") {
                 setTransDetails(get_trans_details_res?.obj?.[0])
 
@@ -178,7 +179,7 @@ const TransactionReceipt = (props) => {
 
         })()
 
-    },[merchantSessionData]))
+    },[merchantSessionData,txnId]))
     return (
         <View style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>

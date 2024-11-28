@@ -71,6 +71,16 @@ const style = StyleSheet.create({
         color: '#1E90FF', // Highlight the link text (e.g., blue color)
         textDecorationLine: 'underline',
       },
+      versionContainer: {
+        alignItems: 'center',        // Centers text inside the container
+        backgroundColor:"#F8F9FA"
+      },
+      versionText:{
+        fontSize:wp('2%'),
+        color:'#000000',
+        marginVertical:hp('2%')
+        
+      }
 
 
 });
@@ -469,6 +479,10 @@ function Login(props) {
                     </View>
 
                 </View>
+            </View>
+            <View style={style.versionContainer}>
+                <Text style={style.versionText}>Version : V.1.0-alpha</Text>
+
             </View>
         </ScrollView>
     );

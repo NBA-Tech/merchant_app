@@ -6,7 +6,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../Config';
 import { DataContext } from '../DataContext';
-
+import { useRoute } from '@react-navigation/native';
 
 const style = StyleSheet.create({
     dateContainer: {
@@ -29,6 +29,7 @@ const style = StyleSheet.create({
     }
 })
 const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, customStyle, isBackHeader = false, navigation, isDate = true }) => {
+    const route = useRoute();
     const { transDate, setTransDate } = useContext(DataContext)
 
     const globalStyle = useContext(StyleContext);
@@ -94,7 +95,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             ) :
                 (
                     <View style={[style.navContainer, customStyle]}>
-                        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                        <TouchableOpacity onPress={() => { route?.name=="transactionreceipt"?navigation.navigate('reportsTab'):navigation.goBack() }}>
                             <BackIcon size={hp('4.2%')} />
                         </TouchableOpacity>
                         <Text style={[globalStyle.headingText, { color: '#ffffff', marginBottom: 10, marginHorizontal: 10 }]}>{navHeading}</Text>

@@ -1,17 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BackHandler, Modal, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { NoInterNetIcon } from './SvgIcons'; // Assuming you have this icon component
-
+import {  useNavigation } from '@react-navigation/native';
 // Create Context
 const BackHandlerContext = createContext();
 
 // BackHandlerProvider to manage back button state
 export const BackHandlerProvider = ({ children, currentRoute }) => {
+    const navigation = useNavigation();
     const [showExitModal, setShowExitModal] = useState(false);
     const noExitRoutes=['reports','trans','transactionreceipt','reportsTab','settlement_report','profile','payment','payment_status']
 
     useEffect(() => {
         const backAction = () => {
+            if(currentRoute.includes("transactionreceipt")){
+            console.log(currentRoute,"true")
+
+                navigation.navigate('reportsTab',{screen:'reports'})
+            }
             if (noExitRoutes.includes(currentRoute)) {
                 return false
             }

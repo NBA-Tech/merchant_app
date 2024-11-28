@@ -130,9 +130,12 @@ const Home = (props) => {
                 (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
                 0
             ).toFixed(2);
+            console.log(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo)
 
             const total_transaction_count = get_transaction_data_res?.obj.reduce(
-                (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
+                (count, { transactionDetailPojo }) => (transactionDetailPojo.filter(
+                    (transaction) => transaction.status === "SUCCESS"
+                ).length),
                 0
             );
 

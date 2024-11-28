@@ -147,7 +147,7 @@ function Transactions(props) {
                 <View style={style.nestedElement}>
                     <Text style={globalStyle.boldTextBlack}>{value?.heading}</Text>
                     <Text style={globalStyle.boldTextBlack}>{value?.amount}</Text>
-                    <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')} />
+                    <RightArrow fill={"#1286ED"} width={wp('4%')} height={hp('4.5%')} />
                     
 
                 </View>
@@ -218,7 +218,7 @@ function Transactions(props) {
 
 
                 const failTransactions = get_transaction_data_res?.obj.flatMap(obj =>
-                    obj.transactionDetailPojo.filter(transaction => transaction.status === "FAILED")
+                    obj.transactionDetailPojo.filter(transaction => transaction.status === "FAILURE")
                 );
 
                 setCards(
@@ -233,7 +233,7 @@ function Transactions(props) {
                             {
                                 heading: 'Failed',
                                 amount: `${failTransactions.length} Transactions`,
-                                onClick:()=>handleFilterTrans('',"FAILED")
+                                onClick:()=>handleFilterTrans('',"FAILURE")
                             }
                         ]} />
                     },
@@ -378,8 +378,8 @@ function Transactions(props) {
                                                 <View style={style.infoContainer}>
                                                     <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.name}</Text>
 
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center',paddingVertical: hp('1%'), }]}>₹ {value?.totalAmount} </Text>
-                                                    <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>{value?.totalTrans} </Text>
+                                                    <Text style={[globalStyle.blackSubText, { textAlign: 'center',paddingVertical: hp('1%'), }]}>₹ {value?.totalAmount} </Text>
+                                                    <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>{value?.totalTrans} </Text>
                                                     
                                               </View>
                                                 <View style={style.rightContainer}>

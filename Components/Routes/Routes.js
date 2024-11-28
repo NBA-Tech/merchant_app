@@ -29,8 +29,8 @@ const ReportsStack = ({ route }) => {
       screenOptions={{ headerShown: false }}
       initialRouteName={route?.params?.Screen || 'reports'} // Use `params.Screen` to determine the initial screen
     >
-      <Stack.Screen name="reports" component={Reports} />
       <Stack.Screen name="trans" component={Transactions} />
+      <Stack.Screen name="reports" component={Reports} />
       <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
     </Stack.Navigator>
   );
