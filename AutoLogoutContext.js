@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from './AuthProvider';
 const AutoLogoutContext = createContext();
 
-const inactivityTime = 10000; // 10 seconds for demonstration, adjust as needed
+const inactivityTime = 5000000; // 10 seconds for demonstration, adjust as needed
 
 export const AutoLogoutProvider = ({ children }) => {
   const navigation = useNavigation();

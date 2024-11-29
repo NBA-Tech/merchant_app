@@ -67,15 +67,15 @@ const Payment = (props) => {
     const [qr, setQr] = useState('')
     const [currOrderId,setCurrOrderId]=useState(undefined)
     const [intervalId, setIntervalId] = useState(null)
+    const [currAmount,setCurrAmount]=useState(0)
 
     const amountRef = useRef('');
 
 
 
     const handlePayment = async () => {
-        setLoading(true)
-        setIsQr(false)
         let amount = amountRef.current.getValue()
+        setCurrAmount(amount)
         if (amount == 0) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
@@ -84,6 +84,8 @@ const Payment = (props) => {
             });
             return
         }
+        setLoading(true)
+        setIsQr(false)
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
@@ -151,11 +153,12 @@ const Payment = (props) => {
                 if (result?.msg === 'SUCCESS') {
                     clearInterval(id);
                     setIsQr(false);
-                    navigation.navigate('payment_status', { status: 'SUCCESS',amount:amountRef.current.getValue() });
+                    navigation.navigate('payment_status', { status: 'SUCCESS',amount:currAmount });
+                   
                 } else if (result?.msg === 'FAILURE') {
                     clearInterval(id);
                     setIsQr(false);
-                    navigation.navigate('payment_status', { status: 'FAILURE',amount:amountRef.current.getValue() });
+                    navigation.navigate('payment_status', { status: 'FAILURE',amount:currAmount });
                 }
             } catch (error) {
                 console.error('Error checking QR status:', error);
@@ -216,6 +219,7 @@ const Payment = (props) => {
                                 <Button
                                     customeStyleButton={style.button}
                                     onClick={handlePayment}
+                                    disabled={loading?true:false}
                                 >
                                     {loading ? <DotsLoader /> : 'Generate'}
 

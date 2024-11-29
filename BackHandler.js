@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BackHandler, Modal, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { NoInterNetIcon } from './SvgIcons'; // Assuming you have this icon component
 import {  useNavigation } from '@react-navigation/native';
+import { useAuth } from './AuthProvider';
+
 // Create Context
 const BackHandlerContext = createContext();
 
@@ -9,6 +11,7 @@ const BackHandlerContext = createContext();
 export const BackHandlerProvider = ({ children, currentRoute }) => {
     const navigation = useNavigation();
     const [showExitModal, setShowExitModal] = useState(false);
+    const { isAuthenticated, setIsAuthenticated } = useAuth();
     const noExitRoutes=['reports','trans','transactionreceipt','reportsTab','settlement_report','profile','payment','payment_status']
 
     useEffect(() => {
@@ -37,6 +40,9 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
     }, [currentRoute]);
 
     const handleExitApp = () => {
+        setShowExitModal(false);
+        setIsAuthenticated(false)
+
         BackHandler.exitApp(); // Exit the app
     };
 

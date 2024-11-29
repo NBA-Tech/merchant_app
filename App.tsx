@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { BackHandler, Modal, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Routes from './Components/Routes/Routes';
 import GlobalStyleProvider from './GlobalStyleProvider';
@@ -8,14 +7,12 @@ import { ConnectivityProvider } from './ConnectivityContext';
 import NoInternetPopup from './NoInternetPopup';
 import { DataProvider } from './DataContext';
 import { AuthProvider } from './AuthProvider';
+import withScreenshotProtection from './ScreenProtection';
+import withBackgroundProtection from './BackgroundProtection';
 
 function App(): React.JSX.Element {
-
-
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-
       <ConnectivityProvider>
         <AuthProvider>
           <GlobalStyleProvider>
@@ -23,9 +20,6 @@ function App(): React.JSX.Element {
               <AlertNotificationRoot>
                 <Routes />
                 <NoInternetPopup />
-
-                {/* Exit Confirmation Modal */}
-
               </AlertNotificationRoot>
             </DataProvider>
           </GlobalStyleProvider>
@@ -35,5 +29,5 @@ function App(): React.JSX.Element {
   );
 }
 
-
-export default App;
+// Wrap App component with the HOC
+export default withBackgroundProtection(withScreenshotProtection(App));

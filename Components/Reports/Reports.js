@@ -40,7 +40,7 @@ const style = StyleSheet.create({
     },
     bodyContainer: {
         flexDirection: 'column',
-        marginHorizontal:wp('1%')
+        marginHorizontal: wp('1%')
     },
     homeBodyContainer: {
         backgroundColor: "#ffffff",
@@ -82,11 +82,12 @@ const style = StyleSheet.create({
         alignSelf: 'center',
         marginTop: hp('2%'),
         paddingTop: 30,
-        padding:wp('2%')
+        padding: wp('2%')
     },
     infoContainer: {
         flexDirection: 'column',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        flexWrap: 'wrap'
     },
     logoContainer: {
         flexDirection: 'column',
@@ -145,12 +146,12 @@ const style = StyleSheet.create({
         paddingBottom: 12,
         paddingLeft: 20,
         alignItems: 'center',
-        gap: 10, 
+        gap: 10,
         flexShrink: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignContent: 'center',
-       
+
     },
     button: {
         backgroundColor: "#ffffff",
@@ -415,11 +416,11 @@ const Reports = (props) => {
 
                                         <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
                                             <TouchableOpacity style={style.filterRow} onPress={() => { setIsUpi(!isUpi) }}>
-                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline,{ fontSize: wp('5%') } ]}>UPI    {isUpi ? 'X' : ''}</Text>
+                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>UPI    {isUpi ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
                                             <TouchableOpacity style={style.filterRow} onPress={() => { setIsPg(!isPg) }}>
-                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline,{ fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
+                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
                                             </TouchableOpacity>
 
 
@@ -449,7 +450,7 @@ const Reports = (props) => {
                                                 itemTextStyle={{
                                                     color: '#000000', // Items in the dropdown list should also be black
                                                     fontFamily: 'IBMPlexSans-Bold',
-                                                     fontSize: wp('3%'),
+                                                    fontSize: wp('3%'),
                                                 }}
                                                 dropdownStyle={{
                                                     backgroundColor: '#E5F3FF', // Dropdown background color to white
@@ -473,14 +474,14 @@ const Reports = (props) => {
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setFromDateModal(!fromDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%'), marginTop: hp('0%') }]}>{fromDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: wp('3.5%'), marginTop: hp('0%') }]}>{fromDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
 
                                                 <TouchableOpacity style={style.filterRow} onPress={() => { setToDateModal(!toDateModal) }}>
                                                     <View style={style.dateField}>
-                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize:  wp('3.5%'),marginTop: hp('0%') }]}>{toDate.toISOString().split('T')[0]}</Text>
+                                                        <Text style={[globalStyle.boldText, { color: '#000000', fontSize: wp('3.5%'), marginTop: hp('0%') }]}>{toDate.toISOString().split('T')[0]}</Text>
                                                         <CalendarIcon />
                                                     </View>
                                                 </TouchableOpacity>
@@ -531,7 +532,7 @@ const Reports = (props) => {
                                                     disabled={loading}
                                                     onClick={handleFilterReset}
                                                 >
-                                                    <Text style={{ color: '#1286ED',fontSize: wp('3.5%') }}>
+                                                    <Text style={{ color: '#1286ED', fontSize: wp('3.5%') }}>
                                                         Reset Filter
                                                     </Text>
                                                 </Button>
@@ -541,7 +542,7 @@ const Reports = (props) => {
                                                     disabled={loading}
                                                     onClick={() => { setIsFilterUpdate(!isFilterUpdate) }}
                                                 >
-                                                    <Text style={{ color: '#FFFFFF',fontSize: wp('3.5%') }}>
+                                                    <Text style={{ color: '#FFFFFF', fontSize: wp('3.5%') }}>
                                                         Filter
                                                     </Text>
                                                 </Button>
@@ -562,15 +563,15 @@ const Reports = (props) => {
                                 customStyle={style.cardCustomStyleCard}
                             >
                                 <View style={style.iconContainer}>
-                                <StatIcon width={wp('8%')} height={hp('5%')}/>
+                                    <StatIcon width={wp('8%')} height={hp('5%')} />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>Transactions Worth </Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'}]}>₹  {transAmount}</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9',fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>₹  {transAmount}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
                                 )}
                             </Card>
@@ -607,13 +608,25 @@ const Reports = (props) => {
                                             <View style={style.settlementContainer}>
                                                 <View style={style.cardData}>
                                                     <View style={style.logoContainer}>
-                                                        {value?.paymentMethod === "UPI" ? <UpiIcon width={wp('8%')} height={hp('10%')}/> : <CardIcon width={wp('8%')} height={hp('10%')}/>}
+                                                        {value?.paymentMethod === "UPI" ? (
+                                                            <UpiIcon width={wp('8%')} height={hp('10%')} />
+                                                        ) : (
+                                                            <CardIcon width={wp('8%')} height={hp('10%')} />
+                                                        )}
                                                     </View>
-                                                    <View style={style.infoContainer}>
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center' }]}>
+                                                    <View style={[style.infoContainer, { maxWidth: '70%' }]}>
+                                                        <Text
+                                                            style={[globalStyle.boldTextBlack, { textAlign: 'center', flexWrap: 'wrap' }]}
+                                                            numberOfLines={1} // Optional: Truncates text if it's too long
+                                                            ellipsizeMode="tail" // Optional: Adds "..." for overflowing text
+                                                        >
                                                             Amount : ₹{value?.amount}
                                                         </Text>
-                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                        <Text
+                                                            style={[globalStyle.blackSubText, { textAlign: 'center', flexWrap: 'wrap' }]}
+                                                            numberOfLines={1}
+                                                            ellipsizeMode="tail"
+                                                        >
                                                             ID : {value?.orderId}
                                                         </Text>
                                                         <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
@@ -623,16 +636,13 @@ const Reports = (props) => {
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
                                                                 Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
                                                             </Text>
-
-                                                        )
-
-                                                        }
-
+                                                        )}
                                                     </View>
                                                     <View style={style.rightContainer}>
-                                                        <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')}/>
+                                                        <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')} />
                                                     </View>
                                                 </View>
+
                                             </View>
                                         </TouchableOpacity>
                                     </Card>
