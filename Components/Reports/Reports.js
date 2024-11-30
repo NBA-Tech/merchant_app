@@ -191,6 +191,8 @@ const Reports = (props) => {
     const date_props = props?.route?.params?.date_props
     const trans_type_props = props?.route?.params?.trans_type_props
     const status_props = props?.route?.params?.status
+    // console.log("props",date_props,trans_type_props,status_props)
+    // console.log(navigation)
 
     const { transDate, setTransDate } = useContext(DataContext)
     const [loading, setLoading] = useState(false);

@@ -18,7 +18,8 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
         const backAction = () => {
             if(currentRoute.includes("transactionreceipt")){
 
-                navigation.navigate('reportsTab',{screen:'reports'})
+                navigation.navigate('reportsMain',{screen:'reports'})
+                // navigation.goBack()
             }
             if (noExitRoutes.includes(currentRoute)) {
                 return false

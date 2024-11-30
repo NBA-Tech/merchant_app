@@ -111,7 +111,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             ) :
                 (
                     <View style={[style.navContainer, customStyle]}>
-                        <TouchableOpacity onPress={() => { route?.name=="transactionreceipt"?navigation.navigate('reportsTab'):navigation.goBack() }}>
+                        <TouchableOpacity onPress={() => { navigation.goBack()}}>
                             <BackIcon size={hp('4.2%')} />
                         </TouchableOpacity>
                         <Text style={[globalStyle.headingText, { color: '#ffffff', marginBottom: 10, marginHorizontal: 10 }]}>{navHeading}</Text>
