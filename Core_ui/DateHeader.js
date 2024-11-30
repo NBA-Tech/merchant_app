@@ -34,6 +34,7 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
 
     const globalStyle = useContext(StyleContext);
     const [merchantData, setMerchantData] = useState()
+    const [blurArrow,setBlurArrow]=useState(false)
 
 
     const getMerchantData = async () => {
@@ -73,6 +74,8 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             const date = new Date(transDate);
             date.setDate(date.getDate() + 1); // Move to the next day
             setTransDate(date);
+            
+
         }
     };
 
@@ -83,6 +86,19 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
         }
 
     }, [])
+    useEffect(()=>{
+        const date=new Date(transDate)
+        const currentDate = new Date();
+
+        if(date.toDateString() == currentDate.toDateString()){
+            setBlurArrow(true)
+
+        }
+        else{
+            setBlurArrow(false)
+        }
+
+    },[transDate])
     return (
         <View>
             {!isBackHeader ? (
@@ -119,8 +135,8 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
                         </TouchableOpacity>
                     </View>
                     <View>
-                        <TouchableOpacity onPress={handleRightClick}>
-                            <RightArrow fill={"#FFFFFF"} width={wp('6%')} height={hp('6.5%')} />
+                        <TouchableOpacity onPress={handleRightClick} disabled={blurArrow?true:false}>
+                            <RightArrow fill={blurArrow?"#808080":"#FFFFFF"} width={wp('6%')} height={hp('6.5%')} />
                         </TouchableOpacity>
                     </View>
 

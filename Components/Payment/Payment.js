@@ -14,7 +14,7 @@ import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
-import { FormatDate, getMerchantSession, convertRupeesToPaise } from '../../HelperFunctions';
+import { FormatDate, getMerchantSession, convertRupeesToPaise, fetchWithTimeout } from '../../HelperFunctions';
 import { TextField } from '../../Core_ui/TextField';
 import DotsLoader from '../../DotsLoader';
 import { useFocusEffect } from '@react-navigation/native';
@@ -53,7 +53,8 @@ const style = StyleSheet.create({
     cardCustomStyle: {
         flex: 1,
         alignSelf: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        margin:0,
     },
 
 })
@@ -101,7 +102,7 @@ const Payment = (props) => {
             amount: amount,
             validTill: ""
         }
-        const generate_qr_api = await fetch(`${BASE_URL}/app/txn/generateQr`, {
+        const generate_qr_api = await fetchWithTimeout(`${BASE_URL}/app/txn/generateQr`, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload)
@@ -203,7 +204,7 @@ const Payment = (props) => {
                     </View>
 
                     <View style={style.paymentBodyContainer}>
-                        {!isQr && (
+                        {!true && (
                             <View>
                                 <View style={style.payment}>
 
@@ -230,7 +231,7 @@ const Payment = (props) => {
 
                         }
 
-                        {isQr && (
+                        {true && (
                             <View>
                                 <View style={style.qrContainer}>
 
@@ -239,7 +240,7 @@ const Payment = (props) => {
                                             source={{ uri: `data:image/png;base64,${qr}` }}
                                             style={{
                                                 width: wp('80%'), // Full width of the screen
-                                                height: hp('85%'), // Full height of the screen
+                                                height: hp('65%'), // Full height of the screen
                                                 resizeMode: 'contain', // Ensure the image scales properly
                                             }}
                                         />

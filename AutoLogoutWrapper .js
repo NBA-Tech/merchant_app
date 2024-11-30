@@ -7,7 +7,6 @@ const AutoLogoutWrapper = ({ children }) => {
 
   // Reset timer on user gestures
   const gesture = Gesture.Tap().onEnd(() => {
-    console.log("User interaction detected, resetting timer");
     resetTimer(); // Call the resetTimer function from context
   });
 

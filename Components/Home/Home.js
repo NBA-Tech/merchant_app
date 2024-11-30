@@ -44,7 +44,7 @@ const style = StyleSheet.create({
     settlement: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems:'center'
+        alignItems: 'center'
     },
     reportContainer: {
         flexDirection: 'column',
@@ -95,7 +95,7 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler()
-    const { resetTimer } = useAutoLogout(); 
+    const { resetTimer } = useAutoLogout();
 
 
 
@@ -130,16 +130,21 @@ const Home = (props) => {
 
         if (get_transaction_data_res?.msg == "Success") {
             const total_amount = get_transaction_data_res?.obj.reduce(
-                (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
+                (sum, { transactionSummary }) =>
+                    sum +
+                    parseFloat(transactionSummary?.totalSuccessAmount || 0) +
+                    parseFloat(transactionSummary?.totalFailureAmount || 0),
                 0
             ).toFixed(2);
 
+
             const total_transaction_count = get_transaction_data_res?.obj.reduce(
-                (count, { transactionDetailPojo }) => (transactionDetailPojo.filter(
-                    (transaction) => transaction.status === "SUCCESS"
-                ).length),
+                (sum, { transactionSummary }) =>
+                    sum +
+                    parseInt(transactionSummary?.totalSuccessTransactions || 0) +
+                    parseInt(transactionSummary?.totalFailureTransactions || 0),
                 0
-            );
+            )
 
             setTransAmount(total_amount)
             setTotalTrans(total_transaction_count)
@@ -209,7 +214,7 @@ const Home = (props) => {
 
     }, [])
     const adjustDatesAndFetchData = async () => {
-        await AsyncStorage.setItem('is_mpin_set',"true")
+        await AsyncStorage.setItem('is_mpin_set', "true")
         resetTimer()
         setDateModal(false);
         setLoading(true);
@@ -265,14 +270,14 @@ const Home = (props) => {
                             >
                                 <View style={style.iconContainer}>
                                     <StatIcon width={wp('8%')} height={hp('5%')} />
-                                    
+
                                     <RightArrow width={wp('6%')} height={hp('6.5%')} />
                                 </View>
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
                                     <View style={style.bodyContainer}>
-                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'  }]}>Successful Transactions worth </Text>
+                                        <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>Total Transactions worth </Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>₹ {transAmount} </Text>
                                         <Text style={[globalStyle.headingText, { color: '#FFFFFFD9', fontSize: wp('4.5%') }]}>{totalTrans} Transactions</Text>
                                     </View>
@@ -314,7 +319,7 @@ const Home = (props) => {
                                             </View>
                                             <View style={style.reportData}>
                                                 <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Download Monthly Reports</Text>
-                                                <RightArrow width={wp('6%')} height={hp('6.5%')}/>
+                                                <RightArrow width={wp('6%')} height={hp('6.5%')} />
                                             </View>
                                             <View style={style.reportData}>
                                                 <Button
@@ -322,11 +327,11 @@ const Home = (props) => {
                                                     customeStyleButton={style.button}
                                                 >
                                                     <View style={style.reportData}>
-                                                       <View style={{display:'flex',flexDirection:'row'}}>
-                                                       <DownloadIcon width={wp('6%')} height={hp('4%')} />
-                                                       <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
-                                                       </View>
-                                                      
+                                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            <DownloadIcon width={wp('6%')} height={hp('4%')} />
+                                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
+                                                        </View>
+
                                                     </View>
                                                 </Button>
                                                 <Button
@@ -334,11 +339,11 @@ const Home = (props) => {
                                                     customeStyleButton={style.button}
                                                 >
                                                     <View style={style.reportData}>
-                                                        <View style={{display:'flex',flexDirection:'row'}}>
-                                                        <DownloadIcon  width={wp('6%')} height={hp('4%')}/>
-                                                        <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Settlement</Text>
+                                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            <DownloadIcon width={wp('6%')} height={hp('4%')} />
+                                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Settlement</Text>
                                                         </View>
-                                                       
+
                                                     </View>
                                                 </Button>
                                             </View>

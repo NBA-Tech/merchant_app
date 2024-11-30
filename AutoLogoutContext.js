@@ -5,7 +5,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from './AuthProvider';
 const AutoLogoutContext = createContext();
 
-const inactivityTime = 5000000; // 10 seconds for demonstration, adjust as needed
+const inactivityTime = 300000; // 5 minutes in milliseconds
+
 
 export const AutoLogoutProvider = ({ children }) => {
   const navigation = useNavigation();
@@ -27,7 +28,6 @@ export const AutoLogoutProvider = ({ children }) => {
   const handleAutoLogout = async() => {
     const merchant_data=await AsyncStorage.getItem('merchant_status_data')
     const is_mpin_set=await AsyncStorage.getItem('is_mpin_set')
-    console.log("merchant_data",merchant_data)
     if(merchant_data && is_mpin_set){
         Alert.alert("Session Expired", "You have been logged out due to inactivity.");
         navigation.navigate('mpin')

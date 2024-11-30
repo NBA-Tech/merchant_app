@@ -311,17 +311,7 @@ const TransactionReceipt = (props) => {
 
 
                         </Card>
-                        <View style={style.buttonContainer}>
-                            <View
-                                style={style.buttonStyle}
-                            >
-                                <ShareIcon fill={'#ffffff'} size={wp('6%')}/>
-                                <Text style={[[globalStyle.boldText, { color: "#ffffff", paddingBottom: 10,fontSize: wp('4.5%') }]]}>Share Transaction Report</Text>
 
-                            </View>
-
-
-                        </View>
 
                     </ScrollView>
                 </View>

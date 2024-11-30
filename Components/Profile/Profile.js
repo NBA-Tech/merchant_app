@@ -12,6 +12,9 @@ import { BASE_URL } from '../../Config';
 import { AuthContext } from '../../AuthProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthProvider, useAuth } from '../../AuthProvider';
+import { NoInterNetIcon } from '../../SvgIcons';
+
+
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -69,9 +72,9 @@ const style = StyleSheet.create({
     },
     cardSubDetails: {
         alignItems: 'center',
-        marginTop: hp('2%'),
+        marginTop: hp('5%'),
         marginHorizontal: wp('5%'),
-        height: hp('65%'), // Ensure the section is scrollable with a fixed height
+        height: hp('55%'), // Ensure the section is scrollable with a fixed height
     },
     leftDetails: {
         display: 'flex',
@@ -87,8 +90,8 @@ const style = StyleSheet.create({
         borderRadius: 16,
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical:hp('2.3%'),
-        marginVertical:hp('0.7%')
+        paddingVertical: hp('2.3%'),
+        marginVertical: hp('0.7%')
 
     },
     centeredView: {
@@ -118,6 +121,44 @@ const style = StyleSheet.create({
         fontFamily: 'Roboto-Regular',
         color: "#0C1421"
     },
+    modalView: {
+        width: '80%',
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+        color: '#000000',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    button: {
+        flex: 1,
+        paddingVertical: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    cancelButton: {
+        backgroundColor: '#d3d3d3',
+    },
+    exitButton: {
+        backgroundColor: '#ff5c5c',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
 
 
 })
@@ -130,6 +171,7 @@ const Profile = (props) => {
     const [isQrModal, setIsQrModal] = useState(false)
     const [userData, setUserData] = useState(undefined)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
+    const [logOutModal,setLogOutModal]=useState(false)
 
 
     const getUserQr = async () => {
@@ -172,8 +214,8 @@ const Profile = (props) => {
 
 
     }
-    const handleLogout=async ()=>{
-        
+    const handleLogout = async () => {
+
         await AsyncStorage.removeItem('merchant_status_data');
         await AsyncStorage.removeItem('is_mpin_set');
         setIsAuthenticated(false)
@@ -212,8 +254,8 @@ const Profile = (props) => {
                     <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
                         <View style={style.centeredView}>
                             <View style={style.modalView}>
-                                <Text style={[globalStyle.boldTextBlack,{fontSize:wp('5%')}]}>{userData?.name ?? 'Loading...'}</Text>
-                                <Text style={[globalStyle.boldTextBlack,{fontSize:wp('5%')}]}>{userData?.bName ?? 'Loading...'}</Text>
+                                <Text style={[globalStyle.boldTextBlack, { fontSize: wp('5%') }]}>{userData?.name ?? 'Loading...'}</Text>
+                                <Text style={[globalStyle.blackSubText, { fontSize: wp('5%') }]}>{userData?.bName ?? 'Loading...'}</Text>
                                 <Image
                                     source={require('../../assets/images/logo.png')}
                                     style={{ width: wp('80%'), height: hp('10%') }}
@@ -227,22 +269,59 @@ const Profile = (props) => {
                     </TouchableWithoutFeedback>
                 </Modal>
 
+                <Modal visible={logOutModal} transparent={true} animationType="slide">
+                <View style={style.centeredView}>
+                    <View style={style.modalView}>
+                        <NoInterNetIcon />
+                        <Text style={style.modalText}>Are you sure you want to exit?</Text>
+                        <View style={style.buttonContainer}>
+                            <TouchableOpacity
+                                style={[style.button, style.cancelButton]}
+                                onPress={()=>{setLogOutModal(false)}}
+                            >
+                                <Text style={style.buttonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[style.button, style.exitButton]}
+                                onPress={handleLogout}
+                            >
+                                <Text style={style.buttonText}>Exit</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
 
                 <View style={style.homeContainer}>
 
                     <View style={style.headerBg}>
                         <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
                         <View style={style.profilePic}>
-                            <ProfileUserIcon/>
+                            <ProfileUserIcon />
                             <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
-                            <View style={style.detailsContainer}>
-                                <Text style={[globalStyle.mediumText,{fontSize:wp('4%')}]}>
+                            <View style={[style.detailsContainer, { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }]}>
+                                <Text
+                                    style={[
+                                        globalStyle.mediumText,
+                                        { fontSize: wp('4%'), flexShrink: 1 }, // FlexShrink ensures text fits without overflowing
+                                    ]}
+                                    numberOfLines={3}
+                                    ellipsizeMode="tail"
+                                >
                                     {userData?.name ?? 'Loading...'}
                                 </Text>
-                                <Text style={style.separateBar}>
-                                    |
-                                </Text>
-                                <Text style={[globalStyle.mediumText,{fontSize:wp('4%')}]}>
+
+                                <Text style={[style.separateBar, { marginHorizontal: 8 }]}>|</Text>
+
+                                <Text
+                                    style={[
+                                        globalStyle.mediumText,
+                                        { fontSize: wp('4%'), flexShrink: 1 },
+                                    ]}
+                                    numberOfLines={3}
+                                    ellipsizeMode="tail"
+                                >
                                     {userData?.email ?? 'Loading...'}
                                 </Text>
                             </View>
@@ -250,26 +329,15 @@ const Profile = (props) => {
                         </View>
                         <View style={style.cardSubDetails}>
                             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <DeviceDetailsIcon  size={wp('7%')}/>
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Device Details</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
-                                        </View>
-                                    </Card>
-                                </View>
 
                                 <View>
                                     <Card customStyle={style.cardContent} onClick={() => { setIsQrModal(!isQrModal) }}>
                                         <View style={style.leftDetails}>
-                                            <QrIcon fill='#1286ED'  width={wp('8%')} height={hp('6.5%')}/>
+                                            <QrIcon fill='#1286ED' width={wp('8%')} height={hp('6.5%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>My QR</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
                                         </View>
                                     </Card>
                                 </View>
@@ -277,44 +345,33 @@ const Profile = (props) => {
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <StaffIcon size={wp('7%')}/>
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Add Staff</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <SettingsIcon  size={wp('7%')}/>
+                                            <SettingsIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Settings</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
                                     <Card customStyle={style.cardContent}>
                                         <View style={style.leftDetails}>
-                                            <HelpIcon   size={wp('7%')}/>
+                                            <HelpIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'}  width={wp('6%')} height={hp('6.5%')}/>
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
                                         </View>
                                     </Card>
                                 </View>
                                 <View>
-                                    <Card customStyle={style.cardContent} onClick={handleLogout}>
+                                    <Card customStyle={style.cardContent} onClick={()=>{setLogOutModal(true)}}>
                                         <View style={style.leftDetails}>
-                                            <LogoutIcon  size={wp('7%')}/>
+                                            <LogoutIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
                                         </View>
                                         <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')}/>
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
                                         </View>
                                     </Card>
                                 </View>

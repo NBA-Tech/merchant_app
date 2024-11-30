@@ -22,3 +22,34 @@ export const isValidEmail = (email) => {
     return emailRegex.test(email);
   };
   
+  export const fetchWithTimeout = async (url, options, timeout = 120000) => {
+    try {
+      const response = await Promise.race([
+        fetch(url, options),
+        new Promise((_, reject) =>
+          setTimeout(
+            () =>
+              reject({
+                success: false,
+                error: 'Request timeout',
+                status: 408, // HTTP Status Code for Request Timeout
+              }),
+            timeout
+          )
+        ),
+      ]);
+  
+      // If fetch resolves successfully, return the Response object
+      return response;
+    } catch (error) {
+      // Return a fake Response-like object with a json() method for timeouts or errors
+      return {
+        json: async () => ({
+          success: false,
+          obj: 'API timeout please try again later !',
+          status:408 , // Default to 500 for unexpected errors
+        }),
+      };
+    }
+  };
+  

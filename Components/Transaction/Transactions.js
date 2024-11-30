@@ -195,14 +195,21 @@ function Transactions(props) {
         if (get_transaction_data_res?.msg == "Success") {
             if (transType == "ALL") {
                 const total_amount = get_transaction_data_res?.obj.reduce(
-                    (sum, { transactionSummary }) => sum + parseFloat(transactionSummary?.totalAmount || 0),
+                    (sum, { transactionSummary }) =>
+                        sum +
+                        parseFloat(transactionSummary?.totalSuccessAmount || 0) +
+                        parseFloat(transactionSummary?.totalFailureAmount || 0),
                     0
                 ).toFixed(2);
 
                 const total_transaction_count = get_transaction_data_res?.obj.reduce(
-                    (count, { transactionDetailPojo }) => count + (transactionDetailPojo?.length || 0),
+                    (sum, { transactionSummary }) =>
+                        sum +
+                        parseInt(transactionSummary?.totalSuccessTransactions || 0) +
+                        parseInt(transactionSummary?.totalFailureTransactions || 0),
                     0
-                );
+                )
+
                 const pendingTransactions = get_transaction_data_res?.obj.flatMap(obj =>
                     obj.transactionDetailPojo.filter(transaction => transaction.status === "PENDING")
                 );
@@ -241,20 +248,34 @@ function Transactions(props) {
                 setTotalTrans(total_transaction_count)
 
             }
-            else if (transType == "UPI") {
-                setTotalUPIAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
-                setTotalUPI(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
-
-            }
-            else if (transType == "PG") {
-                setTotalPGAmount(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalAmount)
-                setTotalPG(get_transaction_data_res?.obj?.[0]?.transactionDetailPojo.length)
+            else if (transType === "UPI") {
+                setTotalUPIAmount(
+                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
+                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureAmount || 0)
+                )
+            
+                setTotalUPI(
+                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
+                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0)
+                )
+            } else if (transType === "PG") {
+                setTotalPGAmount(
+                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
+                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureAmount || 0)
+                )
+            
+                setTotalPG(
+                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
+                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0)
+                );
             }
         }
+            
         else{
-            setCards({})
+
 
             if(transType == "ALL"){
+                setCards({})
                 setTotalTransAmount(0)
                 setTotalTrans(0)
             }
@@ -277,6 +298,7 @@ function Transactions(props) {
 
 
     }
+
     const handleFilterTrans=(value,status)=>{
         if(value=='UPI Collect'){
             value='UPI'
@@ -351,7 +373,7 @@ function Transactions(props) {
                             ) : (
                                 <View style={style.bodyContainer}>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9'}]}>
-                                        Transactions worth 
+                                        Total Transactions worth 
                                     </Text>
                                     <Text style={[globalStyle.headingText, { color: '#FFFFFFD9' }]}>
                                         ₹ {totalTransAmount}

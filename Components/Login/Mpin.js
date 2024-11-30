@@ -87,7 +87,6 @@ const style = StyleSheet.create({
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
-    console.log("typeMpin",typeMpin)
     const {navigation}=props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)

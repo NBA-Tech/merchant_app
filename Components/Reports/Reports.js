@@ -634,7 +634,7 @@ const Reports = (props) => {
                                                         </Text>
                                                         {value?.timeStamp && (
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                Date : {new Date(value?.timeStamp).toISOString().split('T')[0]}
+                                                                Date : {(value?.timeStamp).split('.')[0]}
                                                             </Text>
                                                         )}
                                                     </View>
