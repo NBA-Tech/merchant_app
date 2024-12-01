@@ -107,7 +107,7 @@ const PaymentStatus = (props) => {
       </View>
       <Text style={[styles.statusText,{color:status=="SUCCESS"?"#079B0C":"#FF0E12"}]}>{status=="SUCCESS"?`PAYMENT SUCCESSFUL FOR RS.${amount}`:`PAYMENT FAILED FOR RS.${amount}`}</Text>
 
-      <Button buttonText={'Done'} customeStyleButton={{backgroundColor:status=="SUCCESS"?"#03B80C":"#B80306"}} onClick={()=>{navigation.navigate('payment')}}/>
+      <Button buttonText={'Done'} customeStyleButton={{backgroundColor:status=="SUCCESS"?"#03B80C":"#B80306"}} onClick={()=>{navigation.navigate('paymentTab')}}/>
     </View>
   );
 };

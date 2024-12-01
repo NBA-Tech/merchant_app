@@ -273,7 +273,7 @@ const Profile = (props) => {
                 <View style={style.centeredView}>
                     <View style={style.modalView}>
                         <NoInterNetIcon />
-                        <Text style={style.modalText}>Are you sure you want to exit?</Text>
+                        <Text style={style.modalText}>Are you sure you want to Logout?</Text>
                         <View style={style.buttonContainer}>
                             <TouchableOpacity
                                 style={[style.button, style.cancelButton]}
@@ -285,7 +285,7 @@ const Profile = (props) => {
                                 style={[style.button, style.exitButton]}
                                 onPress={handleLogout}
                             >
-                                <Text style={style.buttonText}>Exit</Text>
+                                <Text style={style.buttonText}>Yes</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

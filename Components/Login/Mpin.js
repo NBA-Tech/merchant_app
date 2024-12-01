@@ -154,7 +154,7 @@ function Mpin(props) {
             });
             setLoading(false)
     
-                navigation.navigate('main',{screen:'home'})
+                navigation.navigate('main',{screen:'homeTab'})
                 setIsAuthenticated(true)
 
 
@@ -219,7 +219,7 @@ function Mpin(props) {
         setLoading(false)
         setIsAuthenticated(true)
 
-        navigation.navigate('main',{screen:'home'})
+        navigation.navigate('main',{screen:'homeTab'})
         
 
 

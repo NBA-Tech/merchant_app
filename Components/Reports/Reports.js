@@ -327,15 +327,13 @@ const Reports = (props) => {
     }
 
     const handleTransDetails = (value) => {
-        navigation.navigate('reportsMain', {
-            screen: 'transactionreceipt',
-            params: {
+            navigation.navigate('transactionreceipt', {
                 txnId: value?.orderId,
                 paymentMethod: value?.paymentMethod,
                 clientId: merchantSessionData?.clientDetails?.id,
                 timeStamp: value?.timeStamp,
-            },
-        });
+            });
+        
 
     }
     useEffect(() => {

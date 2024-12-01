@@ -266,7 +266,7 @@ const Home = (props) => {
                                 hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}
                                 customStyle={style.cardContainer}
-                                onClick={() => { navigation.navigate('reportsMain', { screen: 'trans' }) }}
+                                onClick={() => { navigation.navigate('trans') }}
                             >
                                 <View style={style.iconContainer}>
                                     <StatIcon width={wp('8%')} height={hp('5%')} />
@@ -286,7 +286,7 @@ const Home = (props) => {
                         </View>
                     </View>
                     <View style={style.homeBodyContainer}>
-                        <Card customStyle={style.cardCustomStyle} onClick={() => { navigation.navigate('settlement_report') }}>
+                        <Card customStyle={style.cardCustomStyle} onClick={() => { navigation.navigate('settlementTab') }}>
                             <View style={style.settlementContainer}>
                                 {loading ? (
                                     <CardLoader />

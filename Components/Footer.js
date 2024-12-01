@@ -64,7 +64,7 @@ const Footer = (props) => {
 
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('payment') }}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('paymentTab') }}>
                 <View style={active == "payment" ? globalStyle.blueCircleBorder : ''}>
                     <QrIcon fill={active == "payment" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
@@ -74,7 +74,7 @@ const Footer = (props) => {
 
             </TouchableOpacity>
 
-            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('settlement_report') }}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('settlementTab') }}>
                 <View style={active == "settlement_report" ? globalStyle.blueCircleBorder : ''}>
                     <BankIcon fill={active == "settlement_report" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>
 
@@ -84,7 +84,7 @@ const Footer = (props) => {
 
                 </TouchableOpacity>
 
-            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('profile') }}>
+            <TouchableOpacity style={style.footerElements} onPress={() => { navigation.navigate('profileTab') }}>
 
                 <View style={active == "profile" ? globalStyle.blueCircleBorder : ''}>
                     <UserIcon fill={active == "profile" ? '#1286ED' : '#1C1B1F'} width={wp('6%')} height={hp('4%')}/>

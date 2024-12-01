@@ -22,40 +22,49 @@ import { AutoLogoutProvider } from '../../AutoLogoutContext';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Bottom Tab Navigator for authenticated users
 const ReportsStack = ({ route }) => {
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={route?.params?.Screen || 'reports'} // Use `params.Screen` to determine the initial screen
-    >
-      <Stack.Screen name="trans" component={Transactions} />
-      <Stack.Screen name="reports" component={Reports} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen 
+        name="reports" 
+        component={Reports} 
+        initialParams={route?.params} // Pass initial params if provided
+      />
       <Stack.Screen name="transactionreceipt" component={TransactionReceipt} />
     </Stack.Navigator>
   );
 };
 
+// Home Stack
+const HomeStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="home" component={Home} />
+      <Stack.Screen name="trans" component={Transactions} />
+      <Stack.Screen name="reports" component={ReportsStack} />
+    </Stack.Navigator>
+  );
+};
 
+// Bottom Tab Navigator for authenticated users
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { display: 'none' }, // Hide the tab bar
+        tabBarStyle: { display: 'none' }, // Hide tab bar
       }}
     >
-      <Tab.Screen name="home" component={Home} />
-
-      <Tab.Screen name="reportsMain" component={ReportsStack} />
-      <Tab.Screen name="reportsTab" component={Reports} />
-      <Tab.Screen name="settlement_report" component={SettlementReport} />
-      <Tab.Screen name="profile" component={Profile} />
-      <Stack.Screen name="payment" component={Payment} />
-      <Stack.Screen name="payment_status" component={PaymentStatus} />
+      <Tab.Screen name="homeTab" component={HomeStack} />
+      <Tab.Screen name="reportsTab" component={ReportsStack} />
+      <Tab.Screen name="settlementTab" component={SettlementReport} />
+      <Tab.Screen name="profileTab" component={Profile} />
+      <Tab.Screen name="paymentTab" component={Payment} />
+      <Tab.Screen name="payment_status" component={PaymentStatus} />
     </Tab.Navigator>
   );
 };
+
 
 // Authenticated Stack Navigator
 const AuthStack = () => {
@@ -78,6 +87,7 @@ const UnauthStack = () => {
         <Stack.Screen name="splash_screen" component={SplashScreen} />
         <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="mpin" component={Mpin} />
+        <Stack.Screen name="main" component={BottomTabNavigator} />
       </Stack.Navigator>
     </BackHandlerProvider>
 
@@ -93,7 +103,6 @@ const Routes = () => {
     const checkSession = async () => {
       try {
         const token = await AsyncStorage.getItem('merchant_status_data');
-        console.log("token",token,isAuthenticated)
         if (token !== null) {
           setIsAuthenticated(true);
         }
