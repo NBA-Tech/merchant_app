@@ -219,7 +219,7 @@ const Reports = (props) => {
 
     const status = [
         { label: 'SUCCESS', value: 'SUCCESS' },
-        { label: 'FAILURE', value: 'FAILURE' },
+        { label: 'FAILED', value: 'FAILED' },
     ];
     const paymentMethods = [
         { label: 'UPI', value: 'upi' },
@@ -260,11 +260,15 @@ const Reports = (props) => {
             let total_amount = 0
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
-                    if (currStatus == "" || currStatus == transaction?.status) {
+                    if (
+                        currStatus === "" || 
+                        (currStatus === "FAILED" && ["FAILURE", "FAILED"].includes(transaction?.status)) || 
+                        currStatus === transaction?.status
+                    ) {
                         total_trans_temp.push(transaction);
                         total_amount += parseFloat(transaction?.amount || 0);
-
                     }
+                    
                 });
             });
 

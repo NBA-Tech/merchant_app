@@ -204,7 +204,7 @@ const Payment = (props) => {
                     </View>
 
                     <View style={style.paymentBodyContainer}>
-                        {!true && (
+                        {!isQr && (
                             <View>
                                 <View style={style.payment}>
 
@@ -231,7 +231,7 @@ const Payment = (props) => {
 
                         }
 
-                        {true && (
+                        {isQr && (
                             <View>
                                 <View style={style.qrContainer}>
 
