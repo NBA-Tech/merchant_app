@@ -273,7 +273,7 @@ function Mpin(props) {
                         />
                     </View>
                     <View style={style.formContainer}>
-                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set mPin' : 'Enter MPIN'}</Text>
+                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set MPIN' : 'Enter MPIN'}</Text>
                         <View style={style.MpinContainer}>
                             <TextField
                                 ref={mPin1}
