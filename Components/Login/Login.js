@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler,Linking,AppState   } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler, Linking, AppState } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -46,7 +46,7 @@ const style = StyleSheet.create({
         backgroundColor: "#1385EC",
         paddingVertical: hp('1.5%'),
         borderRadius: 8,
-        marginVertical:hp('2%')
+        marginVertical: hp('2%')
     },
     MpinContainer: {
         flexDirection: 'row',
@@ -68,27 +68,28 @@ const style = StyleSheet.create({
     normalText: {
         fontSize: wp('4.2%'),
         color: '#000',
-      },
-      link: {
+    },
+    link: {
         color: '#1E90FF', // Highlight the link text (e.g., blue color)
         textDecorationLine: 'underline',
-      },
-      versionContainer: {
+    },
+    versionContainer: {
         alignItems: 'center',        // Centers text inside the container
-        backgroundColor:"#F8F9FA"
-      },
-      versionText:{
-        fontSize:wp('2%'),
-        color:'#000000',
-        marginVertical:hp('2%')
-        
-      }
+        backgroundColor: "#F8F9FA"
+    },
+    versionText: {
+        fontSize: wp('2%'),
+        color: '#000000',
+        marginVertical: hp('2%')
+
+    }
 
 
 });
 
 function Login(props) {
     const globalStyle = useContext(StyleContext);
+    const  isResendOtp  = props?.route?.params?.isResendOtp
     const { navigation } = props
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false)
@@ -105,14 +106,14 @@ function Login(props) {
     const [seconds, setSeconds] = useState(0);
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
     const [appState, setAppState] = useState(AppState.currentState);
-    const [retryOtp,setRetryOtp]=useState(true)
+    const [retryOtp, setRetryOtp] = useState(true)
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
         if (direction === 'forward' && text.length === 1 && nextInputRef) {
             nextInputRef.current.focus();
         }
     };
-    
+
     const handleKeyPress = (nativeEvent, prevInputRef, currentRef, direction) => {
         if (direction === 'backward' && nativeEvent.key === 'Backspace' && !nativeEvent.text && prevInputRef) {
             prevInputRef.current.focus();
@@ -236,13 +237,17 @@ function Login(props) {
 
         }
         setLoading(true)
+        let user_creds = await AsyncStorage.getItem('user_creds');
+
+        user_creds = JSON.parse(user_creds)
         let payload = {
             name: "",
-            email: email,
-            mobile_no: mobile,
+            email: user_creds?.email ?? email,
+            mobile_no: user_creds?.mobile ?? mobile,
             otp: otp_values,
             module: ""
         }
+        console.log(payload)
 
         const validate_otp_api = await fetch(`${BASE_URL}/app/validateotp`, {
             method: 'POST',
@@ -257,7 +262,7 @@ function Login(props) {
             setLoading(false)
             if (validate_otp_api_response?.value == "Valid") {
                 payload = {
-                    email: email
+                    email: user_creds?.email ?? email
                 }
                 const get_active_status_api = await fetch(`${BASE_URL}/app/merchant/getActiveStatus`, {
                     method: 'POST',
@@ -271,9 +276,12 @@ function Login(props) {
             }
         }
         if (validate_otp_api_response?.value == "Valid") {
+            console.log(get_active_status_api_response)
             // await AsyncStorage.removeItem('merchant_status_data');
-
             await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
+            // setIsOtp(false)
+
+            await AsyncStorage.setItem('user_creds', JSON.stringify({ email: email, mobile: mobile }));
 
             navigation.navigate('mpin', { type: 'setMpin' })
 
@@ -290,10 +298,15 @@ function Login(props) {
     }
 
     const handleResendOtp = async () => {
+        let user_creds = await AsyncStorage.getItem('user_creds');
+
+        user_creds = JSON.parse(user_creds)
+        console.log(user_creds)
+
         let payload = {
             name: "",
-            email: email,
-            mobile_no: mobile,
+            email: user_creds?.email ?? email,
+            mobile_no: user_creds?.mobile ?? mobile,
             otp: "",
             module: ""
         }
@@ -306,6 +319,7 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const send_otp_api_res = await send_otp_api.json()
+        console.log(send_otp_api_res)
 
         if (send_otp_api_res?.statusCode == 200) {
             Toast.show({
@@ -313,7 +327,7 @@ function Login(props) {
                 title: 'SUCCESS',
                 textBody: 'OTP SENT',
             });
-            [mPin1, mPin2, mPin3, mPin4, mPin5, mPin6].map((value,index)=>{
+            [mPin1, mPin2, mPin3, mPin4, mPin5, mPin6].map((value, index) => {
                 value.current.setValue('')
             })
             mPin1.current.focus()
@@ -326,29 +340,38 @@ function Login(props) {
     }
 
     useEffect(() => {
-        if(isOtp){
+        if (isOtp) {
 
-        const subscription = AppState.addEventListener('change', nextAppState => {
-          setAppState(nextAppState);
-        });
-    
-        // Start the timer when the component mounts
-        const intervalId = BackgroundTimer.setInterval(() => {
-          setSeconds(prev => {
-            if (prev <= 1) {
-              BackgroundTimer.clearInterval(intervalId);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000); // 1-second interval
-    
-        return () => {
-          BackgroundTimer.clearInterval(intervalId); // Cleanup on unmount
-          subscription.remove();
-        };
-    }
-      }, [isOtp,retryOtp]);
+            const subscription = AppState.addEventListener('change', nextAppState => {
+                setAppState(nextAppState);
+            });
+
+            // Start the timer when the component mounts
+            const intervalId = BackgroundTimer.setInterval(() => {
+                setSeconds(prev => {
+                    if (prev <= 1) {
+                        BackgroundTimer.clearInterval(intervalId);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000); // 1-second interval
+
+            return () => {
+                BackgroundTimer.clearInterval(intervalId); // Cleanup on unmount
+                subscription.remove();
+            };
+        }
+    }, [isOtp, retryOtp]);
+
+    useEffect(() => {
+        console.log("isResendOtp", isResendOtp)
+        if (isResendOtp) {
+            setIsOtp(true)
+            handleResendOtp()
+
+        }
+    }, [isResendOtp])
 
 
     return (
@@ -399,11 +422,11 @@ function Login(props) {
                                     />
                                     <Text style={[style.normalText, { flexWrap: 'wrap' }]}>
                                         I accept{' '}
-                                        <Text style={style.link} onPress={()=>{Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf')}}>
+                                        <Text style={style.link} onPress={() => { Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf') }}>
                                             terms & conditions
                                         </Text>
                                         ,{' '}
-                                        <Text style={style.link} onPress={()=>{Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf')}}>
+                                        <Text style={style.link} onPress={() => { Linking.openURL('https://merchant.arthpay.com/doc/tnc2.pdf') }}>
                                             privacy policy
                                         </Text>{' '}
                                         of GVP Infotech Limited (Arthpay)
@@ -427,7 +450,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin1, mPin2, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}      
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -437,7 +460,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin2, mPin3, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}      
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -446,7 +469,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin3, mPin4, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}    
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -455,7 +478,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin4, mPin5, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}    
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -464,7 +487,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin5, mPin6, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin4, mPin5, 'backward')}    
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin4, mPin5, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />
@@ -473,7 +496,7 @@ function Login(props) {
                                         cutomStyle={style.otpField}
                                         placeHolder={''}
                                         onChange={(text) => handleChange(text, mPin6, null, 'forward')}
-                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin5, mPin6, 'backward')}    
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin5, mPin6, 'backward')}
                                         keyboardType="numeric"
                                         maxLength={1}
                                     />

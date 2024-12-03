@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState,useCallback } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView,BackHandler } from 'react-native';
+import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, BackHandler, TouchableOpacity } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -36,8 +36,8 @@ const style = StyleSheet.create({
         backgroundColor: "#F2FAFD",
         width: 'max-content',
         height: hp('10%'),
-        textAlign:'center',
-        width:wp('20%')
+        textAlign: 'center',
+        width: wp('20%')
     },
     button: {
         backgroundColor: "#1385EC",
@@ -47,7 +47,6 @@ const style = StyleSheet.create({
     MpinContainer: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
-        marginVertical: hp('5%')
     },
     buttonMainContainer: {
         flexDirection: 'row',
@@ -81,13 +80,18 @@ const style = StyleSheet.create({
         color: "#FFFFFF",
         paddingHorizontal: wp('14%')
 
+    },
+    resendMpin: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginVertical: hp('2%')
     }
 
 });
 
 function Mpin(props) {
     const typeMpin = props?.route?.params?.type
-    const {navigation}=props
+    const { navigation } = props
     const globalStyle = useContext(StyleContext);
     const [loading, setLoading] = useState(false)
     const [merchantSessionData, setMerchentSessionData] = useState()
@@ -96,24 +100,24 @@ function Mpin(props) {
     const mPin3 = useRef(null)
     const mPin4 = useRef(null)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
-    const { showExitModal,setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
+    const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
         if (direction === 'forward' && text.length === 1 && nextInputRef) {
             nextInputRef.current.focus();
         }
     };
-    
+
     const handleKeyPress = (nativeEvent, prevInputRef, currentRef, direction) => {
         if (direction === 'backward' && nativeEvent.key === 'Backspace' && !nativeEvent.text && prevInputRef) {
             prevInputRef.current.focus();
         }
     };
 
-    const validateMpin=async ()=>{
-        
-        let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
-        if(mpin.length!=4){
+    const validateMpin = async () => {
+
+        let mpin = mPin1.current.getValue() + mPin2.current.getValue() + mPin3.current.getValue() + mPin4.current.getValue()
+        if (mpin.length != 4) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'Oops',
@@ -123,43 +127,44 @@ function Mpin(props) {
 
         }
         setLoading(true)
-        
-        let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+        console.log(merchantSessionData,mpin)
+
+        let token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
-                mpin:mpin,
-                clientId:merchantSessionData?.clientDetails?.id
+                mpin: mpin,
+                clientId: merchantSessionData?.clientDetails?.id
             },
-            
+
         )),
-        merchantSessionData?.clientDetails?.secret
-    ))
-        const validate_mpin_api=await fetch(`${BASE_URL}/app/validateMerchantMpin`,{
-            method:'POST',
-            headers:{
-                'content-type':'application/json'
+            merchantSessionData?.clientDetails?.secret
+        ))
+        const validate_mpin_api = await fetch(`${BASE_URL}/app/validateMerchantMpin`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
             },
-            body:JSON.stringify({
-                token:token
+            body: JSON.stringify({
+                token: token
             })
         })
-        let validate_mpin_res=validate_mpin_api.headers.get('x-token')
-        validate_mpin_res=decryptAES256(validate_mpin_res,merchantSessionData?.clientDetails?.secret)
+        let validate_mpin_res = validate_mpin_api.headers.get('x-token')
+        validate_mpin_res = decryptAES256(validate_mpin_res, merchantSessionData?.clientDetails?.secret)
 
-        if(validate_mpin_res=="true"){
+        if (validate_mpin_res == "true") {
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
                 title: 'Login Success',
                 textBody: 'Welcome back!',
             });
             setLoading(false)
-    
-                navigation.navigate('main',{screen:'homeTab'})
-                setIsAuthenticated(true)
+
+            navigation.navigate('main', { screen: 'homeTab' })
+            setIsAuthenticated(true)
 
 
         }
-        else{
+        else {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Failed',
@@ -170,13 +175,13 @@ function Mpin(props) {
         }
 
 
-        
+
     }
 
-    const setMpin=async()=>{
+    const setMpin = async () => {
 
-        let mpin=mPin1.current.getValue()+mPin2.current.getValue()+mPin3.current.getValue()+mPin4.current.getValue()
-        if(mpin=='' || mpin.length!=4){
+        let mpin = mPin1.current.getValue() + mPin2.current.getValue() + mPin3.current.getValue() + mPin4.current.getValue()
+        if (mpin == '' || mpin.length != 4) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
                 title: 'Oops',
@@ -186,52 +191,53 @@ function Mpin(props) {
 
         }
         setLoading(true)
-        let token=base64Encode(merchantSessionData?.clientDetails?.id)+'.'+base64Encode(encryptAES256(base64Encode(JSON.stringify(
+        console.log(merchantSessionData,mpin)
+        let token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
-                mpin:mpin,
-                clientId:merchantSessionData?.clientDetails?.id
+                mpin: mpin,
+                clientId: merchantSessionData?.clientDetails?.id
             },
-            
+
         )),
-        merchantSessionData?.clientDetails?.secret
-    ))
-    let payload={
-        token:token
-    }
+            merchantSessionData?.clientDetails?.secret
+        ))
+        let payload = {
+            token: token
+        }
 
-    const set_mpin_api=await fetch(`${BASE_URL}/app/setMerchantMpin`,{
-        method:'POST',
-        headers:{
-            'content-type':'application/json'
-        },
-        body:JSON.stringify(payload)
-    })
+        const set_mpin_api = await fetch(`${BASE_URL}/app/setMerchantMpin`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
 
-    const set_mpin_res=await set_mpin_api.json()
-    
-    if(set_mpin_res?.msg=="Success"){
-        Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: 'Login Success',
-            textBody: set_mpin_res?.obj,
-        });
-        setLoading(false)
-        setIsAuthenticated(true)
+        const set_mpin_res = await set_mpin_api.json()
 
-        navigation.navigate('main',{screen:'homeTab'})
-        
+        if (set_mpin_res?.msg == "Success") {
+            Toast.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Login Success',
+                textBody: set_mpin_res?.obj,
+            });
+            setLoading(false)
+            setIsAuthenticated(true)
+
+            navigation.navigate('main', { screen: 'homeTab' })
 
 
-    }
-    else{
-        Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: 'Failed',
-            textBody: set_mpin_res?.obj,
-        });
-        setLoading(false)
-    }
+
+        }
+        else {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Failed',
+                textBody: set_mpin_res?.obj,
+            });
+            setLoading(false)
+        }
 
     }
 
@@ -242,13 +248,13 @@ function Mpin(props) {
                 const sessionData = await getMerchantSession();
                 setMerchentSessionData(sessionData);
             };
-            [mPin1,mPin2,mPin3,mPin4].map((value,index)=>{
+            [mPin1, mPin2, mPin3, mPin4].map((value, index) => {
                 value.current.setValue('')
             })
             mPin1.current.focus()
-    
+
             fetchMerchantSession();
-    
+
             // Optionally, you can return a cleanup function here if needed
             return () => {
                 // Cleanup code (if necessary)
@@ -280,7 +286,7 @@ function Mpin(props) {
                                 cutomStyle={style.textField}
                                 placeHolder={''}
                                 onChange={(text) => handleChange(text, mPin1, mPin2, 'forward')}
-                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}                            
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -291,7 +297,7 @@ function Mpin(props) {
                                 cutomStyle={style.textField}
                                 placeHolder={''}
                                 onChange={(text) => handleChange(text, mPin2, mPin3, 'forward')}
-                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}   
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -301,7 +307,7 @@ function Mpin(props) {
                                 cutomStyle={style.textField}
                                 placeHolder={''}
                                 onChange={(text) => handleChange(text, mPin3, mPin4, 'forward')}
-                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}   
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
@@ -311,13 +317,27 @@ function Mpin(props) {
                                 cutomStyle={style.textField}
                                 placeHolder={''}
                                 onChange={(text) => handleChange(text, mPin4, null, 'forward')}
-                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}   
+                                onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, mPin4, 'backward')}
                                 keyboardType="numeric"
                                 maxLength={1}
                                 isPassword={true}
                             />
 
                         </View>
+                        {typeMpin != 'setMpin' && (
+                            <View style={style.resendMpin}>
+                                <TouchableOpacity onPress={() => { navigation.navigate('login', { isResendOtp: true }) }}>
+                                    <Text style={globalStyle.blueMediumText}>Forgot MPIN ?</Text>
+                                </TouchableOpacity>
+
+
+                            </View>
+
+
+                        )
+
+                        }
+
 
                         <View style={style.buttonMainContainer}>
 
@@ -325,10 +345,10 @@ function Mpin(props) {
                             <Button
                                 customeStyleButton={style.buttonFilled}
                                 customeStyleText={style.textFilled}
-                                onClick={typeMpin=='setMpin'?setMpin:validateMpin}
-                                disabled={loading?true:false}
+                                onClick={typeMpin == 'setMpin' ? setMpin : validateMpin}
+                                disabled={loading ? true : false}
                             >
-                                {loading? <DotsLoader/>: typeMpin == 'setMpin' ? 'Set' : 'Login'}
+                                {loading ? <DotsLoader /> : typeMpin == 'setMpin' ? 'Set' : 'Login'}
                             </Button>
 
                         </View>

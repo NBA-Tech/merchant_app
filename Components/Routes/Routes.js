@@ -19,6 +19,7 @@ import PaymentStatus from '../Payment/PaymentStatus';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { BackHandlerProvider } from '../../BackHandler';
 import { AutoLogoutProvider } from '../../AutoLogoutContext';
+import ResetMpin from '../Login/ResetMpin';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +47,17 @@ const HomeStack = () => {
   );
 };
 
+const ProfileTabView=()=>{
+  return(
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="resetMpin" component={ResetMpin} />
+
+      <Stack.Screen name="profileStack" component={Profile} />
+      </Stack.Navigator>
+
+  )
+}
+
 // Bottom Tab Navigator for authenticated users
 const BottomTabNavigator = () => {
   return (
@@ -58,7 +70,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="homeTab" component={HomeStack} />
       <Tab.Screen name="reportsTab" component={ReportsStack} />
       <Tab.Screen name="settlementTab" component={SettlementReport} />
-      <Tab.Screen name="profileTab" component={Profile} />
+      <Tab.Screen name="profileTab" component={ProfileTabView} />
       <Tab.Screen name="paymentTab" component={Payment} />
       <Tab.Screen name="payment_status" component={PaymentStatus} />
     </Tab.Navigator>
@@ -71,6 +83,7 @@ const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="splash_screen" component={SplashScreen} />
+      <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="mpin" component={Mpin} />
       <Stack.Screen name="main" component={BottomTabNavigator} />
 
@@ -103,7 +116,8 @@ const Routes = () => {
     const checkSession = async () => {
       try {
         const token = await AsyncStorage.getItem('merchant_status_data');
-        if (token !== null) {
+        const user_creds = await AsyncStorage.getItem('user_creds');
+        if (token !== null && user_creds!=null) {
           setIsAuthenticated(true);
         }
       } catch (e) {

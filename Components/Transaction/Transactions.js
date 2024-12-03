@@ -168,136 +168,123 @@ function Transactions(props) {
     }
     const getTransaction = async (transType, from_date, to_date) => {
         let payload = {
-            paymentMethods: [
-                transType
-            ],
-            transactionDate: {
-                from: from_date,
-                to: to_date
-            }
-
-        }
-
+            paymentMethods: [transType],
+            transactionDate: { from: from_date, to: to_date }
+        };
+    
         let headers = {
             'content-type': 'application/json',
             'x-client-id': merchantSessionData?.clientDetails?.id,
             'x-client-secret': merchantSessionData?.clientDetails?.secret
-
-        }
-
-        const get_transaction_data_api = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(payload)
-        })
-
-        const get_transaction_data_res = await get_transaction_data_api.json()
-        if (get_transaction_data_res?.msg == "Success") {
-            if (transType == "ALL") {
-                const total_amount = get_transaction_data_res?.obj.reduce(
-                    (sum, { transactionSummary }) =>
-                        sum +
-                        parseFloat(transactionSummary?.totalSuccessAmount || 0) +
-                        parseFloat(transactionSummary?.totalFailureAmount || 0),
-                    0
-                ).toFixed(2);
-
-                const total_transaction_count = get_transaction_data_res?.obj.reduce(
-                    (sum, { transactionSummary }) =>
-                        sum +
-                        parseInt(transactionSummary?.totalSuccessTransactions || 0) +
-                        parseInt(transactionSummary?.totalFailureTransactions || 0),
-                    0
-                )
-
-                const pendingTransactions = get_transaction_data_res?.obj.flatMap(obj =>
-                    obj.transactionDetailPojo.filter(transaction => transaction.status === "PENDING")
-                );
-
-
-                const successTransactions = get_transaction_data_res?.obj.flatMap(obj =>
-                    obj.transactionDetailPojo.filter(transaction => transaction.status === "SUCCESS")
-                );
-
-
-                const failTransactions = get_transaction_data_res?.obj.flatMap(obj =>
-                    obj.transactionDetailPojo.filter(transaction => transaction.status === "FAILURE")
-                );
-
-                setCards(
-                    {
+        };
+    
+        try {
+            const response = await fetch(`${BASE_URL}/app/txn/getAllTransactionDetails`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+    
+            const result = await response.json();
+    
+            if (result?.msg === "Success") {
+                const { obj } = result;
+    
+                if (transType === "ALL") {
+                    const totalAmount = obj.reduce(
+                        (sum, { transactionSummary }) =>
+                            sum +
+                            parseFloat(transactionSummary?.totalSuccessAmount || 0) +
+                            parseFloat(transactionSummary?.totalFailureAmount || 0),
+                        0
+                    ).toFixed(2);
+    
+                    const totalTransactionCount = obj.reduce(
+                        (sum, { transactionSummary }) =>
+                            sum +
+                            parseInt(transactionSummary?.totalSuccessTransactions || 0) +
+                            parseInt(transactionSummary?.totalFailureTransactions || 0),
+                        0
+                    );
+    
+                    const successTransactions = obj.flatMap(({ transactionDetailPojo }) =>
+                        transactionDetailPojo.filter(transaction => transaction.status === "SUCCESS")
+                    );
+    
+                    const failTransactions = obj.flatMap(({ transactionDetailPojo }) =>
+                        transactionDetailPojo.filter(transaction => transaction.status === "FAILURE")
+                    );
+    
+                    setCards(prevCards => ({
+                        ...prevCards,
                         name: 'Success Transaction',
                         cardDetails: <CardElement cardDetails={[
                             {
                                 heading: 'Success',
                                 amount: `${successTransactions.length} Transactions`,
-                                onClick:()=>handleFilterTrans('',"SUCCESS")
+                                onClick: () => handleFilterTrans('', "SUCCESS")
                             },
                             {
                                 heading: 'Failed',
                                 amount: `${failTransactions.length} Transactions`,
-                                onClick:()=>handleFilterTrans('',"FAILURE")
+                                onClick: () => handleFilterTrans('', "FAILURE")
                             }
                         ]} />
-                    },
-                )
-
-
-
-                setTotalTransAmount(total_amount)
-                setTotalTrans(total_transaction_count)
-
+                    }));
+    
+                    setTotalTransAmount(prevAmount => {
+                        const newAmount = parseFloat(prevAmount || 0) + parseFloat(totalAmount || 0);
+                        return newAmount.toFixed(2);
+                    });
+    
+                    setTotalTrans(prevCount => prevCount + totalTransactionCount);
+    
+                } else if (transType === "UPI") {
+                    const upiAmount =
+                        parseFloat(obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
+                        parseFloat(obj?.[0]?.transactionSummary?.totalFailureAmount || 0);
+    
+                    const upiCount =
+                        parseInt(obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
+                        parseInt(obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0);
+    
+                    setTotalUPIAmount(prev => prev + upiAmount);
+                    setTotalUPI(prev => prev + upiCount);
+    
+                } else if (transType === "PG") {
+                    const pgAmount =
+                        parseFloat(obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
+                        parseFloat(obj?.[0]?.transactionSummary?.totalFailureAmount || 0);
+    
+                    const pgCount =
+                        parseInt(obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
+                        parseInt(obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0);
+    
+                    setTotalPGAmount(prev => prev + pgAmount);
+                    setTotalPG(prev => prev + pgCount);
+                }
+            } else {
+                handleEmptyState(transType);
             }
-            else if (transType === "UPI") {
-                setTotalUPIAmount(
-                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
-                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureAmount || 0)
-                )
-            
-                setTotalUPI(
-                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
-                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0)
-                )
-            } else if (transType === "PG") {
-                setTotalPGAmount(
-                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessAmount || 0) +
-                    parseFloat(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureAmount || 0)
-                )
-            
-                setTotalPG(
-                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
-                    parseInt(get_transaction_data_res?.obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0)
-                );
-            }
+        } catch (error) {
+            console.error("Error fetching transaction data:", error);
+            handleEmptyState(transType);
         }
-            
-        else{
+    };
 
-
-            if(transType == "ALL"){
-                setCards({})
-                setTotalTransAmount(0)
-                setTotalTrans(0)
-            }
-            else if(transType=="PG"){
-                setTotalPGAmount(0)
-                setTotalPG(0)
-    
-            }
-            else if(transType=="UPI"){
-                setTotalUPIAmount(0)
-                setTotalUPI(0)
-
-
-            }
-    
-
+    const handleEmptyState = (transType) => {
+        if (transType === "ALL") {
+            setCards({});
+            setTotalTransAmount(0);
+            setTotalTrans(0);
+        } else if (transType === "PG") {
+            setTotalPGAmount(0);
+            setTotalPG(0);
+        } else if (transType === "UPI") {
+            setTotalUPIAmount(0);
+            setTotalUPI(0);
         }
-    
-
-
-
-    }
+    };
 
     const handleFilterTrans=(value,status)=>{
         if(value=='UPI Collect'){

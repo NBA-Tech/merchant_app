@@ -218,6 +218,7 @@ const Profile = (props) => {
 
         await AsyncStorage.removeItem('merchant_status_data');
         await AsyncStorage.removeItem('is_mpin_set');
+        await AsyncStorage.removeItem('user_creds');
         setIsAuthenticated(false)
         navigation.navigate('login')
 
