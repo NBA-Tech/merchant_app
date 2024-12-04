@@ -30,4 +30,4 @@ function App(): React.JSX.Element {
 }
 
 // Wrap App component with the HOC
-export default withBackgroundProtection((App));
+export default withBackgroundProtection(withScreenshotProtection(App));

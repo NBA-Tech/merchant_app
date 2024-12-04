@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -17,6 +17,12 @@ import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAutoLogout } from '../../AutoLogoutContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import Carousel from 'react-native-reanimated-carousel';
+
+const { width } = Dimensions.get('window');
+
+
 const style = StyleSheet.create({
     homeContainer: {
         flex: 1,
@@ -78,6 +84,18 @@ const style = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
     },
+    card: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginHorizontal: 10,
+    },
+    text: {
+        color: '#fff',
+        fontSize: 24,
+        fontWeight: 'bold',
+    },
 
 });
 
@@ -93,6 +111,12 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { resetTimer } = useAutoLogout();
+
+    const data = [
+        { title: 'Slide 1', backgroundColor: '#FF5733' },
+        { title: 'Slide 2', backgroundColor: '#33C4FF' },
+        { title: 'Slide 3', backgroundColor: '#A833FF' },
+    ];
 
 
 
@@ -305,49 +329,20 @@ const Home = (props) => {
                             </View>
                         </Card>
                         <Card customStyle={style.cardCustomStyle}>
-                            <View style={style.settlementContainer}>
-                                {loading ? (
-                                    <CardLoader />
-                                ) : (
-                                    <View>
-                                        <View style={style.reportContainer}>
-                                            <View style={style.reportData}>
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Reports</Text>
-                                            </View>
-                                            <View style={style.reportData}>
-                                                <Text style={[globalStyle.boldTextBlack, { textAlign: 'flex-start' }]}>Download Monthly Reports</Text>
-                                                <RightArrow width={wp('6%')} height={hp('6.5%')} />
-                                            </View>
-                                            <View style={style.reportData}>
-                                                <Button
-                                                    customeStyleContainer={style.buttonContainer}
-                                                    customeStyleButton={style.button}
-                                                >
-                                                    <View style={style.reportData}>
-                                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                            <DownloadIcon width={wp('6%')} height={hp('4%')} />
-                                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Transaction</Text>
-                                                        </View>
-
-                                                    </View>
-                                                </Button>
-                                                <Button
-                                                    customeStyleContainer={style.buttonContainer}
-                                                    customeStyleButton={style.button}
-                                                >
-                                                    <View style={style.reportData}>
-                                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                            <DownloadIcon width={wp('6%')} height={hp('4%')} />
-                                                            <Text style={[globalStyle.boldTextBlack, { textAlign: 'center', marginTop: hp('0%') }]}>Settlement</Text>
-                                                        </View>
-
-                                                    </View>
-                                                </Button>
-                                            </View>
-                                        </View>
+                            <Carousel
+                                width={width}
+                                height={250}
+                                data={data}
+                                renderItem={({ item }) => (
+                                    <View style={[style.card, { backgroundColor: item.backgroundColor }]}>
+                                        <Text style={style.text}>{item.title}</Text>
                                     </View>
                                 )}
-                            </View>
+                                loop={true}
+                                autoPlay={true}
+                                autoPlayInterval={3000}
+                                pagingEnabled={true}
+                            />
                         </Card>
                     </View>
                 </View>
