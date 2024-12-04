@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -113,9 +113,9 @@ const Home = (props) => {
     const { resetTimer } = useAutoLogout();
 
     const data = [
-        { title: 'Slide 1', backgroundColor: '#FF5733' },
-        { title: 'Slide 2', backgroundColor: '#33C4FF' },
-        { title: 'Slide 3', backgroundColor: '#A833FF' },
+        { src: require('../../assets/images/logo.png') },
+        { src: require('../../assets/images/logo.png') },
+        { src: require('../../assets/images/logo.png') },
     ];
 
 
@@ -328,22 +328,20 @@ const Home = (props) => {
                                 )}
                             </View>
                         </Card>
-                        <Card customStyle={style.cardCustomStyle}>
-                            <Carousel
-                                width={width}
-                                height={250}
-                                data={data}
-                                renderItem={({ item }) => (
-                                    <View style={[style.card, { backgroundColor: item.backgroundColor }]}>
-                                        <Text style={style.text}>{item.title}</Text>
-                                    </View>
-                                )}
-                                loop={true}
-                                autoPlay={true}
-                                autoPlayInterval={3000}
-                                pagingEnabled={true}
-                            />
-                        </Card>
+                        {/* <Carousel
+                            width={width}
+                            height={hp('30%')}
+                            data={data}
+                            renderItem={({ item }) => (
+                                <View style={style.card}>
+                                    <Image source={item.src} style={{width:wp('70%'),height:hp('100%')}}/>
+                                </View>
+                            )}
+                            loop={true}
+                            autoPlay={true}
+                            autoPlayInterval={3000}
+                            pagingEnabled={true}
+                        /> */}
                     </View>
                 </View>
             </ScrollView>
