@@ -12,7 +12,6 @@ export const AutoLogoutProvider = ({ children }) => {
   const navigation = useNavigation();
   const [appState, setAppState] = useState(AppState.currentState);
   const timerRef = useRef(null);
-  const { isAuthenticated, setIsAuthenticated } = useAuth()
 
   // Function to reset the inactivity timer
   const resetTimer = () => {

@@ -1,18 +1,17 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, NativeModules, TouchableOpacity, BackHandler, Linking, AppState } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView,  TouchableOpacity, Linking, AppState } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
-import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
+import { TopHeaderBackground } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Core_ui/Button';
 import DotsLoader from '../../DotsLoader';
 import { BASE_URL } from '../../Config';
-import { base64Encode, base64Decode, encryptAES256 } from '../../Encryption';
+import { base64Encode,  encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isValidEmail } from '../../HelperFunctions';
-import { useBackHandler } from '../../BackHandler';
 import BackgroundTimer from 'react-native-background-timer';
 
 
@@ -104,7 +103,6 @@ function Login(props) {
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
     const [seconds, setSeconds] = useState(0);
-    const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
     const [appState, setAppState] = useState(AppState.currentState);
     const [retryOtp, setRetryOtp] = useState(true)
 

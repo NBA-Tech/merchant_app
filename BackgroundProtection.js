@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { AppState, View, StyleSheet, Animated } from 'react-native';
-import { BlurView } from '@react-native-community/blur'; // Optional for blur effect
 
 const withBackgroundProtection = (WrappedComponent) => {
   const ScreenProtectionHOC = (props) => {

@@ -4,8 +4,6 @@ import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Ima
 import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import Card from '../../Core_ui/Card'
-import { DeviceDetailsIcon, HelpIcon, LogoutIcon, ProfileUserIcon, QrIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import { getMerchantSession } from '../../HelperFunctions';
 import { BASE_URL } from '../../Config';
@@ -18,7 +16,7 @@ import { useBackHandler } from '../../BackHandler';
 import BackgroundTimer from 'react-native-background-timer';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import DotsLoader from '../../DotsLoader';
-import { base64Encode,encryptAES256 } from '../../Encryption';
+import { base64Encode, base64Decode, encryptAES256, decryptAES256 } from '../../Encryption';
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -42,8 +40,10 @@ const style = StyleSheet.create({
     },
     formContainer: {
         flex: 1, // Take remaining space below the header
-        justifyContent: 'center', // Center content vertically
+        justifyContent: 'space-between', // Center content vertically
         paddingHorizontal: wp('5%'),
+        flexDirection: 'column',
+        marginTop: hp('-10%')
 
     },
     MpinContainer: {
@@ -58,12 +58,11 @@ const style = StyleSheet.create({
     buttonMainContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        flex: 1,
-        alignContent: 'center'
+        flex: 1
     },
     textFilled: {
         color: "#FFFFFF",
-        paddingHorizontal: wp('14%')
+        paddingHorizontal: wp('10%')
 
     },
     buttonFilled: {
@@ -78,12 +77,20 @@ const style = StyleSheet.create({
         justifyContent: 'flex-end',
         marginBottom: hp('3%')
     },
-    mpinText:{
+    mpinText: {
         backgroundColor: "#F2FAFD",
         width: 'max-content',
         height: hp('10%'),
         textAlign: 'center',
         width: wp('20%')
+    },
+    outLinedButton: {
+        backgroundColor: "#ffffff",
+        borderColor: '#1286ED',
+        marginHorizontal: wp('0%'),
+        marginVertical: hp('1%'),
+        borderRadius: 10,           // Rounded corners
+        borderWidth: 1,
     }
 
 
@@ -100,12 +107,16 @@ const ResetMpin = (props) => {
     const mPin4 = useRef(null)
     const mPin5 = useRef(null)
     const mPin6 = useRef(null)
+    const mPin2_1 = useRef(null)
+    const mPin2_2 = useRef(null)
+    const mPin2_3 = useRef(null)
+    const mPin2_4 = useRef(null)
     const [isMpin, setISmPIN] = useState()
     const [seconds, setSeconds] = useState(0)
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
     const [appState, setAppState] = useState(AppState.currentState);
     const [retryOtp, setRetryOtp] = useState(true)
-    const [screenType, setScreenType] = useState("otp")
+    const [screenType, setScreenType] = useState("curr_mpin")
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
         if (direction === 'forward' && text.length === 1 && nextInputRef) {
@@ -123,11 +134,83 @@ const ResetMpin = (props) => {
             .map((value) => value.current.getValue())
             .join('');
     };
+    const validateMpin = async () => {
+        let merchantSessionData = await AsyncStorage.getItem('merchant_status_data')
+        merchantSessionData = JSON.parse(merchantSessionData)
+
+        let mpin = mPin1.current.getValue() + mPin2.current.getValue() + mPin3.current.getValue() + mPin4.current.getValue()
+        if (mpin.length != 4) {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Oops',
+                textBody: "Fill 4 digit MPIN",
+            });
+            return
+
+        }
+        setLoading(true)
+
+        let token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
+
+            {
+                mpin: mpin,
+                clientId: merchantSessionData?.clientDetails?.id
+            },
+
+        )),
+            merchantSessionData?.clientDetails?.secret
+        ))
+        const validate_mpin_api = await fetch(`${BASE_URL}/app/validateMerchantMpin`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                token: token
+            })
+        })
+        console.log(validate_mpin_api.headers.get('x-token'), mpin, merchantSessionData)
+        let validate_mpin_res = validate_mpin_api.headers.get('x-token')
+        validate_mpin_res = decryptAES256(validate_mpin_res, merchantSessionData?.clientDetails?.secret)
+
+        if (validate_mpin_res == "true") {
+            [mPin1, mPin2, mPin3, mPin4].map((value, index) => {
+                value.current.setValue('')
+            })
+            console.log(validate_mpin_res, screenType)
+            setScreenType("otp")
+
+        }
+        else {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Failed',
+                textBody: 'Check Mpin',
+            });
+
+        }
+        setLoading(false)
+
+
+
+
+    }
+
     const setMpin = async () => {
         let merchantSessionData = await AsyncStorage.getItem('merchant_status_data')
         merchantSessionData = JSON.parse(merchantSessionData)
 
         let mpin = mPin1.current.getValue() + mPin2.current.getValue() + mPin3.current.getValue() + mPin4.current.getValue()
+        let mpin2 = mPin2_1.current.getValue() + mPin2_2.current.getValue() + mPin2_3.current.getValue() + mPin2_4.current.getValue()
+        if (mpin != mpin2) {
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Oops',
+                textBody: "MPIN doesn't match",
+            });
+            return
+        }
+
         if (mpin == '' || mpin.length != 4) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
@@ -169,7 +252,7 @@ const ResetMpin = (props) => {
                 textBody: 'MPIN Updated Successfully',
             });
             setLoading(false)
-            navigation.goBack()
+            navigation.navigate('mpin')
 
 
 
@@ -180,7 +263,7 @@ const ResetMpin = (props) => {
                 title: 'Failed',
                 textBody: set_mpin_res?.obj,
             });
-           
+
         }
         setLoading(false)
 
@@ -222,7 +305,7 @@ const ResetMpin = (props) => {
                 value.current.setValue('')
             })
             mPin1.current.focus()
-            setScreenType("mpin")
+            setScreenType("set_mpin")
 
         }
         else {
@@ -288,28 +371,32 @@ const ResetMpin = (props) => {
 
     useFocusEffect(
         useCallback(() => {
-            handleResendOtp()
-            const subscription = AppState.addEventListener('change', nextAppState => {
-                setAppState(nextAppState);
-            });
+            if (screenType == "otp") {
 
-            // Start the timer when the component mounts
-            const intervalId = BackgroundTimer.setInterval(() => {
-                setSeconds(prev => {
-                    if (prev <= 1) {
-                        BackgroundTimer.clearInterval(intervalId);
-                        return 0;
-                    }
-                    return prev - 1;
+
+                handleResendOtp()
+                const subscription = AppState.addEventListener('change', nextAppState => {
+                    setAppState(nextAppState);
                 });
-            }, 1000); // 1-second interval
 
-            return () => {
-                BackgroundTimer.clearInterval(intervalId); // Cleanup on unmount
-                subscription.remove();
-            };
+                // Start the timer when the component mounts
+                const intervalId = BackgroundTimer.setInterval(() => {
+                    setSeconds(prev => {
+                        if (prev <= 1) {
+                            BackgroundTimer.clearInterval(intervalId);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000); // 1-second interval
 
-        }, [])
+                return () => {
+                    BackgroundTimer.clearInterval(intervalId); // Cleanup on unmount
+                    subscription.remove();
+                };
+            }
+
+        }, [screenType])
     )
 
     return (
@@ -324,11 +411,11 @@ const ResetMpin = (props) => {
 
                 </View>
                 <View style={style.formContainer}>
-                    <Text style={globalStyle.boldTextBlack}>{screenType == 'otp' ? 'Enter OTP' : 'Set MPIN'}</Text>
+                    <Text style={globalStyle.boldTextBlack}>{screenType == 'otp' ? 'Enter OTP' : screenType == 'curr_mpin' ? 'Enter Current MPIN' : 'Set New MPIN'}</Text>
                     <View style={style.MpinContainer}>
                         <TextField
                             ref={mPin1}
-                            cutomStyle={screenType=="otp"?style.textField:style.mpinText}
+                            cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
                             placeHolder={''}
                             onChange={(text) => handleChange(text, mPin1, mPin2, 'forward')}
                             onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin1, 'backward')}
@@ -339,7 +426,7 @@ const ResetMpin = (props) => {
 
                         <TextField
                             ref={mPin2}
-                            cutomStyle={screenType=="otp"?style.textField:style.mpinText}
+                            cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
                             placeHolder={''}
                             onChange={(text) => handleChange(text, mPin2, mPin3, 'forward')}
                             onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin1, mPin2, 'backward')}
@@ -349,7 +436,7 @@ const ResetMpin = (props) => {
                         />
                         <TextField
                             ref={mPin3}
-                            cutomStyle={screenType=="otp"?style.textField:style.mpinText}
+                            cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
                             placeHolder={''}
                             onChange={(text) => handleChange(text, mPin3, mPin4, 'forward')}
                             onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2, mPin3, 'backward')}
@@ -359,7 +446,7 @@ const ResetMpin = (props) => {
                         />
                         <TextField
                             ref={mPin4}
-                            cutomStyle={screenType=="otp"?style.textField:style.mpinText}
+                            cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
                             placeHolder={''}
                             onChange={(text) => handleChange(text, mPin4, screenType == "otp" ? mPin5 : null, 'forward')}
                             onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin3, screenType == "otp" ? mPin4 : null, 'backward')}
@@ -397,6 +484,7 @@ const ResetMpin = (props) => {
                         }
 
                     </View>
+
                     {screenType == "otp" && (
                         <View style={style.resendOtp}>
                             {seconds > 0 && screenType == "otp" ? (
@@ -417,16 +505,81 @@ const ResetMpin = (props) => {
 
                     }
 
+                    {screenType == "set_mpin" && (
+                        <View>
+                            <Text style={globalStyle.boldTextBlack}>{'Confirm New MPIN'}</Text>
+                            <View style={style.MpinContainer}>
+                                <TextField
+                                    ref={mPin2_1}
+                                    cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
+                                    placeHolder={''}
+                                    onChange={(text) => handleChange(text, mPin2_1, mPin2_2, 'forward')}
+                                    onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin2_1, 'backward')}
+                                    keyboardType="numeric"
+                                    maxLength={1}
+                                    isPassword={screenType == "otp" ? false : true}
+                                />
+
+                                <TextField
+                                    ref={mPin2_2}
+                                    cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
+                                    placeHolder={''}
+                                    onChange={(text) => handleChange(text, mPin2_2, mPin2_3, 'forward')}
+                                    onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_1, mPin2_2, 'backward')}
+                                    keyboardType="numeric"
+                                    maxLength={1}
+                                    isPassword={screenType == "otp" ? false : true}
+                                />
+                                <TextField
+                                    ref={mPin2_3}
+                                    cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
+                                    placeHolder={''}
+                                    onChange={(text) => handleChange(text, mPin2_3, mPin2_4, 'forward')}
+                                    onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_2, mPin2_3, 'backward')}
+                                    keyboardType="numeric"
+                                    maxLength={1}
+                                    isPassword={screenType == "otp" ? false : true}
+                                />
+                                <TextField
+                                    ref={mPin2_4}
+                                    cutomStyle={screenType == "otp" ? style.textField : style.mpinText}
+                                    placeHolder={''}
+                                    onChange={(text) => handleChange(text, mPin2_4, null, 'forward')}
+                                    onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_3, mPin2_4, 'backward')}
+                                    keyboardType="numeric"
+                                    maxLength={1}
+                                    isPassword={screenType == "otp" ? false : true}
+                                />
+                            </View>
+
+
+
+                        </View>
+                    )
+
+                    }
+
                     <View style={style.buttonMainContainer}>
 
 
                         <Button
+                            customeStyleButton={style.outLinedButton}
+                            customeStyleText={style.textFilled}
+                            onClick={screenType == "otp" ? () => { setScreenType("curr_mpin") } : () => { setScreenType("otp") }}
+
+                        >
+                            <Text style={{ color: '#1286ED' }}>
+                                {'Prev'}
+                            </Text>
+                        </Button>
+
+                        <Button
                             customeStyleButton={style.buttonFilled}
                             customeStyleText={style.textFilled}
-                            onClick={screenType == "otp" ? handleOtp : setMpin}
+                            onClick={screenType == "otp" ? handleOtp : screenType == "curr_mpin" ? validateMpin : setMpin}
                             disabled={loading ? true : false}
                         >
-                            {loading ? <DotsLoader /> : screenType == 'otp' ? 'Verify OTP' : 'Set MPIN'}
+                            {loading ? <DotsLoader /> : screenType == "set_mpin" ? 'Set MPIN' : 'Next'}
                         </Button>
 
                     </View>

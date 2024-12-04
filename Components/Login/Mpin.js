@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, BackHandler, TouchableOpacity,Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, BackHandler, TouchableOpacity, Modal } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -145,8 +145,12 @@ function Mpin(props) {
     const mPin2 = useRef(null)
     const mPin3 = useRef(null)
     const mPin4 = useRef(null)
+    const mPin2_1 = useRef(null)
+    const mPin2_2 = useRef(null)
+    const mPin2_3 = useRef(null)
+    const mPin2_4 = useRef(null)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
-    const [resetMpinModal,setResetMpinModal]=useState(false)
+    const [resetMpinModal, setResetMpinModal] = useState(false)
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
@@ -227,6 +231,16 @@ function Mpin(props) {
     const setMpin = async () => {
 
         let mpin = mPin1.current.getValue() + mPin2.current.getValue() + mPin3.current.getValue() + mPin4.current.getValue()
+
+        let mpin2 = mPin2_1.current.getValue() + mPin2_2.current.getValue() + mPin2_3.current.getValue() + mPin2_4.current.getValue()
+        if(mpin!=mpin2){
+            Toast.show({
+                type: ALERT_TYPE.WARNING,
+                title: 'Oops',
+                textBody: "MPIN doesn't match",
+            });
+            return
+        }
         if (mpin == '' || mpin.length != 4) {
             Toast.show({
                 type: ALERT_TYPE.WARNING,
@@ -285,7 +299,7 @@ function Mpin(props) {
         }
 
     }
-    const handleResetMpin=()=>{
+    const handleResetMpin = () => {
         setResetMpinModal(false)
         navigation.navigate('login', { isResendOtp: true })
 
@@ -351,7 +365,7 @@ function Mpin(props) {
                         />
                     </View>
                     <View style={style.formContainer}>
-                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set MPIN' : 'Enter MPIN'}</Text>
+                        <Text style={globalStyle.boldTextBlack}>{typeMpin == 'setMpin' ? 'Set New MPIN' : 'Enter MPIN'}</Text>
                         <View style={style.MpinContainer}>
                             <TextField
                                 ref={mPin1}
@@ -395,10 +409,70 @@ function Mpin(props) {
                                 isPassword={true}
                             />
 
+
+
                         </View>
+                        {typeMpin == 'setMpin' && (
+                            <View>
+                                <Text style={globalStyle.boldTextBlack}>{'Confirm MPIN'}</Text>
+                                <View style={style.MpinContainer}>
+                                    <TextField
+                                        ref={mPin2_1}
+                                        cutomStyle={style.textField}
+                                        placeHolder={''}
+                                        onChange={(text) => handleChange(text, mPin2_1, mPin2_2, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, null, mPin2_1, 'backward')}
+                                        keyboardType="numeric"
+                                        maxLength={1}
+                                        isPassword={true}
+                                    />
+
+                                    <TextField
+                                        ref={mPin2_2}
+                                        cutomStyle={style.textField}
+                                        placeHolder={''}
+                                        onChange={(text) => handleChange(text, mPin2_2, mPin2_3, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_1, mPin2_2, 'backward')}
+                                        keyboardType="numeric"
+                                        maxLength={1}
+                                        isPassword={true}
+                                    />
+                                    <TextField
+                                        ref={mPin2_3}
+                                        cutomStyle={style.textField}
+                                        placeHolder={''}
+                                        onChange={(text) => handleChange(text, mPin2_3, mPin2_4, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_2, mPin2_3, 'backward')}
+                                        keyboardType="numeric"
+                                        maxLength={1}
+                                        isPassword={true}
+                                    />
+                                    <TextField
+                                        ref={mPin2_4}
+                                        cutomStyle={style.textField}
+                                        placeHolder={''}
+                                        onChange={(text) => handleChange(text, mPin2_4, null, 'forward')}
+                                        onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent, mPin2_3, mPin2_4, 'backward')}
+                                        keyboardType="numeric"
+                                        maxLength={1}
+                                        isPassword={true}
+                                    />
+
+
+
+                                </View>
+
+
+                            </View>
+                        )
+
+                        }
+
+
+
                         {typeMpin != 'setMpin' && (
                             <View style={style.resendMpin}>
-                                <TouchableOpacity onPress={()=>{setResetMpinModal(true)}}>
+                                <TouchableOpacity onPress={() => { setResetMpinModal(true) }}>
                                     <Text style={globalStyle.blueMediumText}>Forgot MPIN ?</Text>
                                 </TouchableOpacity>
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { GestureHandlerRootView, GestureDetector, Gesture } from "react-native-gesture-handler";
 import { useAutoLogout } from './AutoLogoutContext'; // Import the custom hook
 

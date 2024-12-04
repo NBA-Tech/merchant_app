@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, BackHandler } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { RightArrow } from '../../SvgIcons';
@@ -12,11 +12,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
 import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
-import { useBackHandler } from '../../BackHandler';
 import { useAutoLogout } from '../../AutoLogoutContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const style = StyleSheet.create({
@@ -94,7 +92,6 @@ const Home = (props) => {
     const [totalTrans, setTotalTrans] = useState(0)
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
-    const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler()
     const { resetTimer } = useAutoLogout();
 
 
