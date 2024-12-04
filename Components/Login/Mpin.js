@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, BackHandler, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, BackHandler, TouchableOpacity,Modal } from 'react-native';
 import { StyleContext } from '../../GlobalStyleProvider';
 import { TopHeaderBackground, LoginFooter } from '../../SvgIcons';
 import { TextField } from '../../Core_ui/TextField';
@@ -15,6 +15,7 @@ import { AuthProvider, useAuth } from '../../AuthProvider';
 import { useBackHandler } from '../../BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { NoInterNetIcon } from '../../SvgIcons';
 
 const style = StyleSheet.create({
     loginContainer: {
@@ -85,7 +86,52 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-end',
         marginVertical: hp('2%')
-    }
+    },
+    modalView: {
+        width: '80%',
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+        color: '#000000',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    button: {
+        flex: 1,
+        paddingVertical: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    cancelButton: {
+        backgroundColor: '#d3d3d3',
+    },
+    exitButton: {
+        backgroundColor: '#ff5c5c',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+
 
 });
 
@@ -100,6 +146,7 @@ function Mpin(props) {
     const mPin3 = useRef(null)
     const mPin4 = useRef(null)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
+    const [resetMpinModal,setResetMpinModal]=useState(false)
     const { showExitModal, setShowExitModal, handleCloseModal, handleExitApp } = useBackHandler();
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
@@ -127,7 +174,6 @@ function Mpin(props) {
 
         }
         setLoading(true)
-        console.log(merchantSessionData,mpin)
 
         let token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
@@ -191,7 +237,6 @@ function Mpin(props) {
 
         }
         setLoading(true)
-        console.log(merchantSessionData,mpin)
         let token = base64Encode(merchantSessionData?.clientDetails?.id) + '.' + base64Encode(encryptAES256(base64Encode(JSON.stringify(
 
             {
@@ -240,6 +285,11 @@ function Mpin(props) {
         }
 
     }
+    const handleResetMpin=()=>{
+        setResetMpinModal(false)
+        navigation.navigate('login', { isResendOtp: true })
+
+    }
 
 
     useFocusEffect(
@@ -269,6 +319,28 @@ function Mpin(props) {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
                 <View style={style.loginContainer}>
+                    <Modal visible={resetMpinModal} transparent={true} animationType="slide">
+                        <View style={style.centeredView}>
+                            <View style={style.modalView}>
+                                <NoInterNetIcon />
+                                <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
+                                <View style={style.buttonContainer}>
+                                    <TouchableOpacity
+                                        style={[style.button, style.cancelButton]}
+                                        onPress={() => { setResetMpinModal(false) }}
+                                    >
+                                        <Text style={style.buttonText}>Cancel</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[style.button, style.exitButton]}
+                                        onPress={handleResetMpin}
+                                    >
+                                        <Text style={style.buttonText}>Confirm</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
                     <View style={style.topHeaderContainer}>
                         <TopHeaderBackground />
                     </View>
@@ -326,7 +398,7 @@ function Mpin(props) {
                         </View>
                         {typeMpin != 'setMpin' && (
                             <View style={style.resendMpin}>
-                                <TouchableOpacity onPress={() => { navigation.navigate('login', { isResendOtp: true }) }}>
+                                <TouchableOpacity onPress={()=>{setResetMpinModal(true)}}>
                                     <Text style={globalStyle.blueMediumText}>Forgot MPIN ?</Text>
                                 </TouchableOpacity>
 

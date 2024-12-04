@@ -172,6 +172,7 @@ const Profile = (props) => {
     const [userData, setUserData] = useState(undefined)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
     const [logOutModal,setLogOutModal]=useState(false)
+    const [resetMpinModal,setResetMpinModal]=useState(false)
 
 
     const getUserQr = async () => {
@@ -192,6 +193,11 @@ const Profile = (props) => {
             }
 
         }
+    }
+    const handleResetMpin=()=>{
+        setResetMpinModal(false)
+        navigation.navigate('resetMpin')
+
     }
 
     const getUserData = async () => {
@@ -294,6 +300,30 @@ const Profile = (props) => {
             </Modal>
 
 
+            <Modal visible={resetMpinModal} transparent={true} animationType="slide">
+                <View style={style.centeredView}>
+                    <View style={style.modalView}>
+                        <NoInterNetIcon />
+                        <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
+                        <View style={style.buttonContainer}>
+                            <TouchableOpacity
+                                style={[style.button, style.cancelButton]}
+                                onPress={()=>{setResetMpinModal(false)}}
+                            >
+                                <Text style={style.buttonText}>Cancel</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[style.button, style.exitButton]}
+                                onPress={handleResetMpin}
+                            >
+                                <Text style={style.buttonText}>Confirm</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+
                 <View style={style.homeContainer}>
 
                     <View style={style.headerBg}>
@@ -359,6 +389,17 @@ const Profile = (props) => {
                                         <View style={style.leftDetails}>
                                             <HelpIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
+                                        </View>
+                                        <View>
+                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                        </View>
+                                    </Card>
+                                </View>
+                                <View>
+                                    <Card customStyle={style.cardContent} onClick={()=>{setResetMpinModal(true)}}>
+                                        <View style={style.leftDetails}>
+                                            <HelpIcon size={wp('7%')} />
+                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Reset MPIN</Text>
                                         </View>
                                         <View>
                                             <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />

@@ -50,9 +50,10 @@ const HomeStack = () => {
 const ProfileTabView=()=>{
   return(
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="profileStack" component={Profile} />
+
       <Stack.Screen name="resetMpin" component={ResetMpin} />
 
-      <Stack.Screen name="profileStack" component={Profile} />
       </Stack.Navigator>
 
   )

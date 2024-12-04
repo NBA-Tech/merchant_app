@@ -247,7 +247,6 @@ function Login(props) {
             otp: otp_values,
             module: ""
         }
-        console.log(payload)
 
         const validate_otp_api = await fetch(`${BASE_URL}/app/validateotp`, {
             method: 'POST',
@@ -258,7 +257,11 @@ function Login(props) {
         })
         const validate_otp_api_response = await validate_otp_api.json()
         let get_active_status_api_response = ""
-        if (validate_otp_api_response?.key) {
+        if(isResendOtp && validate_otp_api_response?.value == "Valid"){
+            navigation.navigate('mpin', { type: 'setMpin' })
+
+        }
+        else if (validate_otp_api_response?.key) {
             setLoading(false)
             if (validate_otp_api_response?.value == "Valid") {
                 payload = {
@@ -276,13 +279,10 @@ function Login(props) {
             }
         }
         if (validate_otp_api_response?.value == "Valid") {
-            console.log(get_active_status_api_response)
-            // await AsyncStorage.removeItem('merchant_status_data');
-            await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
-            // setIsOtp(false)
-
-            await AsyncStorage.setItem('user_creds', JSON.stringify({ email: email, mobile: mobile }));
-
+            if(!isResendOtp){
+                await AsyncStorage.setItem('merchant_status_data', JSON.stringify(get_active_status_api_response));
+                await AsyncStorage.setItem('user_creds', JSON.stringify({ email: email, mobile: mobile }));
+            }
             navigation.navigate('mpin', { type: 'setMpin' })
 
         }
@@ -301,7 +301,6 @@ function Login(props) {
         let user_creds = await AsyncStorage.getItem('user_creds');
 
         user_creds = JSON.parse(user_creds)
-        console.log(user_creds)
 
         let payload = {
             name: "",
@@ -319,7 +318,6 @@ function Login(props) {
             body: JSON.stringify(payload)
         })
         const send_otp_api_res = await send_otp_api.json()
-        console.log(send_otp_api_res)
 
         if (send_otp_api_res?.statusCode == 200) {
             Toast.show({
@@ -365,7 +363,6 @@ function Login(props) {
     }, [isOtp, retryOtp]);
 
     useEffect(() => {
-        console.log("isResendOtp", isResendOtp)
         if (isResendOtp) {
             setIsOtp(true)
             handleResendOtp()
