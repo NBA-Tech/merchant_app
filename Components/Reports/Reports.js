@@ -57,7 +57,7 @@ const style = StyleSheet.create({
     },
     filterRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         marginVertical: hp('2%')
     },
     dropdown: {
@@ -363,6 +363,7 @@ const Reports = (props) => {
             }
         }
         if (status_props != undefined) {
+            console.log(status_props)
             setCurrStatus(status_props)
         }
         setIsFilterUpdate(!isFilterUpdate)
@@ -420,7 +421,7 @@ const Reports = (props) => {
                                     <View style={style.filterContainer}>
                                         <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Payment method</Text>
 
-                                        <View style={[style.filterRow, { justifyContent: 'space-around' }]}>
+                                        <View style={style.filterRow}>
                                             <View >
                                             <TouchableOpacity  onPress={() => { setIsUpi(!isUpi) }}>
                                                 <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>UPI    {isUpi ? 'X' : ''}</Text>
@@ -442,7 +443,7 @@ const Reports = (props) => {
 
                     
 
-                                        <View style={[style.filterRow, { justifyContent: 'space-around' }]}>
+                                        <View style={style.filterRow}>
                                            <View>
                                            <TouchableOpacity  onPress={() => { currStatus=="SUCCESS"? setCurrStatus(''):setCurrStatus('SUCCESS') }}>
                                                 <Text style={[globalStyle.boldText, currStatus=="SUCCESS" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>SUCCESS    {currStatus=="SUCCESS" ? 'X' : ''}</Text>

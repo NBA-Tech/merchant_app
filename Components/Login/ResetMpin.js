@@ -17,6 +17,7 @@ import BackgroundTimer from 'react-native-background-timer';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import DotsLoader from '../../DotsLoader';
 import { base64Encode, base64Decode, encryptAES256, decryptAES256 } from '../../Encryption';
+import { useAuth } from '../../AuthProvider';
 const style = StyleSheet.create({
     profilePage: {
         backgroundColor: "#ffffff",
@@ -125,6 +126,7 @@ const ResetMpin = (props) => {
     const [appState, setAppState] = useState(AppState.currentState);
     const [retryOtp, setRetryOtp] = useState(true)
     const [screenType, setScreenType] = useState("curr_mpin")
+    const { isAuthenticated, setIsAuthenticated } = useAuth();
 
     const handleChange = (text, currentRef, nextInputRef, direction) => {
         if (direction === 'forward' && text.length === 1 && nextInputRef) {
@@ -260,7 +262,7 @@ const ResetMpin = (props) => {
                 textBody: 'MPIN Updated Successfully',
             });
             setLoading(false)
-            navigation.navigate('authStack',{screen:'mpin'})
+            navigation.navigate('mpin')
 
 
 

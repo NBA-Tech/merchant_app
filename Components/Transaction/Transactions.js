@@ -212,7 +212,7 @@ function Transactions(props) {
                     );
     
                     const failTransactions = obj.flatMap(({ transactionDetailPojo }) =>
-                        transactionDetailPojo.filter(transaction => transaction.status === "FAILURE")
+                        transactionDetailPojo.filter(transaction =>["FAILURE", "FAILED"].includes(transaction?.status))
                     );
     
                     setCards(prevCards => ({
@@ -227,7 +227,7 @@ function Transactions(props) {
                             {
                                 heading: 'Failed',
                                 amount: `${failTransactions.length} Transactions`,
-                                onClick: () => handleFilterTrans('', "FAILURE")
+                                onClick: () => handleFilterTrans('', "FAILED")
                             }
                         ]} />
                     }));
