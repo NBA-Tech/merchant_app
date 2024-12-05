@@ -363,7 +363,6 @@ const Reports = (props) => {
             }
         }
         if (status_props != undefined) {
-            console.log(status_props)
             setCurrStatus(status_props)
         }
         setIsFilterUpdate(!isFilterUpdate)

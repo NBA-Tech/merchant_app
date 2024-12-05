@@ -179,7 +179,6 @@ const ResetMpin = (props) => {
                 token: token
             })
         })
-        console.log(validate_mpin_api.headers.get('x-token'), mpin, merchantSessionData)
         let validate_mpin_res = validate_mpin_api.headers.get('x-token')
         validate_mpin_res = decryptAES256(validate_mpin_res, merchantSessionData?.clientDetails?.secret)
 
@@ -187,7 +186,6 @@ const ResetMpin = (props) => {
             [mPin1, mPin2, mPin3, mPin4].map((value, index) => {
                 value.current.setValue('')
             })
-            console.log(validate_mpin_res, screenType)
             setScreenType("otp")
 
         }
