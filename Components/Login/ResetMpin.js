@@ -91,7 +91,15 @@ const style = StyleSheet.create({
         marginVertical: hp('1%'),
         borderRadius: 10,           // Rounded corners
         borderWidth: 1,
-    }
+    },
+    disabledOutLinedButton: {
+        backgroundColor: "#f0f0f0",
+        borderColor: "#d0d0d0",
+        opacity: 0.7,
+        marginHorizontal: wp('0%'),
+        marginVertical: hp('1.1%'),
+        
+      },
 
 
 })
@@ -252,7 +260,7 @@ const ResetMpin = (props) => {
                 textBody: 'MPIN Updated Successfully',
             });
             setLoading(false)
-            navigation.navigate('mpin')
+            navigation.navigate('authStack',{screen:'mpin'})
 
 
 
@@ -563,12 +571,13 @@ const ResetMpin = (props) => {
 
 
                         <Button
-                            customeStyleButton={style.outLinedButton}
+                            customeStyleButton={screenType=="curr_mpin"?style.disabledOutLinedButton:style.outLinedButton}
                             customeStyleText={style.textFilled}
                             onClick={screenType == "otp" ? () => { setScreenType("curr_mpin") } : () => { setScreenType("otp") }}
+                            disabled={screenType=="curr_mpin"?true:false}
 
                         >
-                            <Text style={{ color: '#1286ED' }}>
+                            <Text style={{ color: screenType=="curr_mpin"?'#A0C7ED':"#1286ED" }}>
                                 {'Prev'}
                             </Text>
                         </Button>

@@ -53,7 +53,6 @@ const ProfileTabView=()=>{
       <Stack.Screen name="profileStack" component={Profile} />
 
       <Stack.Screen name="resetMpin" component={ResetMpin} />
-      <Stack.Screen name="mpin" component={Mpin} />
       </Stack.Navigator>
 
   )

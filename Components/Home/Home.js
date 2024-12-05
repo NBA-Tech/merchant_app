@@ -17,8 +17,12 @@ import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAutoLogout } from '../../AutoLogoutContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { image_urls } from '../../Config';
 import Carousel from 'react-native-reanimated-carousel';
+import {
+    configureReanimatedLogger,
+    ReanimatedLogLevel,
+  } from 'react-native-reanimated';
 
 const { width } = Dimensions.get('window');
 
@@ -111,11 +115,14 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { resetTimer } = useAutoLogout();
-
+    configureReanimatedLogger({
+        level: ReanimatedLogLevel.warn,
+        strict: false, // Reanimated runs in strict mode by default
+      });
     const data = [
-        { src: require('../../assets/images/logo.png') },
-        { src: require('../../assets/images/logo.png') },
-        { src: require('../../assets/images/logo.png') },
+        { src: image_urls?.image_url_1},
+        { src:  image_urls?.image_url_2},
+        { src:  image_urls?.image_url_3},
     ];
 
 
@@ -328,20 +335,21 @@ const Home = (props) => {
                                 )}
                             </View>
                         </Card>
-                        {/* <Carousel
+                        <Carousel
                             width={width}
                             height={hp('30%')}
+                            style={{marginLeft:'0.5%',marginBottom:hp('2%')}}
                             data={data}
                             renderItem={({ item }) => (
                                 <View style={style.card}>
-                                    <Image source={item.src} style={{width:wp('70%'),height:hp('100%')}}/>
+                                    <Image source={{uri:item?.src}} style={{width:wp('90%'),height:hp('50%')}}/>
                                 </View>
                             )}
                             loop={true}
                             autoPlay={true}
                             autoPlayInterval={3000}
                             pagingEnabled={true}
-                        /> */}
+                        />
                     </View>
                 </View>
             </ScrollView>

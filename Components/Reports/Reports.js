@@ -132,11 +132,12 @@ const style = StyleSheet.create({
         borderRadius: 20,
         color: '#FFFFFF',
         paddingVertical: 10,
-        paddingHorizontal: 20,
         justifyContent: 'center',
+        paddingHorizontal: 10,
         alignItems: 'center',
         flexShrink: 0,
-        marginHorizontal: wp('5%')
+        marginHorizontal: wp('2%'),
+        textAlign:'center'
     },
     dateField: {
         backgroundColor: '#E5F3FF',
@@ -173,13 +174,14 @@ const style = StyleSheet.create({
         borderRadius: 20,
         color: '#1286ED',
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
         flexShrink: 0,
         borderColor: '#1286ED',
         borderWidth: 1,
-        marginHorizontal: wp('5%')
+        marginHorizontal: wp('2%'),
+        textAlign:'center'
 
     }
 
@@ -434,44 +436,22 @@ const Reports = (props) => {
 
                                         <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Status</Text>
 
-                                        <View style={style.filterRow}>
-                                            <Dropdown
-                                                style={[
-                                                    style.dropdown,
-                                                    isStatusFocus && { borderColor: 'blue' },
-                                                    { backgroundColor: '#E5F3FF' },
-                                                ]}
-                                                placeholderStyle={{
-                                                    color: '#000000', // Placeholder text black
-                                                    fontSize: wp('3.5%'), // Example for adjusting font size (optional)
-                                                    fontFamily: 'IBMPlexSans-Bold'
-                                                }}
-                                                selectedTextStyle={{
-                                                    color: '#000000', // Selected text black
-                                                    fontSize: wp('3.5%'), // Adjust as necessary
-                                                    fontFamily: 'IBMPlexSans-Bold'
-                                                }}
-                                                itemTextStyle={{
-                                                    color: '#000000', // Items in the dropdown list should also be black
-                                                    fontFamily: 'IBMPlexSans-Bold',
-                                                    fontSize: wp('3%'),
-                                                }}
-                                                dropdownStyle={{
-                                                    backgroundColor: '#E5F3FF', // Dropdown background color to white
-                                                }}
-                                                maxHeight={hp('10%')}
-                                                labelField="label"
-                                                valueField="value"
-                                                placeholder={!isStatusFocus ? 'Select Status' : '...'}
-                                                onFocus={() => setIsStatusFocus(true)}
-                                                onBlur={() => setIsStatusFocus(false)}
-                                                data={status}
-                                                value={currStatus}
-                                                onChange={(item) => setCurrStatus(item?.value)}
+                    
 
-                                            />
+                                        <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
+                                            <TouchableOpacity style={style.filterRow} onPress={() => { currStatus=="SUCCESS"? setCurrStatus(''):setCurrStatus('SUCCESS') }}>
+                                                <Text style={[globalStyle.boldText, currStatus=="SUCCESS" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>SUCCESS    {currStatus=="SUCCESS" ? 'X' : ''}</Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity style={style.filterRow} onPress={() => { currStatus=="FAILED"? setCurrStatus(''): setCurrStatus('FAILED') }}>
+                                                <Text style={[globalStyle.boldText, currStatus=="FAILED" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>FAILED     {currStatus=="FAILED" ? 'X' : ''}</Text>
+                                            </TouchableOpacity>
+
+
+
 
                                         </View>
+
                                         <View >
                                             <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Date</Text>
                                             <View style={style.filterRow}>
