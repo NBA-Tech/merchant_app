@@ -420,14 +420,18 @@ const Reports = (props) => {
                                     <View style={style.filterContainer}>
                                         <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Payment method</Text>
 
-                                        <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
-                                            <TouchableOpacity style={style.filterRow} onPress={() => { setIsUpi(!isUpi) }}>
+                                        <View style={[style.filterRow, { justifyContent: 'space-around' }]}>
+                                            <View >
+                                            <TouchableOpacity  onPress={() => { setIsUpi(!isUpi) }}>
                                                 <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>UPI    {isUpi ? 'X' : ''}</Text>
                                             </TouchableOpacity>
+                                            </View>
 
-                                            <TouchableOpacity style={style.filterRow} onPress={() => { setIsPg(!isPg) }}>
+                                           <View >
+                                           <TouchableOpacity  onPress={() => { setIsPg(!isPg) }}>
                                                 <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
                                             </TouchableOpacity>
+                                           </View>
 
 
 
@@ -438,14 +442,18 @@ const Reports = (props) => {
 
                     
 
-                                        <View style={[style.filterRow, { justifyContent: 'flex-start' }]}>
-                                            <TouchableOpacity style={style.filterRow} onPress={() => { currStatus=="SUCCESS"? setCurrStatus(''):setCurrStatus('SUCCESS') }}>
+                                        <View style={[style.filterRow, { justifyContent: 'space-around' }]}>
+                                           <View>
+                                           <TouchableOpacity  onPress={() => { currStatus=="SUCCESS"? setCurrStatus(''):setCurrStatus('SUCCESS') }}>
                                                 <Text style={[globalStyle.boldText, currStatus=="SUCCESS" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>SUCCESS    {currStatus=="SUCCESS" ? 'X' : ''}</Text>
                                             </TouchableOpacity>
+                                           </View>
 
-                                            <TouchableOpacity style={style.filterRow} onPress={() => { currStatus=="FAILED"? setCurrStatus(''): setCurrStatus('FAILED') }}>
+                                            <View>
+                                            <TouchableOpacity  onPress={() => { currStatus=="FAILED"? setCurrStatus(''): setCurrStatus('FAILED') }}>
                                                 <Text style={[globalStyle.boldText, currStatus=="FAILED" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>FAILED     {currStatus=="FAILED" ? 'X' : ''}</Text>
                                             </TouchableOpacity>
+                                            </View>
 
 
 
