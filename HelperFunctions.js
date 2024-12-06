@@ -52,4 +52,23 @@ export const isValidEmail = (email) => {
       };
     }
   };
-  
+
+  export function formatDateWithAmPm(dateString) {
+    const date = new Date(dateString);
+
+    if (isNaN(date)) {
+        return "Invalid date";
+    }
+
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+    };
+
+    return date.toLocaleString('en-US', options);
+  }

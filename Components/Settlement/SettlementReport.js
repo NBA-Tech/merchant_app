@@ -8,7 +8,7 @@ import DateHeader from '../../Core_ui/DateHeader';
 import Footer from '../Footer';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
-import { BankIcon, CardIcon, RightArrow, UpiIcon } from '../../SvgIcons';
+import { BankIcon, CardIcon, RightArrow, StatIcon, UpiIcon } from '../../SvgIcons';
 import Button from '../../Core_ui/Button';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { DataContext } from '../../DataContext';
@@ -85,6 +85,10 @@ const style = StyleSheet.create({
         flex: 1,
         alignSelf: 'center',
     },
+    cardContainer: {
+        flexDirection: 'column',
+        padding: hp('1%'),
+    },
 
 
 
@@ -134,7 +138,9 @@ function SettlementReport(props) {
         if (get_settlement_data_res?.statusCode == 200) {
             if (trans_type == "ALL") {
                 const total_amount = get_settlement_data_res?.obj?.reduce(
-                    (sum, { summaryDetails }) => sum + parseFloat(summaryDetails?.totalAmount || 0),
+                    (sum, { summaryDetails }) => sum + 
+                    parseFloat(summaryDetails?.totalSuccessAmount || 0)+
+                    parseFloat(summaryDetails?.totalFailureAmount || 0),
                     0
                 ).toFixed(2);
 
@@ -142,13 +148,13 @@ function SettlementReport(props) {
             }
 
             else if (trans_type == "UPI") {
-                setTotalUPIAmount(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalAmount)
-                setTotalUPI(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
+                setTotalUPIAmount(parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)+parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0))
+                // setTotalUPI(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
 
             }
             else if (trans_type == "PG") {
-                setTotalPGAmount(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalAmount)
-                setTotalPG(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
+                setTotalPGAmount(parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)+parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0))
+                // setTotalPG(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
             }
 
 
@@ -188,14 +194,35 @@ function SettlementReport(props) {
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
                             <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} isBackHeader={true} navHeading={'Settlements'} navigation={navigation} />
+                            {dateModal && (
+                                <DateTimePicker
+                                    value={transDate}
+                                    mode="date"
+                                    display="spinner"
+                                    onChange={(event, selectedDate) => {
+                                        if (selectedDate) {
+                                            setTransDate(selectedDate);
+                                            setDateModal(false)
+                                        }
+                                    }}
+                                    maximumDate={new Date()}
+                                />
+                            )
+
+                            }
                             <Card hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}  >
                                 {loading ? (
                                     <CardLoader />
                                 ) : (
-                                    <View style={style.cardRow}>
+                                    <View style={style.cardContainer}>
+                                        <StatIcon width={wp('8%')} height={hp('5%')} />
                                         <Text style={globalStyle.headingText}>
-                                            Total: ₹ {settlementAmount ?? 0}
+                                            Total Transaction Worth
+                                        </Text>
+
+                                        <Text style={globalStyle.headingText}>
+                                            ₹ {settlementAmount ?? 0}
                                         </Text>
                                     </View>
 
@@ -246,12 +273,6 @@ function SettlementReport(props) {
 
                 </View>
 
-                <View>
-                    <Button customeStyleContainer={style.buttonContainer}
-                        customeStyleButton={style.button}>
-                        <Text style={style.download}>Download</Text>
-                    </Button>
-                </View>
             </ScrollView>
 
             <Footer active={'settlement_report'} navigation={navigation} />

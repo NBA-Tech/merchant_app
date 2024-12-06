@@ -294,7 +294,7 @@ function Transactions(props) {
             value='PG'
 
         }
-        navigation.navigate('reports',{date_props:{fromDate:transDate,toDate:transDate},trans_type_props:value,status:status})
+        navigation.navigate('reportsStack',{date_props:{fromDate:transDate,toDate:transDate},trans_type_props:value,status:status})
     }
 
     useEffect(() => {

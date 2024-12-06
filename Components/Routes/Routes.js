@@ -42,7 +42,7 @@ const HomeStack = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="home" component={Home} />
       <Stack.Screen name="trans" component={Transactions} />
-      <Stack.Screen name="reports" component={ReportsStack} />
+      <Stack.Screen name="reportsStack" component={ReportsStack} />
     </Stack.Navigator>
   );
 };

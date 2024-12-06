@@ -16,7 +16,7 @@ import { BASE_URL } from '../../Config';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
-import { FormatDate, getMerchantSession } from '../../HelperFunctions';
+import { FormatDate, getMerchantSession,formatDateWithAmPm } from '../../HelperFunctions';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FAB, Provider as PaperProvider } from 'react-native-paper';
 import Modal from "react-native-modal";
@@ -626,7 +626,7 @@ const Reports = (props) => {
                                                         </Text>
                                                         {value?.timeStamp && (
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                Date : {(value?.timeStamp).split('.')[0]}
+                                                                Date : {formatDateWithAmPm(value?.timeStamp)}
                                                             </Text>
                                                         )}
                                                     </View>

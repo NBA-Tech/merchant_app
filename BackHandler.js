@@ -16,9 +16,11 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
 
     useEffect(() => {
         const backAction = () => {
+            console.log(currentRoute)
             if(currentRoute.includes("transactionreceipt")){
+                console.log("comes here")
 
-                navigation.navigate('reports')
+                navigation.navigate('ReportsStack',{screen:'reports'})
                 // navigation.goBack()
             }
             if (noExitRoutes.includes(currentRoute)) {

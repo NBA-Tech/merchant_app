@@ -211,12 +211,17 @@ const Home = (props) => {
 
         if (get_settlement_data_res?.statusCode == 200) {
             const total_amount = get_settlement_data_res?.obj?.reduce(
-                (sum, { summaryDetails }) => sum + parseFloat(summaryDetails?.totalAmount || 0),
+                (sum, { summaryDetails }) => 
+                    sum + 
+                parseFloat(summaryDetails?.totalSuccessAmount || 0)+
+                parseFloat(summaryDetails?.totalFailureAmount || 0),
                 0
             ).toFixed(2);
 
             const total_settlement_count = get_settlement_data_res?.obj?.reduce(
-                (count, { settlementDetails }) => count + (settlementDetails?.length || 0),
+                (count, { summaryDetails }) => count + 
+                parseInt(summaryDetails?.totalSuccessTransactions || 0)+
+                parseInt(summaryDetails?.totalFailureTransactions || 0),
                 0
             );
 

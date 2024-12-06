@@ -58,6 +58,7 @@ const style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: wp('2%'),
+        marginHorizontal:wp('10%')
     },
     separateBar: {
         color: '#000000',
@@ -171,8 +172,8 @@ const Profile = (props) => {
     const [isQrModal, setIsQrModal] = useState(false)
     const [userData, setUserData] = useState(undefined)
     const { isAuthenticated, setIsAuthenticated } = useAuth()
-    const [logOutModal,setLogOutModal]=useState(false)
-    const [resetMpinModal,setResetMpinModal]=useState(false)
+    const [logOutModal, setLogOutModal] = useState(false)
+    const [resetMpinModal, setResetMpinModal] = useState(false)
 
 
     const getUserQr = async () => {
@@ -194,7 +195,7 @@ const Profile = (props) => {
 
         }
     }
-    const handleResetMpin=()=>{
+    const handleResetMpin = () => {
         setResetMpinModal(false)
         navigation.navigate('resetMpin')
 
@@ -277,51 +278,51 @@ const Profile = (props) => {
                 </Modal>
 
                 <Modal visible={logOutModal} transparent={true} animationType="slide">
-                <View style={style.centeredView}>
-                    <View style={style.modalView}>
-                        <NoInterNetIcon />
-                        <Text style={style.modalText}>Are you sure you want to Logout?</Text>
-                        <View style={style.buttonContainer}>
-                            <TouchableOpacity
-                                style={[style.button, style.cancelButton]}
-                                onPress={()=>{setLogOutModal(false)}}
-                            >
-                                <Text style={style.buttonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[style.button, style.exitButton]}
-                                onPress={handleLogout}
-                            >
-                                <Text style={style.buttonText}>Yes</Text>
-                            </TouchableOpacity>
+                    <View style={style.centeredView}>
+                        <View style={style.modalView}>
+                            <NoInterNetIcon />
+                            <Text style={style.modalText}>Are you sure you want to Logout?</Text>
+                            <View style={style.buttonContainer}>
+                                <TouchableOpacity
+                                    style={[style.button, style.cancelButton]}
+                                    onPress={() => { setLogOutModal(false) }}
+                                >
+                                    <Text style={style.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[style.button, style.exitButton]}
+                                    onPress={handleLogout}
+                                >
+                                    <Text style={style.buttonText}>Yes</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
 
 
-            <Modal visible={resetMpinModal} transparent={true} animationType="slide">
-                <View style={style.centeredView}>
-                    <View style={style.modalView}>
-                        <NoInterNetIcon />
-                        <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
-                        <View style={style.buttonContainer}>
-                            <TouchableOpacity
-                                style={[style.button, style.cancelButton]}
-                                onPress={()=>{setResetMpinModal(false)}}
-                            >
-                                <Text style={style.buttonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[style.button, style.exitButton]}
-                                onPress={handleResetMpin}
-                            >
-                                <Text style={style.buttonText}>Confirm</Text>
-                            </TouchableOpacity>
+                <Modal visible={resetMpinModal} transparent={true} animationType="slide">
+                    <View style={style.centeredView}>
+                        <View style={style.modalView}>
+                            <NoInterNetIcon />
+                            <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
+                            <View style={style.buttonContainer}>
+                                <TouchableOpacity
+                                    style={[style.button, style.cancelButton]}
+                                    onPress={() => { setResetMpinModal(false) }}
+                                >
+                                    <Text style={style.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={[style.button, style.exitButton]}
+                                    onPress={handleResetMpin}
+                                >
+                                    <Text style={style.buttonText}>Confirm</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
 
 
                 <View style={style.homeContainer}>
@@ -331,11 +332,16 @@ const Profile = (props) => {
                         <View style={style.profilePic}>
                             <ProfileUserIcon />
                             <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
-                            <View style={[style.detailsContainer, { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }]}>
+                            <View
+                                style={[
+                                    style.detailsContainer,
+                                    { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
+                                ]}
+                            >
                                 <Text
                                     style={[
                                         globalStyle.mediumText,
-                                        { fontSize: wp('4%'), flexShrink: 1 }, // FlexShrink ensures text fits without overflowing
+                                        { fontSize: wp('4%'), flexShrink: 1 },
                                     ]}
                                     numberOfLines={3}
                                     ellipsizeMode="tail"
@@ -343,7 +349,7 @@ const Profile = (props) => {
                                     {userData?.name ?? 'Loading...'}
                                 </Text>
 
-                                <Text style={[style.separateBar, { marginHorizontal: 8 }]}>|</Text>
+                                <Text style={[style.separateBar]}>|</Text>
 
                                 <Text
                                     style={[
@@ -356,6 +362,7 @@ const Profile = (props) => {
                                     {userData?.email ?? 'Loading...'}
                                 </Text>
                             </View>
+
 
                         </View>
                         <View style={style.cardSubDetails}>
@@ -396,7 +403,7 @@ const Profile = (props) => {
                                     </Card>
                                 </View>
                                 <View>
-                                    <Card customStyle={style.cardContent} onClick={()=>{setResetMpinModal(true)}}>
+                                    <Card customStyle={style.cardContent} onClick={() => { setResetMpinModal(true) }}>
                                         <View style={style.leftDetails}>
                                             <HelpIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Reset MPIN</Text>
@@ -407,7 +414,7 @@ const Profile = (props) => {
                                     </Card>
                                 </View>
                                 <View>
-                                    <Card customStyle={style.cardContent} onClick={()=>{setLogOutModal(true)}}>
+                                    <Card customStyle={style.cardContent} onClick={() => { setLogOutModal(true) }}>
                                         <View style={style.leftDetails}>
                                             <LogoutIcon size={wp('7%')} />
                                             <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>

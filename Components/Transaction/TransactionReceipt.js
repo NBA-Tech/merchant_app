@@ -10,7 +10,7 @@ import Button from '../../Core_ui/Button';
 import { BASE_URL } from '../../Config';
 import { base64Encode, encryptAES256 } from '../../Encryption';
 import { IconButton } from 'react-native-paper';
-import { getMerchantSession } from '../../HelperFunctions';
+import { formatDateWithAmPm, getMerchantSession } from '../../HelperFunctions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormatDate } from '../../HelperFunctions';
 import CardLoader from '../../Core_ui/CardLoader';
@@ -248,7 +248,7 @@ const TransactionReceipt = (props) => {
                                     <View style={style.bodyContainer}>
                                         <Text style={[globalStyle.headingText, { color: '#1A4163'  }]}>Transactions worth </Text>
                                         <Text style={[globalStyle.headingText, { color: '#1A4163'}]}>₹  {transDetails?.amount}</Text>
-                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>{new Date(timeStamp).toISOString().split('.')[0]}</Text>
+                                        <Text style={[globalStyle.headingText, { color: '#1A4163', fontSize: wp('4.5%') }]}>{formatDateWithAmPm(timeStamp)}</Text>
                                     </View>
 
                                     <View style={style.iconContainer}>
