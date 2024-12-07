@@ -533,7 +533,7 @@ function Login(props) {
                 </View>
             </View>
             <View style={style.versionContainer}>
-                <Text style={style.versionText}>Version : V.1.3-alpha</Text>
+                <Text style={style.versionText}>Version : V.1.4-alpha</Text>
 
             </View>
         </ScrollView>
