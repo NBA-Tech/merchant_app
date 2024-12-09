@@ -3,6 +3,7 @@ import { BackHandler, Modal, Text, View, StyleSheet, TouchableOpacity } from 're
 import { NoInterNetIcon } from './SvgIcons'; // Assuming you have this icon component
 import {  useNavigation } from '@react-navigation/native';
 import { useAuth } from './AuthProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Create Context
 const BackHandlerContext = createContext();
@@ -16,10 +17,7 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
 
     useEffect(() => {
         const backAction = () => {
-            console.log(currentRoute)
             if(currentRoute.includes("transactionreceipt")){
-                console.log("comes here")
-
                 navigation.navigate('ReportsStack',{screen:'reports'})
                 // navigation.goBack()
             }
@@ -42,9 +40,11 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
         return () => backHandler.remove(); // Cleanup the listener on unmount
     }, [currentRoute]);
 
-    const handleExitApp = () => {
+    const handleExitApp = async() => {
+        await AsyncStorage.removeItem('is_mpin_set');
         setShowExitModal(false);
         setIsAuthenticated(false)
+        navigation.navigate('mpin')
 
         BackHandler.exitApp(); // Exit the app
     };

@@ -58,7 +58,7 @@ const style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: wp('2%'),
-        marginHorizontal:wp('10%')
+        marginHorizontal: wp('10%')
     },
     separateBar: {
         color: '#000000',
@@ -250,191 +250,193 @@ const Profile = (props) => {
     }, [])
     return (
         <SafeAreaView style={style.profilePage}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-            <View style={[globalStyle.backgroundWhite]}>
+                <View style={[globalStyle.backgroundWhite]}>
 
-                <Modal
-                    visible={isQrModal}
-                    transparent={true}
-                    animationType="slide"
-                    onRequestClose={() => { setIsQrModal(false) }}
-                >
-                    <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
+                    <Modal
+                        visible={isQrModal}
+                        transparent={true}
+                        animationType="slide"
+                        onRequestClose={() => { setIsQrModal(false) }}
+                    >
+                        <TouchableWithoutFeedback onPress={() => { setIsQrModal(false) }}>
+                            <View style={style.centeredView}>
+                                <View style={style.modalView}>
+                                    <Text style={[globalStyle.boldTextBlack, { fontSize: wp('5%') }]}>{userData?.name ?? 'Loading...'}</Text>
+                                    <Text style={[globalStyle.blackSubText, { fontSize: wp('5%') }]}>{userData?.bName ?? 'Loading...'}</Text>
+                                    <Image
+                                        source={require('../../assets/images/logo.png')}
+                                        style={{ width: wp('80%'), height: hp('10%') }}
+                                    />
+                                    <Image
+                                        source={{ uri: `data:image/png;base64,${myQr}` }}
+                                        style={{ width: wp('80%'), height: hp('40%') }}
+                                    />
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+
+                    <Modal visible={logOutModal} transparent={true} animationType="slide">
                         <View style={style.centeredView}>
                             <View style={style.modalView}>
-                                <Text style={[globalStyle.boldTextBlack, { fontSize: wp('5%') }]}>{userData?.name ?? 'Loading...'}</Text>
-                                <Text style={[globalStyle.blackSubText, { fontSize: wp('5%') }]}>{userData?.bName ?? 'Loading...'}</Text>
-                                <Image
-                                    source={require('../../assets/images/logo.png')}
-                                    style={{ width: wp('80%'), height: hp('10%') }}
-                                />
-                                <Image
-                                    source={{ uri: `data:image/png;base64,${myQr}` }}
-                                    style={{ width: wp('80%'), height: hp('40%') }}
-                                />
+                                <NoInterNetIcon />
+                                <Text style={style.modalText}>Are you sure you want to Logout?</Text>
+                                <View style={style.buttonContainer}>
+                                    <TouchableOpacity
+                                        style={[style.button, style.cancelButton]}
+                                        onPress={() => { setLogOutModal(false) }}
+                                    >
+                                        <Text style={style.buttonText}>Cancel</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[style.button, style.exitButton]}
+                                        onPress={handleLogout}
+                                    >
+                                        <Text style={style.buttonText}>Yes</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
+                    </Modal>
 
-                <Modal visible={logOutModal} transparent={true} animationType="slide">
-                    <View style={style.centeredView}>
-                        <View style={style.modalView}>
-                            <NoInterNetIcon />
-                            <Text style={style.modalText}>Are you sure you want to Logout?</Text>
-                            <View style={style.buttonContainer}>
-                                <TouchableOpacity
-                                    style={[style.button, style.cancelButton]}
-                                    onPress={() => { setLogOutModal(false) }}
-                                >
-                                    <Text style={style.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[style.button, style.exitButton]}
-                                    onPress={handleLogout}
-                                >
-                                    <Text style={style.buttonText}>Yes</Text>
-                                </TouchableOpacity>
+
+                    <Modal visible={resetMpinModal} transparent={true} animationType="slide">
+                        <View style={style.centeredView}>
+                            <View style={style.modalView}>
+                                <NoInterNetIcon />
+                                <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
+                                <View style={style.buttonContainer}>
+                                    <TouchableOpacity
+                                        style={[style.button, style.cancelButton]}
+                                        onPress={() => { setResetMpinModal(false) }}
+                                    >
+                                        <Text style={style.buttonText}>Cancel</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[style.button, style.exitButton]}
+                                        onPress={handleResetMpin}
+                                    >
+                                        <Text style={style.buttonText}>Confirm</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </Modal>
+                    </Modal>
 
 
-                <Modal visible={resetMpinModal} transparent={true} animationType="slide">
-                    <View style={style.centeredView}>
-                        <View style={style.modalView}>
-                            <NoInterNetIcon />
-                            <Text style={style.modalText}>Are you sure you want to reset your MPIN? An OTP will be sent to your registered mobile number</Text>
-                            <View style={style.buttonContainer}>
-                                <TouchableOpacity
-                                    style={[style.button, style.cancelButton]}
-                                    onPress={() => { setResetMpinModal(false) }}
-                                >
-                                    <Text style={style.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[style.button, style.exitButton]}
-                                    onPress={handleResetMpin}
-                                >
-                                    <Text style={style.buttonText}>Confirm</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
+                    <View style={style.homeContainer}>
 
-
-                <View style={style.homeContainer}>
-
-                    <View style={style.headerBg}>
-                        <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
-                        <View style={style.profilePic}>
-                            <ProfileUserIcon />
-                            <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
-                            <View
-                                style={[
-                                    style.detailsContainer,
-                                    { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
-                                ]}
-                            >
-                                <Text
+                        <View style={style.headerBg}>
+                            <DateHeader isBackHeader={true} navHeading={'Profile'} customStyle={{ marginLeft: hp('5%') }} navigation={navigation} isDate={false} />
+                            <View style={style.profilePic}>
+                                <ProfileUserIcon />
+                                <Text style={globalStyle.mediumText}>{userData?.bName ?? 'Loading...'}</Text>
+                                <View
                                     style={[
-                                        globalStyle.mediumText,
-                                        { fontSize: wp('4%'), flexShrink: 1 },
+                                        style.detailsContainer,
+                                        { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
                                     ]}
-                                    numberOfLines={3}
-                                    ellipsizeMode="tail"
                                 >
-                                    {userData?.name ?? 'Loading...'}
-                                </Text>
+                                    <Text
+                                        style={[
+                                            globalStyle.mediumText,
+                                            { fontSize: wp('4%'), flexShrink: 1 },
+                                        ]}
+                                        numberOfLines={3}
+                                        ellipsizeMode="tail"
+                                    >
+                                        {userData?.name ?? 'Loading...'}
+                                    </Text>
 
-                                <Text style={[style.separateBar]}>|</Text>
+                                    <Text style={[style.separateBar]}>|</Text>
 
-                                <Text
-                                    style={[
-                                        globalStyle.mediumText,
-                                        { fontSize: wp('4%'), flexShrink: 1 },
-                                    ]}
-                                    numberOfLines={3}
-                                    ellipsizeMode="tail"
-                                >
-                                    {userData?.email ?? 'Loading...'}
-                                </Text>
+                                    <Text
+                                        style={[
+                                            globalStyle.mediumText,
+                                            { fontSize: wp('4%'), flexShrink: 1 },
+                                        ]}
+                                        numberOfLines={3}
+                                        ellipsizeMode="tail"
+                                    >
+                                        {userData?.email ?? 'Loading...'}
+                                    </Text>
+                                </View>
+
+
                             </View>
+                            <View style={style.cardSubDetails}>
+                                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+
+                                    <View>
+                                        <Card customStyle={style.cardContent} onClick={() => { setIsQrModal(!isQrModal) }}>
+                                            <View style={style.leftDetails}>
+                                                <QrIcon fill='#1286ED' width={wp('8%')} height={hp('6.5%')} />
+                                                <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>My QR</Text>
+                                            </View>
+                                            <View>
+                                                <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                            </View>
+                                        </Card>
+                                    </View>
+
+                                    <View>
+                                        <Card customStyle={style.cardContent}>
+                                            <View style={style.leftDetails}>
+                                                <SettingsIcon size={wp('7%')} />
+                                                <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Settings</Text>
+                                            </View>
+                                            <View>
+                                                <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                            </View>
+                                        </Card>
+                                    </View>
+                                    <View>
+                                        <Card customStyle={style.cardContent}>
+                                            <View style={style.leftDetails}>
+                                                <HelpIcon size={wp('7%')} />
+                                                <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
+                                            </View>
+                                            <View>
+                                                <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                            </View>
+                                        </Card>
+                                    </View>
+                                    <View>
+                                        <Card customStyle={style.cardContent} onClick={() => { setResetMpinModal(true) }}>
+                                            <View style={style.leftDetails}>
+                                                <HelpIcon size={wp('7%')} />
+                                                <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Reset MPIN</Text>
+                                            </View>
+                                            <View>
+                                                <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                            </View>
+                                        </Card>
+                                    </View>
+                                    <View>
+                                        <Card customStyle={style.cardContent} onClick={() => { setLogOutModal(true) }}>
+                                            <View style={style.leftDetails}>
+                                                <LogoutIcon size={wp('7%')} />
+                                                <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
+                                            </View>
+                                            <View>
+                                                <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
+                                            </View>
+                                        </Card>
+                                    </View>
 
 
+                                </ScrollView>
+
+
+                            </View>
                         </View>
-                        <View style={style.cardSubDetails}>
-                            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
-                                <View>
-                                    <Card customStyle={style.cardContent} onClick={() => { setIsQrModal(!isQrModal) }}>
-                                        <View style={style.leftDetails}>
-                                            <QrIcon fill='#1286ED' width={wp('8%')} height={hp('6.5%')} />
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>My QR</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
-                                        </View>
-                                    </Card>
-                                </View>
-
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <SettingsIcon size={wp('7%')} />
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Settings</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent}>
-                                        <View style={style.leftDetails}>
-                                            <HelpIcon size={wp('7%')} />
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Help & Support</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent} onClick={() => { setResetMpinModal(true) }}>
-                                        <View style={style.leftDetails}>
-                                            <HelpIcon size={wp('7%')} />
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Reset MPIN</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
-                                        </View>
-                                    </Card>
-                                </View>
-                                <View>
-                                    <Card customStyle={style.cardContent} onClick={() => { setLogOutModal(true) }}>
-                                        <View style={style.leftDetails}>
-                                            <LogoutIcon size={wp('7%')} />
-                                            <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Logout</Text>
-                                        </View>
-                                        <View>
-                                            <RightArrow fill={'#002D57'} width={wp('6%')} height={hp('6.5%')} />
-                                        </View>
-                                    </Card>
-                                </View>
-
-
-                            </ScrollView>
-
-
-                        </View>
                     </View>
 
                 </View>
-
-            </View>
+            </ScrollView>
             <Footer active='profile' navigation={navigation} />
 
 

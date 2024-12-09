@@ -18,6 +18,7 @@ import { FormatDate, getMerchantSession, convertRupeesToPaise, fetchWithTimeout 
 import { TextField } from '../../Core_ui/TextField';
 import DotsLoader from '../../DotsLoader';
 import { useFocusEffect } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const style = StyleSheet.create({
     paymentContainer: {
@@ -194,7 +195,7 @@ const Payment = (props) => {
     );
 
     return (
-        <View style={style.home}>
+        <SafeAreaView style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ marginBottom: hp('2%') }}>
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
@@ -271,7 +272,7 @@ const Payment = (props) => {
             </ScrollView>
             <Footer active="payment" navigation={navigation} />
 
-        </View>
+        </SafeAreaView>
     );
 };
 

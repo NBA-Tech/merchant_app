@@ -23,6 +23,7 @@ import {
     configureReanimatedLogger,
     ReanimatedLogLevel,
   } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
@@ -274,7 +275,7 @@ const Home = (props) => {
 
 
     return (
-        <View style={style.home}>
+        <SafeAreaView style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
@@ -359,7 +360,7 @@ const Home = (props) => {
                 </View>
             </ScrollView>
             <Footer active={'home'} navigation={navigation} />
-        </View>
+        </SafeAreaView>
     );
 };
 

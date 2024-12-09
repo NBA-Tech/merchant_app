@@ -1,4 +1,9 @@
 {
   "name": "merchant_app",
-  "displayName": "merchant_app"
+  "displayName": "merchant_app",
+  "extra": {
+    "eas": {
+      "projectId": "002d50de-5a01-42f0-be4b-32e9155f190e"
+    }
+  }
 }

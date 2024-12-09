@@ -14,6 +14,7 @@ import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { DataContext } from '../../DataContext';
 import CardLoader from '../../Core_ui/CardLoader';
 import { BASE_URL } from '../../Config';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const style = StyleSheet.create({
     home: {
         backgroundColor: "#ffffff",
@@ -188,7 +189,7 @@ function SettlementReport(props) {
     }, [transDate, merchantSessionData]);
 
     return (
-        <View style={style.home}>
+        <SafeAreaView style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
@@ -276,7 +277,7 @@ function SettlementReport(props) {
             </ScrollView>
 
             <Footer active={'settlement_report'} navigation={navigation} />
-        </View>
+        </SafeAreaView>
     );
 };
 export default SettlementReport;

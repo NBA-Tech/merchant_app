@@ -13,6 +13,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isValidEmail } from '../../HelperFunctions';
 import BackgroundTimer from 'react-native-background-timer';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const style = StyleSheet.create({
@@ -370,6 +371,7 @@ function Login(props) {
 
 
     return (
+        <SafeAreaView style={{flex:1}}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
                 <View style={style.loginContainer}>
@@ -537,6 +539,7 @@ function Login(props) {
 
             </View>
         </ScrollView>
+        </SafeAreaView>
     );
 }
 

@@ -13,6 +13,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CardLoader from '../../Core_ui/CardLoader';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const style = StyleSheet.create({
@@ -326,7 +327,7 @@ function Transactions(props) {
 
 
     return (
-        <View style={style.home}>
+        <SafeAreaView style={style.home}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={[globalStyle.background, { flex: 1 }]}>
                     <View style={style.homeContainer}>
@@ -463,7 +464,7 @@ function Transactions(props) {
                 </View>
             </ScrollView>
             <Footer active={'home'} navigation={navigation}/>
-        </View>
+        </SafeAreaView>
     );
 }
 

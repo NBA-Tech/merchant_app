@@ -16,6 +16,7 @@ import { useBackHandler } from '../../BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { NoInterNetIcon } from '../../SvgIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const style = StyleSheet.create({
     loginContainer: {
@@ -330,6 +331,7 @@ function Mpin(props) {
 
 
     return (
+        <SafeAreaView style={{flex:1}}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={[globalStyle.backgroundWhite, { flex: 1 }]}>
                 <View style={style.loginContainer}>
@@ -505,6 +507,7 @@ function Mpin(props) {
                 </View>
             </View>
         </ScrollView>
+        </SafeAreaView>
     );
 }
 

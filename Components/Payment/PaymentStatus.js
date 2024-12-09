@@ -4,6 +4,7 @@ import { PaymentFailIcon, PaymentSuccssIcon } from '../../SvgIcons';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import Button from '../../Core_ui/Button';
 import Sound from 'react-native-sound'; // Import the Sound library
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -79,7 +80,7 @@ const PaymentStatus = (props) => {
   }, []);
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={styles.logoIcon}>
         <Animated.View
           style={[
@@ -108,7 +109,7 @@ const PaymentStatus = (props) => {
       <Text style={[styles.statusText,{color:status=="SUCCESS"?"#079B0C":"#FF0E12"}]}>{status=="SUCCESS"?`PAYMENT SUCCESSFUL FOR RS.${amount}`:`PAYMENT FAILED FOR RS.${amount}`}</Text>
 
       <Button buttonText={'Done'} customeStyleButton={{backgroundColor:status=="SUCCESS"?"#03B80C":"#B80306"}} onClick={()=>{navigation.navigate('paymentTab')}}/>
-    </View>
+    </SafeAreaView>
   );
 };
 

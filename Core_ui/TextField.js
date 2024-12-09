@@ -1,10 +1,10 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 export const TextField = forwardRef((props, ref) => {
-  const { placeHolder, onChange, cutomStyle, placeHolderTextColor, isPassword, keyboardType, maxLength,onKeyPress } = props;
+  const { placeHolder, onChange, cutomStyle, placeHolderTextColor, isPassword, keyboardType, maxLength, onKeyPress } = props;
   const [inputValue, setInputValue] = useState(""); // State to track input value
   const inputRef = useRef();
 
@@ -17,26 +17,31 @@ export const TextField = forwardRef((props, ref) => {
 
   return (
     <View style={styles.textContainer}>
-      <TextInput
-        ref={inputRef}
-        placeholder={placeHolder}
-        value={inputValue} // Controlled input value
-        onChangeText={(text) => {
-          setInputValue(text); // Update state
-          if (onChange) {
-            onChange(text); // Call the onChange function if provided
-          }
-        }}
-        style={[styles.defaultText, cutomStyle]}
-        placeholderTextColor={placeHolderTextColor}
-        underlineColor="transparent"
-        activeUnderlineColor="#1385EC"
-        textColor="#3D5920"
-        secureTextEntry={isPassword}
-        keyboardType={keyboardType}
-        maxLength={maxLength}
-        onKeyPress={onKeyPress}
-      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <TextInput
+          ref={inputRef}
+          placeholder={placeHolder}
+          value={inputValue} // Controlled input value
+          onChangeText={(text) => {
+            setInputValue(text); // Update state
+            if (onChange) {
+              onChange(text); // Call the onChange function if provided
+            }
+          }}
+          style={[styles.defaultText, cutomStyle]}
+          placeholderTextColor={placeHolderTextColor}
+          underlineColor="transparent"
+          activeUnderlineColor="#1385EC"
+          textColor="#3D5920"
+          secureTextEntry={isPassword}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
+          onKeyPress={onKeyPress}
+        />
+      </KeyboardAvoidingView>
     </View>
   );
 });

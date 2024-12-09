@@ -118,14 +118,13 @@ const Routes = () => {
         const token = await AsyncStorage.getItem('merchant_status_data');
         const user_creds = await AsyncStorage.getItem('user_creds');
         const mpin_set=await AsyncStorage.removeItem('is_mpin_set');
-        if (token !== null && user_creds!=null && mpin_set!=null) {
+        if (token  && user_creds && mpin_set) {
           setIsAuthenticated(true);
         }
       } catch (e) {
         console.log('Failed to load session token', e);
       }
     };
-    console.log("Session check")
 
     checkSession();
   }, [isAuthenticated]);
