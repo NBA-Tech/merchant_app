@@ -315,6 +315,9 @@ function Transactions(props) {
                 setLoading(true);
     
                 try {
+                    if(merchantSessionData){
+
+                    
                     await Promise.all(
                         ["PG", "UPI", "ALL"].map(async (value) => {
                             const startOfDay = transDate.toISOString().slice(0, 10);
@@ -323,18 +326,19 @@ function Transactions(props) {
                             
                         })
                     );
+                }
                 } catch (error) {
                     console.error("Error fetching transactions:", error);
                 } finally {
-                    setTimeout(() => {
+                    if(merchantSessionData){
                         setLoading(false)
                         
-                    }, 1000);
+                }
                 }
             };
     
             fetchData();
-        }, [transDate, merchantSessionData]) // Dependencies to re-run the effect
+        }, [transDate,merchantSessionData]) // Dependencies to re-run the effect
     );
 
 
