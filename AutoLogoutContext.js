@@ -11,6 +11,7 @@ const inactivityTime = 300000; // 5 minutes in milliseconds
 export const AutoLogoutProvider = ({ children }) => {
   const navigation = useNavigation();
   const [appState, setAppState] = useState(AppState.currentState);
+  const [isMpinSet,setIsMpinSet]=useState(false)
   const timerRef = useRef(null);
 
   // Function to reset the inactivity timer
@@ -27,31 +28,19 @@ export const AutoLogoutProvider = ({ children }) => {
   const handleAutoLogout = async() => {
     const merchant_data=await AsyncStorage.getItem('merchant_status_data')
     const is_mpin_set=await AsyncStorage.getItem('is_mpin_set')
-    if(merchant_data && is_mpin_set){
+    if(merchant_data && (is_mpin_set|| isMpinSet)){
+        setIsMpinSet(false)
+        await AsyncStorage.removeItem('is_mpin_set')
         Alert.alert("Session Expired", "You have been logged out due to inactivity.");
         navigation.navigate('mpin')
 
     }
+    else{
+      resetTimer()
+    }
 
   };
 
-  // Listen for app state changes
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", nextAppState => {
-      setAppState(nextAppState);
-
-      if (nextAppState === "active") {
-        resetTimer(); // Reset timer when app comes to the foreground
-      } else {
-        clearTimeout(timerRef.current); // Clear timeout when app goes to the background
-      }
-    });
-
-    return () => {
-      subscription.remove();
-      clearTimeout(timerRef.current); // Cleanup on unmount
-    };
-  }, []);
 
   // Initialize inactivity timer on component mount
   useEffect(() => {
@@ -60,7 +49,7 @@ export const AutoLogoutProvider = ({ children }) => {
   }, []);
 
   return (
-    <AutoLogoutContext.Provider value={{ resetTimer }}>
+    <AutoLogoutContext.Provider value={{ resetTimer,setIsMpinSet }}>
       {children}
     </AutoLogoutContext.Provider>
   );

@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 // Create a scaling function for font size that uses the smaller of width or height scaling
-const scaleFont = (size) => {
+export const scaleFont = (size) => {
   const scaledWidth = wp(size);
   const scaledHeight = hp(size);
   return scaledWidth > scaledHeight ? scaledWidth : scaledHeight;

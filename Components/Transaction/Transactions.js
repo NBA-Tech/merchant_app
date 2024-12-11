@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState,useCallback  } from 'react';
 import { StyleContext } from '../../GlobalStyleProvider';
+import { useFocusEffect } from '@react-navigation/native';
+
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import DateHeader from '../../Core_ui/DateHeader';
 import Card from '../../Core_ui/Card';
@@ -216,8 +218,7 @@ function Transactions(props) {
                         transactionDetailPojo.filter(transaction =>["FAILURE", "FAILED"].includes(transaction?.status))
                     );
     
-                    setCards(prevCards => ({
-                        ...prevCards,
+                    setCards(({
                         name: 'Success Transaction',
                         cardDetails: <CardElement cardDetails={[
                             {
@@ -233,12 +234,9 @@ function Transactions(props) {
                         ]} />
                     }));
     
-                    setTotalTransAmount(prevAmount => {
-                        const newAmount = parseFloat(prevAmount || 0) + parseFloat(totalAmount || 0);
-                        return newAmount.toFixed(2);
-                    });
+                    setTotalTransAmount(parseFloat(totalAmount || 0).toFixed(2));
     
-                    setTotalTrans(prevCount => prevCount + totalTransactionCount);
+                    setTotalTrans(totalTransactionCount);
     
                 } else if (transType === "UPI") {
                     const upiAmount =
@@ -249,8 +247,8 @@ function Transactions(props) {
                         parseInt(obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
                         parseInt(obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0);
     
-                    setTotalUPIAmount(prev => prev + upiAmount);
-                    setTotalUPI(prev => prev + upiCount);
+                    setTotalUPIAmount(upiAmount.toFixed(2));
+                    setTotalUPI(upiCount);
     
                 } else if (transType === "PG") {
                     const pgAmount =
@@ -261,8 +259,8 @@ function Transactions(props) {
                         parseInt(obj?.[0]?.transactionSummary?.totalFailureTransactions || 0) +
                         parseInt(obj?.[0]?.transactionSummary?.totalSuccessTransactions || 0);
     
-                    setTotalPGAmount(prev => prev + pgAmount);
-                    setTotalPG(prev => prev + pgCount);
+                    setTotalPGAmount(pgAmount.toFixed(2));
+                    setTotalPG(pgCount);
                 }
             } else {
                 handleEmptyState(transType);
@@ -310,20 +308,34 @@ function Transactions(props) {
 
 
 
-    useEffect(() => {
-        (async () => {
-            setLoading(true)
-
-            await Promise.all(
-                ["PG", "UPI", "ALL"].map(async (value) => {
-                    const startOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 0, 0, 0, 0));
-                    const endOfDay = new Date(Date.UTC(transDate.getFullYear(), transDate.getMonth(), transDate.getDate(), 23, 59, 59, 999));
-                    await getTransaction(value, startOfDay.toISOString(), endOfDay.toISOString());
-                })
-            );
-            setLoading(false)
-        })();
-    }, [transDate, merchantSessionData]);
+    useFocusEffect(
+        useCallback(() => {
+    
+            const fetchData = async () => {
+                setLoading(true);
+    
+                try {
+                    await Promise.all(
+                        ["PG", "UPI", "ALL"].map(async (value) => {
+                            const startOfDay = transDate.toISOString().slice(0, 10);
+                            const endOfDay = transDate.toISOString().slice(0, 10);
+                            await getTransaction(value, startOfDay, endOfDay);
+                            
+                        })
+                    );
+                } catch (error) {
+                    console.error("Error fetching transactions:", error);
+                } finally {
+                    setTimeout(() => {
+                        setLoading(false)
+                        
+                    }, 1000);
+                }
+            };
+    
+            fetchData();
+        }, [transDate, merchantSessionData]) // Dependencies to re-run the effect
+    );
 
 
     return (

@@ -21,6 +21,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { FAB, Provider as PaperProvider } from 'react-native-paper';
 import Modal from "react-native-modal";
 import { BlurView } from '@react-native-community/blur';
+import { scaleFont } from '../../globalStyle';
 
 
 const style = StyleSheet.create({
@@ -608,25 +609,23 @@ const Reports = (props) => {
                                                     </View>
                                                     <View style={[style.infoContainer, { maxWidth: '70%' }]}>
                                                         <Text
-                                                            style={[globalStyle.boldTextBlack, { textAlign: 'center', flexWrap: 'wrap' }]}
-                                                            numberOfLines={1} // Optional: Truncates text if it's too long
+                                                            style={[globalStyle.boldTextBlack, { textAlign: 'flex-start', flexWrap: 'wrap' }]}
                                                             ellipsizeMode="tail" // Optional: Adds "..." for overflowing text
                                                         >
                                                             Amount : ₹{value?.amount}
                                                         </Text>
                                                         <Text
-                                                            style={[globalStyle.blackSubText, { textAlign: 'center', flexWrap: 'wrap' }]}
-                                                            numberOfLines={1}
+                                                            style={[globalStyle.blackSubText, { textAlign: 'flex-start', flexWrap: 'wrap',fontSize:scaleFont('1.7%') }]}
                                                             ellipsizeMode="tail"
                                                         >
                                                             ID : {value?.orderId}
                                                         </Text>
-                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
+                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start',fontSize:scaleFont('1.7%') }]}>
                                                             Status : {value?.status}
                                                         </Text>
-                                                        {value?.timeStamp && (
-                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'center' }]}>
-                                                                Date : {formatDateWithAmPm(value?.timeStamp)}
+                                                        {value?.date && (
+                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start',fontSize:scaleFont('1.7%') }]}>
+                                                                Time : {value?.date +'  '+ value?.time}
                                                             </Text>
                                                         )}
                                                     </View>

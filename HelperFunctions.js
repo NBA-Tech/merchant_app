@@ -55,20 +55,23 @@ export const isValidEmail = (email) => {
 
   export function formatDateWithAmPm(dateString) {
     const date = new Date(dateString);
-
+  
     if (isNaN(date)) {
-        return "Invalid date";
+      return "Invalid date";
     }
-
+  
+    // Use UTC methods to ensure the time is correctly parsed in UTC
     const options = {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: 'UTC', // Ensure UTC time zone is used
     };
-
+  
     return date.toLocaleString('en-US', options);
   }
+  

@@ -115,7 +115,7 @@ const Home = (props) => {
     const [totalTrans, setTotalTrans] = useState(0)
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
-    const { resetTimer } = useAutoLogout();
+    const { resetTimer,setIsMpinSet } = useAutoLogout();
     configureReanimatedLogger({
         level: ReanimatedLogLevel.warn,
         strict: false, // Reanimated runs in strict mode by default
@@ -249,6 +249,7 @@ const Home = (props) => {
     }, [])
     const adjustDatesAndFetchData = async () => {
         await AsyncStorage.setItem('is_mpin_set', "true")
+        setIsMpinSet(true)
         resetTimer()
         setDateModal(false);
         setLoading(true);

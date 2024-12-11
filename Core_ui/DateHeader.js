@@ -104,8 +104,8 @@ const DateHeader = ({ date, dateOnClick, leftOnClick, rightOnClick, navHeading, 
             {!isBackHeader ? (
                 <View>
                     <View style={style.headerContainer}>
-                        <Text style={[globalStyle.headingText, { fontSize: 15 }]}>{merchantData?.obj?.bName}</Text>
-                        <Text style={globalStyle.boldText}>{merchantData?.obj?.name}</Text>
+                        <Text style={[globalStyle.headingText, { fontSize: 15 }]}>{merchantData?.obj?.bName ?? 'Loading...'}</Text>
+                        <Text style={globalStyle.boldText}>{merchantData?.obj?.name ?? 'Loading...'}</Text>
                     </View>
                 </View>
             ) :
