@@ -7,7 +7,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Core_ui/Button';
 import DotsLoader from '../../DotsLoader';
-import { BASE_URL } from '../../Config';
+import { BASE_URL, appVersion } from '../../Config';
 import { base64Encode,  encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -535,7 +535,7 @@ function Login(props) {
                 </View>
             </View>
             <View style={style.versionContainer}>
-                <Text style={style.versionText}>Version : V.1.5-alpha</Text>
+                <Text style={style.versionText}>Version : {appVersion}</Text>
 
             </View>
         </ScrollView>
