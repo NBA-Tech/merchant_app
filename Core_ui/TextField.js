@@ -18,8 +18,7 @@ export const TextField = forwardRef((props, ref) => {
   return (
     <View style={styles.textContainer}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
       >
         <TextInput
           ref={inputRef}

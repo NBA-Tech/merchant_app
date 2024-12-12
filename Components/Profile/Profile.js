@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import DateHeader from '../../Core_ui/DateHeader';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import Card from '../../Core_ui/Card'
-import { DeviceDetailsIcon, HelpIcon, LogoutIcon, ProfileUserIcon, QrIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
+import { DeviceDetailsIcon, HelpIcon, LogoutIcon, ProfileUserIcon, QrIcon, ResetIcon, RightArrow, SettingsIcon, StaffIcon } from '../../SvgIcons';
 import Footer from '../Footer';
 import { getMerchantSession } from '../../HelperFunctions';
 import { BASE_URL } from '../../Config';
@@ -350,7 +350,7 @@ const Profile = (props) => {
                                         {userData?.name ?? 'Loading...'}
                                     </Text>
 
-                                    <Text style={[style.separateBar]}>|</Text>
+                                    <Text style={[style.separateBar]}></Text>
 
                                     <Text
                                         style={[
@@ -406,7 +406,7 @@ const Profile = (props) => {
                                     <View>
                                         <Card customStyle={style.cardContent} onClick={() => { setResetMpinModal(true) }}>
                                             <View style={style.leftDetails}>
-                                                <HelpIcon size={wp('7%')} />
+                                                <ResetIcon height={hp('7%')} width={wp('7%')} />
                                                 <Text style={[globalStyle.mediumText, { marginHorizontal: wp('3%') }]}>Reset MPIN</Text>
                                             </View>
                                             <View>

@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef,useCallback } from 'react';
 import { View, StyleSheet, Animated, Text } from 'react-native';
 import { PaymentFailIcon, PaymentSuccssIcon } from '../../SvgIcons';
 import { heightPercentageToDP } from 'react-native-responsive-screen';
 import Button from '../../Core_ui/Button';
 import Sound from 'react-native-sound'; // Import the Sound library
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -59,25 +61,33 @@ const PaymentStatus = (props) => {
     });
   };
 
-  useEffect(() => {
-    // Animate main circle scale
-    Animated.timing(mainCircleScale, {
-      toValue: 1, // Final scale (original size)
-      duration: 1500, // Duration for the animation
-      useNativeDriver: true, // Use native driver for performance
-    }).start(()=>{
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Animate main circle scale
+      Animated.timing(mainCircleScale, {
+        toValue: 1, // Final scale (original size)
+        duration: 700, // Duration for the animation
+        useNativeDriver: true, // Use native driver for performance
+      }).start(() => {
         playSuccessSound();
+      });
 
-    });
+      // Animate inner circle scale
+      Animated.timing(innerCircleScale, {
+        toValue: 1, // Final scale (original size)
+        duration: 800, // Duration for the animation
+        useNativeDriver: true, // Use native driver for performance
+      }).start();
 
-    // Animate inner circle scale
-    Animated.timing(innerCircleScale, {
-      toValue: 1, // Final scale (original size)
-      duration: 2000, // Duration for the animation
-      useNativeDriver: true, // Use native driver for performance
-    }).start(()=>{
-    });
-  }, []);
+      // Return a cleanup function if needed
+      return () => {
+        // Optionally reset animations
+        mainCircleScale.setValue(0);
+        innerCircleScale.setValue(0);
+      };
+    }, [mainCircleScale, innerCircleScale])
+  );
 
   return (
     <SafeAreaView style={styles.mainContainer}>
