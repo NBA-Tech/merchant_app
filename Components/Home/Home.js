@@ -11,7 +11,6 @@ import DateHeader from '../../Core_ui/DateHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
 import { BASE_URL } from '../../Config';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession } from '../../HelperFunctions';
 import { useFocusEffect } from '@react-navigation/native';
@@ -24,6 +23,7 @@ import {
     ReanimatedLogLevel,
   } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const { width } = Dimensions.get('window');
 
@@ -282,21 +282,22 @@ const Home = (props) => {
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
                             <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} />
-                            {dateModal && (
-                                <DateTimePicker
-                                    value={transDate}
-                                    mode="date"
-                                    display="spinner"
-                                    onChange={(event, selectedDate) => {
-                                        if (selectedDate) {
-                                            setTransDate(selectedDate);
-                                        }
-                                    }}
-                                    maximumDate={new Date()}
-                                />
-                            )
 
-                            }
+                            <DateTimePickerModal
+                                isVisible={dateModal}
+                                mode="date" 
+                                display="spinner" 
+                                onConfirm={(selectedDate) => {
+                                    if (selectedDate) {
+                                        setTransDate(selectedDate); 
+                                    }
+                                    setDateModal(false); 
+                                }}
+                                onCancel={() => setDateModal(false)} 
+                                maximumDate={new Date()} 
+                                date={transDate}
+                            />
+
                             <Card
                                 hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}

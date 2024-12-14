@@ -16,6 +16,7 @@ import { FormatDate } from '../../HelperFunctions';
 import CardLoader from '../../Core_ui/CardLoader';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const style = StyleSheet.create({
     reportPage: {
@@ -180,7 +181,7 @@ const TransactionReceipt = (props) => {
 
     },[merchantSessionData,txnId]))
     return (
-        <View style={style.reportPage}>
+        <SafeAreaView style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
@@ -317,7 +318,7 @@ const TransactionReceipt = (props) => {
                 </View>
             </View>
             <Footer active={'transfer'} navigation={navigation} />
-        </View>
+        </SafeAreaView>
     );
 };
 

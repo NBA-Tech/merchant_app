@@ -6,7 +6,6 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import Card from '../../Core_ui/Card';
 import DateHeader from '../../Core_ui/DateHeader';
 import Footer from '../Footer';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { BankIcon, CardIcon, RightArrow, StatIcon, UpiIcon } from '../../SvgIcons';
 import Button from '../../Core_ui/Button';
@@ -15,6 +14,7 @@ import { DataContext } from '../../DataContext';
 import CardLoader from '../../Core_ui/CardLoader';
 import { BASE_URL } from '../../Config';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const style = StyleSheet.create({
     home: {
         backgroundColor: "#ffffff",
@@ -139,9 +139,9 @@ function SettlementReport(props) {
         if (get_settlement_data_res?.statusCode == 200) {
             if (trans_type == "ALL") {
                 const total_amount = get_settlement_data_res?.obj?.reduce(
-                    (sum, { summaryDetails }) => sum + 
-                    parseFloat(summaryDetails?.totalSuccessAmount || 0)+
-                    parseFloat(summaryDetails?.totalFailureAmount || 0),
+                    (sum, { summaryDetails }) => sum +
+                        parseFloat(summaryDetails?.totalSuccessAmount || 0) +
+                        parseFloat(summaryDetails?.totalFailureAmount || 0),
                     0
                 ).toFixed(2);
 
@@ -149,12 +149,16 @@ function SettlementReport(props) {
             }
 
             else if (trans_type == "UPI") {
-                setTotalUPIAmount(parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)+parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0))
+                setTotalUPIAmount(
+                    (parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)
+                        + parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0)).toFixed(2))
                 // setTotalUPI(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
 
             }
             else if (trans_type == "PG") {
-                setTotalPGAmount(parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)+parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0))
+                setTotalPGAmount(
+                    (parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalSuccessAmount ?? 0)
+                        + parseFloat(get_settlement_data_res?.obj?.[0]?.summaryDetails?.totalFailureAmount ?? 0)).toFixed(2))
                 // setTotalPG(get_settlement_data_res?.obj?.[0]?.settlementDetails.length)
             }
 
@@ -195,22 +199,22 @@ function SettlementReport(props) {
                     <View style={style.homeContainer}>
                         <View style={{ margin: hp('2%') }}>
                             <DateHeader date={FormatDate(transDate)} dateOnClick={toggleDateModal} isBackHeader={true} navHeading={'Settlements'} navigation={navigation} />
-                            {dateModal && (
-                                <DateTimePicker
-                                    value={transDate}
-                                    mode="date"
-                                    display="spinner"
-                                    onChange={(event, selectedDate) => {
-                                        if (selectedDate) {
-                                            setTransDate(selectedDate);
-                                            setDateModal(false)
-                                        }
-                                    }}
-                                    maximumDate={new Date()}
-                                />
-                            )
 
-                            }
+                            <DateTimePickerModal
+                                isVisible={dateModal}
+                                mode="date"
+                                display="spinner"
+                                onConfirm={(selectedDate) => {
+                                    if (selectedDate) {
+                                        setTransDate(selectedDate);
+                                    }
+                                    setDateModal(false);
+                                }}
+                                onCancel={() => setDateModal(false)}
+                                maximumDate={new Date()}
+                                date={transDate}
+                            />
+
                             <Card hasBackground={true}
                                 backgroundImage={require('../../assets/images/credit_bg.png')}  >
                                 {loading ? (
@@ -241,7 +245,7 @@ function SettlementReport(props) {
                                 <View>
                                     <View style={style.cardRow}>
                                         <View style={style.leftDetails}>
-                                            <CardIcon  width={wp('8%')} height={hp('6.5%')}/>
+                                            <CardIcon width={wp('8%')} height={hp('6.5%')} />
 
 
                                             <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>PG</Text>
@@ -255,7 +259,7 @@ function SettlementReport(props) {
 
                                     <View style={style.cardRow}>
                                         <View style={style.leftDetails}>
-                                            <UpiIcon  width={wp('8%')} height={hp('6.5%')}/>
+                                            <UpiIcon width={wp('8%')} height={hp('6.5%')} />
 
                                             <Text style={[globalStyle.boldBlackText, { marginHorizontal: wp('1%') }]}>UPI</Text>
                                         </View>
@@ -265,7 +269,7 @@ function SettlementReport(props) {
                                             </Text>
                                         </View>
                                     </View>
-                                    
+
                                 </View>
                             )}
                         </Card>

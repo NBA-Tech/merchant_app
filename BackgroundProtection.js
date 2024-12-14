@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AppState, View, StyleSheet, Animated } from 'react-native';
+import { AppState, View, StyleSheet, Platform,Animated } from 'react-native';
+import { BlurView } from '@react-native-community/blur';
 
 const withBackgroundProtection = (WrappedComponent) => {
   const ScreenProtectionHOC = (props) => {
@@ -8,7 +9,7 @@ const withBackgroundProtection = (WrappedComponent) => {
 
     useEffect(() => {
       const handleAppStateChange = (nextAppState) => {
-        const isBackground = nextAppState === 'background';
+        const isBackground = nextAppState === 'background' || nextAppState === 'inactive';
         setIsAppInBackground(isBackground);
 
         // Animate the overlay
@@ -30,21 +31,25 @@ const withBackgroundProtection = (WrappedComponent) => {
       <View style={{ flex: 1 }}>
         <WrappedComponent {...props} />
 
-        {/* Overlay: Blank or Blur */}
-        {isAppInBackground && (
-          <Animated.View style={[styles.overlay, { opacity }]}>
-            {/* Blank screen */}
-            <View style={styles.blankScreen} />
-
-            {/* Optional: Blur effect */}
-            {/* <BlurView
-              style={StyleSheet.absoluteFill}
-              blurType="light"
-              blurAmount={10}
-              reducedTransparencyFallbackColor="white"
-            /> */}
-          </Animated.View>
+        {/* Overlay: BlurView */}
+        {isAppInBackground && Platform.OS == 'ios' && (
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            blurType="light" // Options: 'light', 'dark', 'extraLight'
+            blurAmount={10} // Adjust the blur intensity
+            reducedTransparencyFallbackColor="white" // Fallback color for older devices
+          />
         )}
+
+        {isAppInBackground && Platform.OS == "android" && (
+          <Animated.View style={[styles.overlay, { opacity }]}>
+            <View style={styles.blankScreen} />
+          </Animated.View>
+        )
+
+        }
+
+
       </View>
     );
   };

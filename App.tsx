@@ -25,9 +25,9 @@ function App(): React.JSX.Element {
           </GlobalStyleProvider>
         </AuthProvider>
       </ConnectivityProvider>
-    </GestureHandlerRootView>
+    </GestureHandlerRootView> 
   );
 }
 
 // Wrap App component with the HOC
-export default withBackgroundProtection((App));
+export default withBackgroundProtection(withScreenshotProtection(App));

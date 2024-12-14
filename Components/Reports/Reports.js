@@ -13,15 +13,16 @@ import DateHeader from '../../Core_ui/DateHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
 import { BASE_URL } from '../../Config';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
-import { FormatDate, getMerchantSession,formatDateWithAmPm } from '../../HelperFunctions';
+import { FormatDate, getMerchantSession, formatDateWithAmPm } from '../../HelperFunctions';
 import { Dropdown } from 'react-native-element-dropdown';
 import { FAB, Provider as PaperProvider } from 'react-native-paper';
 import Modal from "react-native-modal";
 import { BlurView } from '@react-native-community/blur';
 import { scaleFont } from '../../globalStyle';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 
 const style = StyleSheet.create({
@@ -138,7 +139,7 @@ const style = StyleSheet.create({
         alignItems: 'center',
         flexShrink: 0,
         marginHorizontal: wp('2%'),
-        textAlign:'center'
+        textAlign: 'center'
     },
     dateField: {
         backgroundColor: '#E5F3FF',
@@ -182,7 +183,7 @@ const style = StyleSheet.create({
         borderColor: '#1286ED',
         borderWidth: 1,
         marginHorizontal: wp('2%'),
-        textAlign:'center'
+        textAlign: 'center'
 
     }
 
@@ -264,14 +265,14 @@ const Reports = (props) => {
             get_transaction_data_res.obj.forEach(paymentMethodObj => {
                 paymentMethodObj.transactionDetailPojo.forEach(transaction => {
                     if (
-                        currStatus === "" || 
-                        (currStatus === "FAILED" && ["FAILURE", "FAILED"].includes(transaction?.status)) || 
+                        currStatus === "" ||
+                        (currStatus === "FAILED" && ["FAILURE", "FAILED"].includes(transaction?.status)) ||
                         currStatus === transaction?.status
                     ) {
                         total_trans_temp.push(transaction);
                         total_amount += parseFloat(transaction?.amount || 0);
                     }
-                    
+
                 });
             });
 
@@ -330,13 +331,13 @@ const Reports = (props) => {
     }
 
     const handleTransDetails = (value) => {
-            navigation.navigate('transactionreceipt', {
-                txnId: value?.orderId,
-                paymentMethod: value?.paymentMethod,
-                clientId: merchantSessionData?.clientDetails?.id,
-                timeStamp: value?.timeStamp,
-            });
-        
+        navigation.navigate('transactionreceipt', {
+            txnId: value?.orderId,
+            paymentMethod: value?.paymentMethod,
+            clientId: merchantSessionData?.clientDetails?.id,
+            timeStamp: value?.timeStamp,
+        });
+
 
     }
     useEffect(() => {
@@ -391,7 +392,7 @@ const Reports = (props) => {
 
 
     return (
-        <View style={style.reportPage}>
+        <SafeAreaView style={style.reportPage}>
             <View style={{ flexGrow: 1 }}>
 
                 <View style={[globalStyle.background, { flex: 1 }]}>
@@ -423,16 +424,16 @@ const Reports = (props) => {
 
                                         <View style={style.filterRow}>
                                             <View >
-                                            <TouchableOpacity  onPress={() => { setIsUpi(!isUpi) }}>
-                                                <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>UPI    {isUpi ? 'X' : ''}</Text>
-                                            </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { setIsUpi(!isUpi) }}>
+                                                    <Text style={[globalStyle.boldText, isUpi ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>UPI    {isUpi ? 'X' : ''}</Text>
+                                                </TouchableOpacity>
                                             </View>
 
-                                           <View >
-                                           <TouchableOpacity  onPress={() => { setIsPg(!isPg) }}>
-                                                <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
-                                            </TouchableOpacity>
-                                           </View>
+                                            <View >
+                                                <TouchableOpacity onPress={() => { setIsPg(!isPg) }}>
+                                                    <Text style={[globalStyle.boldText, isPg ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>PG     {isPg ? 'X' : ''}</Text>
+                                                </TouchableOpacity>
+                                            </View>
 
 
 
@@ -441,19 +442,19 @@ const Reports = (props) => {
 
                                         <Text style={[globalStyle.boldText, { color: '#1286ED', fontSize: wp('4.5%') }]}>Status</Text>
 
-                    
+
 
                                         <View style={style.filterRow}>
-                                           <View>
-                                           <TouchableOpacity  onPress={() => { currStatus=="SUCCESS"? setCurrStatus(''):setCurrStatus('SUCCESS') }}>
-                                                <Text style={[globalStyle.boldText, currStatus=="SUCCESS" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>SUCCESS    {currStatus=="SUCCESS" ? 'X' : ''}</Text>
-                                            </TouchableOpacity>
-                                           </View>
+                                            <View>
+                                                <TouchableOpacity onPress={() => { currStatus == "SUCCESS" ? setCurrStatus('') : setCurrStatus('SUCCESS') }}>
+                                                    <Text style={[globalStyle.boldText, currStatus == "SUCCESS" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>SUCCESS    {currStatus == "SUCCESS" ? 'X' : ''}</Text>
+                                                </TouchableOpacity>
+                                            </View>
 
                                             <View>
-                                            <TouchableOpacity  onPress={() => { currStatus=="FAILED"? setCurrStatus(''): setCurrStatus('FAILED') }}>
-                                                <Text style={[globalStyle.boldText, currStatus=="FAILED" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>FAILED     {currStatus=="FAILED" ? 'X' : ''}</Text>
-                                            </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => { currStatus == "FAILED" ? setCurrStatus('') : setCurrStatus('FAILED') }}>
+                                                    <Text style={[globalStyle.boldText, currStatus == "FAILED" ? style.chipFilled : style.chipOutline, { fontSize: wp('5%') }]}>FAILED     {currStatus == "FAILED" ? 'X' : ''}</Text>
+                                                </TouchableOpacity>
                                             </View>
 
 
@@ -480,41 +481,35 @@ const Reports = (props) => {
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                        {fromDateModal && (
-                                            <DateTimePicker
-                                                value={fromDate}
-                                                mode="date"
-                                                display="spinner"
-                                                onChange={(event, selectedDate) => {
-                                                    if (selectedDate) {
-                                                        setFromDate(selectedDate)
-                                                    }
-                                                    setFromDateModal(false)
+                                        <DateTimePickerModal
+                                            isVisible={fromDateModal}
+                                            mode="date"
+                                            display="spinner"
+                                            onConfirm={(selectedDate) => {
+                                                if (selectedDate) {
+                                                    setFromDate(selectedDate);
+                                                }
+                                                setFromDateModal(false);
+                                            }}
+                                            onCancel={() => setFromDateModal(false)}
+                                            maximumDate={new Date()}
+                                            date={fromDate}
+                                        />
 
-                                                }}
-                                                maximumDate={new Date()}
-                                            />
-                                        )
-
-                                        }
-
-                                        {toDateModal && (
-                                            <DateTimePicker
-                                                value={toDate}
-                                                mode="date"
-                                                display="spinner"
-                                                onChange={(event, selectedDate) => {
-                                                    if (selectedDate) {
-                                                        setToDate(selectedDate)
-                                                    }
-                                                    setToDateModal(false)
-
-                                                }}
-                                                maximumDate={new Date()}
-                                            />
-                                        )
-
-                                        }
+                                         <DateTimePickerModal
+                                            isVisible={toDateModal}
+                                            mode="date"
+                                            display="spinner"
+                                            onConfirm={(selectedDate) => {
+                                                if (selectedDate) {
+                                                    setToDate(selectedDate);
+                                                }
+                                                setToDateModal(false);
+                                            }}
+                                            onCancel={() => setToDateModal(false)}
+                                            maximumDate={new Date()}
+                                            date={toDate}
+                                        />
 
                                         <View>
 
@@ -615,17 +610,17 @@ const Reports = (props) => {
                                                             Amount : ₹{value?.amount}
                                                         </Text>
                                                         <Text
-                                                            style={[globalStyle.blackSubText, { textAlign: 'flex-start', flexWrap: 'wrap',fontSize:scaleFont('1.7%') }]}
+                                                            style={[globalStyle.blackSubText, { textAlign: 'flex-start', flexWrap: 'wrap', fontSize: scaleFont('1.7%') }]}
                                                             ellipsizeMode="tail"
                                                         >
                                                             ID : {value?.orderId}
                                                         </Text>
-                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start',fontSize:scaleFont('1.7%') }]}>
+                                                        <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start', fontSize: scaleFont('1.7%') }]}>
                                                             Status : {value?.status}
                                                         </Text>
                                                         {value?.date && (
-                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start',fontSize:scaleFont('1.7%') }]}>
-                                                                Time : {value?.date +'  '+ value?.time}
+                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start', fontSize: scaleFont('1.7%') }]}>
+                                                                Time : {value?.date + '  ' + value?.time}
                                                             </Text>
                                                         )}
                                                     </View>
@@ -659,7 +654,7 @@ const Reports = (props) => {
 
             </View>
             <Footer active={'transfer'} navigation={navigation} />
-        </View>
+        </SafeAreaView>
     );
 };
 

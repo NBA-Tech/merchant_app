@@ -11,7 +11,6 @@ import DateHeader from '../../Core_ui/DateHeader';
 import { ScrollView } from 'react-native-gesture-handler';
 import Footer from '../Footer';
 import { BASE_URL } from '../../Config';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { DataContext } from '../../DataContext';
 import { FormatDate, getMerchantSession, convertRupeesToPaise, fetchWithTimeout } from '../../HelperFunctions';

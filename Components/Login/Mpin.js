@@ -14,7 +14,7 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { useBackHandler } from '../../BackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect,CommonActions } from '@react-navigation/native';
 import { NoInterNetIcon } from '../../SvgIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -285,7 +285,14 @@ function Mpin(props) {
             setLoading(false)
             setIsAuthenticated(true)
 
-            navigation.navigate('main', { screen: 'homeTab' })
+            navigation.dispatch(
+                CommonActions.reset({
+                  index: 0, // Focus on the first screen in the new stack
+                  routes: [
+                    { name: 'main', params: { screen: 'homeTab' } }, // Set the desired screen in the stack
+                  ],
+                })
+              );
 
 
 
