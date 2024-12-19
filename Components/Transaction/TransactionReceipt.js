@@ -175,6 +175,7 @@ const TransactionReceipt = (props) => {
                 setTransDetails(get_trans_details_res?.obj?.[0])
 
             }
+            console.log(get_trans_details_res)
             setLoading(false)
 
         })()

@@ -1,4 +1,4 @@
-package com.merchant_app
+package com.merchant_app_mobile_app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
