@@ -1,4 +1,4 @@
-package com.merchant_mobile_app
+package com.arthpay.mobile_app
 
 import android.app.Activity
 import android.view.WindowManager
