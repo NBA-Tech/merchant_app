@@ -1,4 +1,4 @@
-package com.merchant_app_mobile_app
+package com.merchant_mobile_app
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

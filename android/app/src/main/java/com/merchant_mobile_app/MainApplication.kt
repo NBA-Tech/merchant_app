@@ -1,4 +1,4 @@
-package com.merchant_app_mobile_app
+package com.merchant_mobile_app
 
 import android.app.Application
 import com.facebook.react.PackageList
@@ -10,7 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
-import com.merchant_app_mobile_app.ScreenshotPreventerPackage
+import com.merchant_mobile_app.ScreenshotPreventerPackage
 
 class MainApplication : Application(), ReactApplication {
 
