@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37334993886",
+    "project_id": "fcm-test-b1625",
+    "storage_bucket": "fcm-test-b1625.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37334993886:android:49ac8e0724626a0090ab4f",
+        "android_client_info": {
+          "package_name": "com.arthpay.mobile_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH_GfNTIwmn_qnG_HLAM_yL_Oct4wmdZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
