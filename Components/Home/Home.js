@@ -24,6 +24,7 @@ import {
   } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { NotificationContext } from '../../NotificationProvider';
 
 const { width } = Dimensions.get('window');
 
@@ -116,6 +117,7 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { resetTimer,setIsMpinSet } = useAutoLogout();
+    const {setReqPermission,hasPermission}=useContext(NotificationContext)
     configureReanimatedLogger({
         level: ReanimatedLogLevel.warn,
         strict: false, // Reanimated runs in strict mode by default
@@ -239,8 +241,10 @@ const Home = (props) => {
         setDateModal(!dateModal)
     }
     useEffect(() => {
+        setReqPermission(true)
         const getSession = async () => {
             setMerchentSessionData(await getMerchantSession())
+            console.log(await getMerchantSession())
 
         }
         getSession()

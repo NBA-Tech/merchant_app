@@ -9,13 +9,11 @@ import { DataProvider } from './DataContext';
 import { AuthProvider } from './AuthProvider';
 import withScreenshotProtection from './ScreenProtection';
 import withBackgroundProtection from './BackgroundProtection';
-import NotificationProvider from './NotificationProvider';
 
 function App(): React.JSX.Element {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ConnectivityProvider>
-        <NotificationProvider>
         <AuthProvider>
           <GlobalStyleProvider>
             <DataProvider>
@@ -26,7 +24,6 @@ function App(): React.JSX.Element {
             </DataProvider>
           </GlobalStyleProvider>
         </AuthProvider>
-        </NotificationProvider>
       </ConnectivityProvider>
     </GestureHandlerRootView> 
   );

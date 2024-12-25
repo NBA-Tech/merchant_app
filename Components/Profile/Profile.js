@@ -222,7 +222,22 @@ const Profile = (props) => {
 
     }
     const handleLogout = async () => {
+        const merchent_session=await getMerchantSession()
+        let payload={
+            id:merchent_session?.id,
+            token:""
 
+        }
+
+        const clearFCM=await fetch(`${BASE_URL}/app/saveMobileNotificationToken`,{
+            method:'POST',
+            headers:{
+                'content-type': 'application/json',
+            },
+            body:JSON.stringify(payload)
+
+        })
+        
         await AsyncStorage.removeItem('merchant_status_data');
         await AsyncStorage.removeItem('is_mpin_set');
         await AsyncStorage.removeItem('user_creds');

@@ -19,6 +19,7 @@ import PaymentStatus from '../Payment/PaymentStatus';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { BackHandlerProvider } from '../../BackHandler';
 import { AutoLogoutProvider } from '../../AutoLogoutContext';
+import NotificationProvider from '../../NotificationProvider';
 import ResetMpin from '../Login/ResetMpin';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -144,8 +145,10 @@ const Routes = () => {
     <NavigationContainer onStateChange={onStateChange}>
       <BackHandlerProvider currentRoute={currentRoute}>
         <AutoLogoutProvider>
+          <NotificationProvider>
 
         {isAuthenticated ? <AuthStack /> : <UnauthStack />}
+        </NotificationProvider>
         </AutoLogoutProvider>
       </BackHandlerProvider>
     </NavigationContainer >

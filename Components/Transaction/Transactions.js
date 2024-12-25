@@ -191,7 +191,6 @@ function Transactions(props) {
 
             if (result?.msg === "Success") {
                 const { obj } = result;
-                console.log(obj?.[0]?.transactionDetailPojo)
 
                 if (transType === "ALL") {
                     const totalAmount = obj.reduce(

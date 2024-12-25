@@ -496,7 +496,7 @@ const Reports = (props) => {
                                             date={fromDate}
                                         />
 
-                                         <DateTimePickerModal
+                                        <DateTimePickerModal
                                             isVisible={toDateModal}
                                             mode="date"
                                             display="spinner"
@@ -609,6 +609,11 @@ const Reports = (props) => {
                                                         >
                                                             Amount : ₹{value?.amount}
                                                         </Text>
+                                                        {value?.payee_name && (
+                                                            <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start', fontSize: scaleFont('1.7%') }]}>
+                                                                Sender Name : {value?.payee_name}
+                                                            </Text>
+                                                        )}
                                                         <Text
                                                             style={[globalStyle.blackSubText, { textAlign: 'flex-start', flexWrap: 'wrap', fontSize: scaleFont('1.7%') }]}
                                                             ellipsizeMode="tail"
@@ -623,6 +628,7 @@ const Reports = (props) => {
                                                                 Time : {value?.date + '  ' + value?.time}
                                                             </Text>
                                                         )}
+
                                                     </View>
                                                     <View style={style.rightContainer}>
                                                         <RightArrow fill={"#1286ED"} width={wp('6%')} height={hp('6.5%')} />
