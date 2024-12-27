@@ -98,10 +98,10 @@ android {
             keyPassword 'android'
         }
          release {
-            storeFile file('arthpay-key.keystore')
-            storePassword 'Kumarpapa@2003'
-            keyAlias 'arthpay_app_alias'
-            keyPassword 'Kumarpapa@2003'
+            storeFile file('arthpay-key.jks')
+            storePassword '#Arthpay#2024'
+            keyAlias 'upload'
+            keyPassword '#Arthpay#2024'
         }
     }
     buildTypes {
