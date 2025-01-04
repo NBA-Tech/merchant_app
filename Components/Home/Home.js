@@ -244,7 +244,6 @@ const Home = (props) => {
         setReqPermission(true)
         const getSession = async () => {
             setMerchentSessionData(await getMerchantSession())
-            console.log(await getMerchantSession())
 
         }
         getSession()

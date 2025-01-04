@@ -41,10 +41,19 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
     }, [currentRoute]);
 
     const handleExitApp = async() => {
+        let isMpinPage=false
+        const mpin_set=await AsyncStorage.getItem('is_mpin_set');
+        if(mpin_set!=null){
+            isMpinPage=true
+
+        }
         await AsyncStorage.removeItem('is_mpin_set');
         setShowExitModal(false);
         setIsAuthenticated(false)
-        navigation.navigate('mpin')
+        if(isMpinPage){
+            navigation.navigate('mpin')
+
+        }
 
         BackHandler.exitApp(); // Exit the app
     };
