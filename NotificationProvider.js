@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation,useRoute  } from '@react-navigation/native';
 import { getMerchantSession } from './HelperFunctions';
 import { BASE_URL } from './Config';
+import DeviceInfo from 'react-native-device-info';
 
 const NotificationProvider = ({ children }) => {
   const EXCLUSION_ROUTES=['splash_screen','login','mpin']
@@ -23,9 +24,11 @@ const NotificationProvider = ({ children }) => {
 
   const saveFCMToken=async(token)=>{
     const merchent_session=await getMerchantSession()
+    const unique_id = await  DeviceInfo.getUniqueId();
     let payload={
         id:merchent_session?.id,
-        token:token
+        token:token,
+        mac:unique_id
 
     }
 
@@ -37,6 +40,8 @@ const NotificationProvider = ({ children }) => {
         body:JSON.stringify(payload)
 
     })
+    const res=await clearFCM.json()
+    console.log(res)
 
 
   }
