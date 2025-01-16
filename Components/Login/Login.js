@@ -8,7 +8,7 @@ import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Core_ui/Button';
 import DotsLoader from '../../DotsLoader';
 import { BASE_URL, appVersion } from '../../Config';
-import { base64Encode,  encryptAES256 } from '../../Encryption';
+import { base64Encode,  decryptAES256,  encryptAES256 } from '../../Encryption';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isValidEmail } from '../../HelperFunctions';
@@ -254,7 +254,13 @@ function Login(props) {
             },
             body: JSON.stringify(payload)
         })
-        const validate_otp_api_response = await validate_otp_api.json()
+        let validate_otp_api_response = await validate_otp_api.json()
+
+        validate_otp_api_response=decryptAES256(validate_otp_api_response?.value,base64Encode(payload?.email+payload?.email))
+
+        validate_otp_api_response={value:validate_otp_api_response.split('.')[1]}
+
+
         let get_active_status_api_response = ""
         if(isResendOtp && validate_otp_api_response?.value == "Valid"){
             navigation.navigate('mpin', { type: 'setMpin' })
@@ -289,7 +295,7 @@ function Login(props) {
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Login Failed',
-                textBody: 'OTP FAILED',
+                textBody: validate_otp_api_response?.value,
             });
         }
         setLoading(false)

@@ -306,7 +306,11 @@ const ResetMpin = (props) => {
             },
             body: JSON.stringify(payload)
         })
-        const validate_otp_api_response = await validate_otp_api.json()
+        let validate_otp_api_response = await validate_otp_api.json()
+        validate_otp_api_response=decryptAES256(validate_otp_api_response?.value,base64Encode(payload?.email+payload?.email))
+
+        validate_otp_api_response={value:validate_otp_api_response.split('.')[1]}
+
 
         if (validate_otp_api_response?.value == "Valid") {
             [mPin1, mPin2, mPin3, mPin4].map((value, index) => {
