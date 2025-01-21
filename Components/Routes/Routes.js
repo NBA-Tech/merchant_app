@@ -118,7 +118,7 @@ const Routes = () => {
       try {
         const token = await AsyncStorage.getItem('merchant_status_data');
         const user_creds = await AsyncStorage.getItem('user_creds');
-        const mpin_set=await AsyncStorage.removeItem('is_mpin_set');
+        const mpin_set=await AsyncStorage.getItem('is_mpin_set');
         if (token  && user_creds && mpin_set) {
           setIsAuthenticated(true);
         }

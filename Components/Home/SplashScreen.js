@@ -42,7 +42,7 @@ const SplashScreen = ({ navigation }) => {
           }).start(resolve);
         });
         setTimeout(async () => {
-          const token = await AsyncStorage.getItem('merchant_status_data');
+          const token = await AsyncStorage.getItem('is_mpin_set');
           if (token != null) {
             navigation.navigate('mpin');
           } else {

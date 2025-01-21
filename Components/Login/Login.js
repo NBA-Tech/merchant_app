@@ -266,7 +266,7 @@ function Login(props) {
             navigation.navigate('mpin', { type: 'setMpin' })
 
         }
-        else if (validate_otp_api_response?.key) {
+        else if (validate_otp_api_response?.value == "Valid") {
             setLoading(false)
             if (validate_otp_api_response?.value == "Valid") {
                 payload = {

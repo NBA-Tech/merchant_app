@@ -13,7 +13,7 @@ import { AuthContext } from '../../AuthProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { NoInterNetIcon } from '../../SvgIcons';
-
+import DeviceInfo from 'react-native-device-info';
 
 const style = StyleSheet.create({
     profilePage: {
@@ -223,13 +223,16 @@ const Profile = (props) => {
     }
     const handleLogout = async () => {
         const merchent_session=await getMerchantSession()
+        const unique_id = await  DeviceInfo.getUniqueId();
         let payload={
             id:merchent_session?.id,
-            token:""
+            status:"SUCCESS",
+            mac:unique_id
 
         }
+        console.log(payload)
 
-        const clearFCM=await fetch(`${BASE_URL}/app/saveMobileNotificationToken`,{
+        const clearFCM=await fetch(`${BASE_URL}/app/logout`,{
             method:'POST',
             headers:{
                 'content-type': 'application/json',
@@ -237,6 +240,9 @@ const Profile = (props) => {
             body:JSON.stringify(payload)
 
         })
+
+        const res=await clearFCM.json()
+        console.log(res)
         
         await AsyncStorage.removeItem('merchant_status_data');
         await AsyncStorage.removeItem('is_mpin_set');
