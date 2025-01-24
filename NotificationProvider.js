@@ -9,8 +9,14 @@ import { useNavigation,useRoute  } from '@react-navigation/native';
 import { getMerchantSession } from './HelperFunctions';
 import { BASE_URL } from './Config';
 import DeviceInfo from 'react-native-device-info';
+import Tts from 'react-native-tts';
+
 
 const NotificationProvider = ({ children }) => {
+  Tts.setDefaultPitch(1); // Default is 1.0
+  Tts.setDefaultRate(0.4); // Default is 0.5
+
+  
   const EXCLUSION_ROUTES=['splash_screen','login','mpin']
   const [fcmToken, setFcmToken] = useState(null);
   const [hasPermission, setHasPermission] = useState(false);
@@ -24,6 +30,7 @@ const NotificationProvider = ({ children }) => {
 
   const saveFCMToken=async(token)=>{
     const merchent_session=await getMerchantSession()
+    console.log(token)
     const unique_id = await  DeviceInfo.getUniqueId();
     let payload={
         id:merchent_session?.id,
@@ -95,6 +102,7 @@ const NotificationProvider = ({ children }) => {
         smallIcon: 'ic_notification',
         ongoing: false,
       });
+      Tts.speak(body);
     } catch (error) {
       console.error('Error handling background notification:', error);
     }
@@ -116,6 +124,8 @@ const NotificationProvider = ({ children }) => {
       title: title,
       textBody: body,
     });
+    Tts.speak(body);
+
   };
 
   useEffect(() => {

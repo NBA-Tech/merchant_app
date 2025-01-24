@@ -188,10 +188,13 @@ function Login(props) {
         let base64_email = base64Encode(email)
         let client_token = base64Encode("" + email + "" + email)
 
-        let token = base64_email + '.' + base64Encode(mobile + "." + encryptAES256(pasword, client_token))
+        let token = base64_email + '.' + base64Encode(mobile + "." + encryptAES256(pasword, client_token)+"."+isChecked)
+
         let payload = {
             token: token,
-            email: base64_email
+            email: base64_email,
+             accepted_tnc: isChecked
+
         }
 
         const check_login_api = await fetch(`${BASE_URL}/app/login`, {

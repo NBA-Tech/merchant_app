@@ -226,7 +226,7 @@ const Profile = (props) => {
         const unique_id = await  DeviceInfo.getUniqueId();
         let payload={
             id:merchent_session?.id,
-            status:"SUCCESS",
+            status:"ACTIVE",
             mac:unique_id
 
         }
