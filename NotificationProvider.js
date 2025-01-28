@@ -28,27 +28,38 @@ const NotificationProvider = ({ children }) => {
 
 
 
-  const saveFCMToken=async(token)=>{
-    const merchent_session=await getMerchantSession()
-    console.log(token)
-    const unique_id = await  DeviceInfo.getUniqueId();
-    let payload={
-        id:merchent_session?.id,
-        token:token,
-        mac:unique_id
+  const saveFCMToken=async(token,is_external=false)=>{
+    if(is_external){
+      const hasPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
+      if (hasPermission) {
+        token = await messaging().getToken();
+
+        }
+    }
+    if(token!=null){
+      const merchent_session=await getMerchantSession()
+      const unique_id = await  DeviceInfo.getUniqueId();
+      let payload={
+          id:merchent_session?.id,
+          token:token,
+          mac:unique_id
+  
+      }
+  
+      const clearFCM=await fetch(`${BASE_URL}/app/saveMobileNotificationToken`,{
+          method:'POST',
+          headers:{
+              'content-type': 'application/json',
+          },
+          body:JSON.stringify(payload)
+  
+      })
+      const res=await clearFCM.json()
 
     }
-
-    const clearFCM=await fetch(`${BASE_URL}/app/saveMobileNotificationToken`,{
-        method:'POST',
-        headers:{
-            'content-type': 'application/json',
-        },
-        body:JSON.stringify(payload)
-
-    })
-    const res=await clearFCM.json()
-    console.log(res)
+   
 
 
   }
@@ -144,7 +155,7 @@ const NotificationProvider = ({ children }) => {
   }, [hasPermission, reqPermission]);
 
   return (
-    <NotificationContext.Provider value={{ fcmToken, hasPermission, setReqPermission }}>
+    <NotificationContext.Provider value={{ fcmToken, hasPermission, setReqPermission,saveFCMToken }}>
       {children}
     </NotificationContext.Provider>
   );

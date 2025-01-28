@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthProvider, useAuth } from '../../AuthProvider';
 import { NoInterNetIcon } from '../../SvgIcons';
 import DeviceInfo from 'react-native-device-info';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 const style = StyleSheet.create({
     profilePage: {
@@ -222,33 +223,44 @@ const Profile = (props) => {
 
     }
     const handleLogout = async () => {
-        const merchent_session=await getMerchantSession()
-        const unique_id = await  DeviceInfo.getUniqueId();
-        let payload={
-            id:merchent_session?.id,
-            status:"ACTIVE",
-            mac:unique_id
+        const merchent_session = await getMerchantSession()
+        const unique_id = await DeviceInfo.getUniqueId();
+        let payload = {
+            id: merchent_session?.id,
+            status: "ACTIVE",
+            mac: unique_id
 
         }
-        console.log(payload)
 
-        const clearFCM=await fetch(`${BASE_URL}/app/logout`,{
-            method:'POST',
-            headers:{
+        const clearFCM = await fetch(`${BASE_URL}/app/logout`, {
+            method: 'POST',
+            headers: {
                 'content-type': 'application/json',
             },
-            body:JSON.stringify(payload)
+            body: JSON.stringify(payload)
 
         })
 
-        const res=await clearFCM.json()
-        console.log(res)
-        
-        await AsyncStorage.removeItem('merchant_status_data');
-        await AsyncStorage.removeItem('is_mpin_set');
-        await AsyncStorage.removeItem('user_creds');
-        setIsAuthenticated(false)
-        navigation.navigate('login')
+        const res = await clearFCM.json()
+
+        if (res?.msg != "SUCCESS" || res?.msg != 200) {
+            setLogOutModal(false)
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Oops',
+                textBody: res?.obj,
+            });
+
+        }
+        else {
+            await AsyncStorage.removeItem('merchant_status_data');
+            await AsyncStorage.removeItem('is_mpin_set');
+            await AsyncStorage.removeItem('user_creds');
+            setIsAuthenticated(false)
+            navigation.navigate('login')
+        }
+
+
 
     }
 

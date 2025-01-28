@@ -117,7 +117,7 @@ const Home = (props) => {
     const [settlementAmount, setSettlementAmount] = useState(0)
     const [settlementCount, setSettlementCount] = useState(0)
     const { resetTimer,setIsMpinSet } = useAutoLogout();
-    const {setReqPermission,hasPermission}=useContext(NotificationContext)
+    const {setReqPermission,hasPermission,saveFCMToken}=useContext(NotificationContext)
     configureReanimatedLogger({
         level: ReanimatedLogLevel.warn,
         strict: false, // Reanimated runs in strict mode by default
@@ -247,6 +247,7 @@ const Home = (props) => {
 
         }
         getSession()
+        saveFCMToken(null,true)
 
 
     }, [])
