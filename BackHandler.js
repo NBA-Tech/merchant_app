@@ -13,7 +13,7 @@ export const BackHandlerProvider = ({ children, currentRoute }) => {
     const navigation = useNavigation();
     const [showExitModal, setShowExitModal] = useState(false);
     const { isAuthenticated, setIsAuthenticated } = useAuth();
-    const noExitRoutes=['reports','trans','transactionreceipt','reportsTab','settlementTab','profileTab','paymentTab','payment_status']
+    const noExitRoutes=['reports','trans','transactionreceipt','reportsTab','settlementTab','profileTab','profileStack','paymentTab','payment_status']
 
     useEffect(() => {
         const backAction = () => {

@@ -6,4 +6,4 @@ export const image_urls={
     image_url_3:"https://uat-merchant.arthpay.com/img/mobile/home_car_3.png"
     
 }
-export const appVersion='V.1.6-alpha'
+export const appVersion='V.1.8'
