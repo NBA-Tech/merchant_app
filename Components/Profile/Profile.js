@@ -231,7 +231,6 @@ const Profile = (props) => {
             mac: unique_id
 
         }
-        console.log(payload)
 
         const clearFCM = await fetch(`${BASE_URL}/app/logout`, {
             method: 'POST',
@@ -243,7 +242,6 @@ const Profile = (props) => {
         })
 
         const res = await clearFCM.json()
-        console.log(res)
 
         if (res?.msg != "SUCCESS" && res?.msg != 200) {
             setLogOutModal(false)
