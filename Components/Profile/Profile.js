@@ -226,11 +226,12 @@ const Profile = (props) => {
         const merchent_session = await getMerchantSession()
         const unique_id = await DeviceInfo.getUniqueId();
         let payload = {
-            id: merchent_session?.id,
+            merchantId: merchent_session?.id,
             status: "ACTIVE",
             mac: unique_id
 
         }
+        console.log(payload)
 
         const clearFCM = await fetch(`${BASE_URL}/app/logout`, {
             method: 'POST',
@@ -242,8 +243,9 @@ const Profile = (props) => {
         })
 
         const res = await clearFCM.json()
+        console.log(res)
 
-        if (res?.msg != "SUCCESS" || res?.msg != 200) {
+        if (res?.msg != "SUCCESS" && res?.msg != 200) {
             setLogOutModal(false)
             Toast.show({
                 type: ALERT_TYPE.DANGER,
