@@ -611,7 +611,7 @@ const Reports = (props) => {
                                                         </Text>
                                                         {value?.payee_name && (
                                                             <Text style={[globalStyle.blackSubText, { textAlign: 'flex-start', fontSize: scaleFont('1.7%') }]}>
-                                                                Sender Name : {value?.payee_name}
+                                                                Payer Name : {value?.payee_name}
                                                             </Text>
                                                         )}
                                                         <Text
